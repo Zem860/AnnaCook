@@ -34,5 +34,14 @@ namespace RecipeTest.Controllers
             return Ok(recipesWithPhotos);
         }
 
+        [HttpPost]
+        [Route("api/recipe/add")]
+        public IHttpActionResult addRecipe(Recipe recipe)
+        {
+            db.Recipe.Add(recipe);
+            db.SaveChanges();
+            return Ok();
+        }
+
     }
 }

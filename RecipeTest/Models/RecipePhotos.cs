@@ -24,16 +24,15 @@ namespace RecipeTest.Models
         [Column(TypeName ="nvarchar(max)")]
         [Display(Name ="圖片位置")]
         public string ImgUrl {  get; set; }
-        [Required]
-        [Column(TypeName ="bit")]
-        [Display(Name ="是否為封面")]
-        public bool IsCover {  get; set; }
-        [Required(ErrorMessage = "{0}必填")]
+
+        [Column(TypeName = "bit")]
+        [Display(Name = "是否為封面")]
+        public bool IsCover { get; set; } = true;
         [Column(TypeName = "DATETIME")]
         [Display(Name = "創建時間")]
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        [Required(ErrorMessage ="{0}必填")]
+
         [Column(TypeName = "DATETIME")]
         [Display(Name = "更新時間")]
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;

@@ -19,40 +19,37 @@ namespace RecipeTest.Models
 
         [Column(TypeName ="nvarchar")]
         public string RecipeName { get; set; }
-        [Required]
+
         [Column(TypeName = "bit")]
         [Display(Name ="已發布")]
         public bool IsPublished { get; set; } = false;
-        [Required]
         [MaxLength(500)]
         [Column(TypeName ="nvarchar")]
-        public string RecipeIntro { get; set; }
-        [Required]
-        [Column(TypeName ="decimal")]
+        public string RecipeIntro { get; set; } = null;
+
+        [Column(TypeName = "decimal")]
         [Display(Name = "烹調時間")]
-        public decimal CookingTime { get; set; }
-        [Required]
+        public decimal CookingTime { get; set; } = 0;
+
         [Column(TypeName = "decimal")]
         [Display(Name = "份數")]
-        public decimal Portion { get; set; }
-        [Required]
+        public decimal Portion { get; set; } = 0;
+
         [Column(TypeName = "int")]
         [Display(Name = "按讚數")]
-        public int LikedNumber { get; set; }
-        [Required]
-        [Column(TypeName ="decimal")]
-        [Display(Name ="評分")]
-        public decimal Rating { get; set; }
-        [Required]
+        public int LikedNumber { get; set; } = 0;
+
+        [Column(TypeName = "decimal")]
+        [Display(Name = "評分")]
+        public decimal Rating { get; set; } = 0;
+        
         [Column(TypeName ="nvarchar")]
         [Display(Name ="食譜影片Id")]
-        public string RecipeVideoLink { get; set; }
-        [Required]
+        public string RecipeVideoLink { get; set; } = null;
         [Column(TypeName = "DATETIME")]
         [Display(Name = "創建時間")]
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        [Required]
         [Column(TypeName = "DATETIME")]
         [Display(Name ="更新時間")]
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;

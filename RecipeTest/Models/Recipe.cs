@@ -56,5 +56,10 @@ namespace RecipeTest.Models
         public virtual ICollection<RecipePhotos> RecipesPhotos { get; set; }
         public virtual ICollection<Ingredients> Ingredients { get; set; }
         public virtual ICollection<Steps> Steps { get; set; }
+
+        internal static void Add(string recipeName)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -33,10 +33,11 @@ namespace RecipeTest.Models
         [Display(Name ="使用者名稱")]
         [Column(TypeName ="nvarchar")]
         public string AccountName {  get; set; }
+
         [MaxLength(500)]
         [Column(TypeName = "nvarchar")]
         [Display(Name = "使用者照片")]
-        public string AccountProfilePhoto { set; get; }
+        public string AccountProfilePhoto { set; get; } = null;
 
         [DisplayFormat(ApplyFormatInEditMode =true, DataFormatString ="{0:d}")]
         [Column(TypeName="datetime")]

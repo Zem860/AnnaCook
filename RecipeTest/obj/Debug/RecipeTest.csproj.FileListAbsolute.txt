@@ -101,3 +101,4 @@ C:\2025\RecipeTest\RecipeTest\obj\Debug\RecipeTest.Migrations.test.resources
 C:\2025\RecipeTest\RecipeTest\obj\Debug\RecipeTest.csproj.GenerateResource.cache
 C:\2025\RecipeTest\RecipeTest\obj\Debug\RecipeTest.Migrations.featAddUserTable.resources
 C:\2025\RecipeTest\RecipeTest\obj\Debug\RecipeTest.Migrations.updatedatabaseForm.resources
+C:\2025\RecipeTest\RecipeTest\bin\jose-jwt.dll

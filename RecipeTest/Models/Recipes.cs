@@ -22,7 +22,7 @@ namespace RecipeTest.Models
 
         [JsonIgnore]
         [ForeignKey("UserId")]
-        public virtual User User { get; set; }
+        public virtual Users User { get; set; }
 
         [MaxLength(20)]
         [Display(Name = "食譜名稱")]

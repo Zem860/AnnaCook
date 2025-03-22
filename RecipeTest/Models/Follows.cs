@@ -23,10 +23,10 @@ namespace RecipeTest.Models
 
         [JsonIgnore]
         [ForeignKey("UserId")]
-        public virtual User Follower { get; set; }
+        public virtual Users Follower { get; set; }
 
         [JsonIgnore]
         [ForeignKey("FollowedUserId")]
-        public virtual User FollowedUser { get; set; }
+        public virtual Users FollowedUser { get; set; }
     }
 }

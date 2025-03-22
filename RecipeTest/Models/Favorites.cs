@@ -18,7 +18,7 @@ public class Favorites
     public DateTime UpdatedAt { get; set; }
 
     [JsonIgnore]
-    public virtual User User { get; set; }
+    public virtual Users User { get; set; }
 
     [JsonIgnore]
     public virtual Recipes Recipe { get; set; }

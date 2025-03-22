@@ -44,7 +44,7 @@ namespace RecipeTest.Controllers
             string password = request.Password;
             var salt = userhash.createSalt() ;
             var hash = userhash.HashPassword(password, salt);
-            var user = new User
+            var user = new Users
             {
                 AccountEmail = request.AccountEmail,
                 AccountName = request.AccountName,

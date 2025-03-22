@@ -15,7 +15,7 @@ namespace RecipeTest.Models
         public virtual DbSet<Ingredients> Ingredients { get; set; }
         public virtual DbSet<StepPhotos> StepPhotos { get; set; }
         public virtual DbSet<SubSteps> SubSteps { get; set; }
-        public virtual DbSet<User> User { get; set; }
+        public virtual DbSet<Users> User { get; set; }
         public virtual DbSet<Follows> Follows { get; set; }
         public virtual DbSet<Favorites> Favorites { get; set; }
 
@@ -74,8 +74,8 @@ namespace RecipeTest.Models
                 .WillCascadeOnDelete(true);
 
             // 🔹 設定 User 的唯一索引
-            modelBuilder.Entity<User>().HasIndex(u => u.AccountEmail).IsUnique();
-            modelBuilder.Entity<User>().HasIndex(u => u.AccountName).IsUnique();
+            modelBuilder.Entity<Users>().HasIndex(u => u.AccountEmail).IsUnique();
+            modelBuilder.Entity<Users>().HasIndex(u => u.AccountName).IsUnique();
 
             // 🔹 設定 Recipes 的 decimal 精度
             modelBuilder.Entity<Recipes>()

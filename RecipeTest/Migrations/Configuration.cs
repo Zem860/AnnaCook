@@ -6,14 +6,14 @@
     using System.Linq;
     using RecipeTest.Models;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<RecipeTest.Models.Model1>
+    internal sealed class Configuration : DbMigrationsConfiguration<RecipeTest.Models.RecipeModel>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
         }
 
-        protected override void Seed(RecipeTest.Models.Model1 context)
+        protected override void Seed(RecipeTest.Models.RecipeModel context)
         {
         //    context.Recipe.AddOrUpdate(
         //        r => r.Id,

@@ -12,12 +12,12 @@ namespace RecipeTest.Controllers
 {
     public class RecipeController : ApiController
     {
-        private Model1 db = new Model1();
+        private RecipeModel db = new RecipeModel();
         [HttpGet]
         [Route("api/recipes")]
         public IHttpActionResult getAllRecipeData()
         {
-            var RecipesWithPhotos = db.Recipe
+            var RecipesWithPhotos = db.Recipes
                 .GroupJoin(
                     db.RecipePhotos,              // 內表：RecipePhotos
                     recipe => recipe.Id,          // 外鍵 (Recipe.Id)
@@ -55,7 +55,7 @@ namespace RecipeTest.Controllers
         public IHttpActionResult getOneRecipe()
         {
 
-            var RecipeWithCover = db.Recipe
+            var RecipeWithCover = db.Recipes
                 .GroupJoin(
                 db.RecipePhotos,
                 recipe => recipe.Id,
@@ -101,7 +101,7 @@ namespace RecipeTest.Controllers
         [Route("api/recipeCards")]
         public IHttpActionResult getAllRecipe()
         {
-            var recipesWithPhotos = db.Recipe
+            var recipesWithPhotos = db.Recipes
              .GroupJoin(
                  db.RecipePhotos,
                  recipe => recipe.Id,         // 連接主鍵 (Recipe.Id)
@@ -141,14 +141,14 @@ namespace RecipeTest.Controllers
                 try
                 {
                     // 1️⃣ 新增 `Recipe`
-                    Recipe newRecipe = new Recipe
+                    Recipes newRecipe = new Recipes
                     {
                         RecipeName = recipe.RecipeName,
                         CreatedAt = DateTime.UtcNow,
                         UpdatedAt = DateTime.UtcNow
                     };
 
-                    db.Recipe.Add(newRecipe);
+                    db.Recipes.Add(newRecipe);
                     db.SaveChanges(); // ✅ 先確保 `Recipe` 成功存入，獲得 `Id`
 
                     // **檢查是否成功取得 `Recipe.Id`**

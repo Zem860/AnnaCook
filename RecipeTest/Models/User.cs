@@ -46,6 +46,9 @@ namespace RecipeTest.Models
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString="{0:d}")]
         [Column(TypeName ="datetime")]
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
-
+        public virtual ICollection<Follows> Following { get; set; }  // 我追蹤了誰
+        public virtual ICollection<Follows> Followers { get; set; }  // 誰追蹤我
+        public virtual ICollection<Favorites> Favorites { get; set; }
+        public virtual ICollection<Recipes> Recipes { get; set; }
     }
 }

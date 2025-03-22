@@ -9,7 +9,7 @@ namespace RecipeTest.Controllers
 {
     public class HomeController : Controller
     {
-        private Model1 db = new Model1();
+        private RecipeModel db = new RecipeModel();
 
         public class RecipeViewModel
         {
@@ -23,7 +23,7 @@ namespace RecipeTest.Controllers
 
         public ActionResult Index()
         {
-            var recipesWithPhotos = db.Recipe
+            var recipesWithPhotos = db.Recipes
             .GroupJoin(
                 db.RecipePhotos,
                 recipe => recipe.Id,         // 連接主鍵 (Recipe.Id)

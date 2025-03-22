@@ -18,7 +18,7 @@ namespace RecipeTest.Models
         public int RecipeId { get; set; }
         [JsonIgnore]
         [ForeignKey("RecipeId")]
-        public virtual Recipe Recipe { get; set; }
+        public virtual Recipes Recipe { get; set; }
 
         [Required]
         [MaxLength(20)]

@@ -21,6 +21,22 @@ namespace RecipeTest.Models
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+
+            modelBuilder.Entity<RecipeTags>()
+    .HasKey(rt => new { rt.RecipeId, rt.TagId });
+
+            modelBuilder.Entity<RecipeTags>()
+                .HasRequired(rt => rt.Recipes)
+                .WithMany(r => r.RecipeTags)
+                .HasForeignKey(rt => rt.RecipeId)
+                .WillCascadeOnDelete(true);
+
+            modelBuilder.Entity<RecipeTags>()
+                .HasRequired(rt => rt.Tags)
+                .WithMany(t => t.RecipeTags)
+                .HasForeignKey(rt => rt.TagId)
+                .WillCascadeOnDelete(false);
+
             // 🔹 User → Recipes：改為 false，避免循環錯誤
             //記得之後再程式碼記得刪除
             modelBuilder.Entity<Recipes>()

@@ -70,6 +70,7 @@ namespace RecipeTest.Models
         public virtual ICollection<StepPhotos> StepPhotos { get; set; }
 
         public virtual ICollection<Favorites>Favorites { get; set; }
+        public virtual ICollection<RecipeTags> RecipeTags { get; set; }
 
         //internal static void Add(string recipeName)
         //{

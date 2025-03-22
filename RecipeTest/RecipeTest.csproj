@@ -197,6 +197,10 @@
     <Compile Include="Migrations\202503211635274_fix-ModelName-DoubleForeignKey.Designer.cs">
       <DependentUpon>202503211635274_fix-ModelName-DoubleForeignKey.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202503220300483_add-recipeTag.cs" />
+    <Compile Include="Migrations\202503220300483_add-recipeTag.Designer.cs">
+      <DependentUpon>202503220300483_add-recipeTag.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Favorites.cs" />
     <Compile Include="Models\Follows.cs" />
@@ -204,9 +208,11 @@
     <Compile Include="Models\RecipeModel.cs" />
     <Compile Include="Models\Recipes.cs" />
     <Compile Include="Models\RecipePhotos.cs" />
+    <Compile Include="Models\RecipeTags.cs" />
     <Compile Include="Models\StepPhotos.cs" />
     <Compile Include="Models\Steps.cs" />
     <Compile Include="Models\SubSteps.cs" />
+    <Compile Include="Models\Tags.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Pages\RecipeRelated.cs" />
     <Compile Include="Pages\UserRelated.cs" />
@@ -360,6 +366,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202503211635274_fix-ModelName-DoubleForeignKey.resx">
       <DependentUpon>202503211635274_fix-ModelName-DoubleForeignKey.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202503220300483_add-recipeTag.resx">
+      <DependentUpon>202503220300483_add-recipeTag.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

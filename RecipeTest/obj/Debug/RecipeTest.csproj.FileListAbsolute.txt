@@ -112,3 +112,4 @@ C:\2025\RecipeTest\RecipeTest\obj\Debug\RecipeTest.dll
 C:\2025\RecipeTest\RecipeTest\obj\Debug\RecipeTest.pdb
 C:\2025\RecipeTest\RecipeTest\obj\Debug\RecipeTest.Migrations.fixModelNameDoubleForeignKey.resources
 C:\2025\RecipeTest\RecipeTest\obj\Debug\RecipeTest.csproj.GenerateResource.cache
+C:\2025\RecipeTest\RecipeTest\obj\Debug\RecipeTest.Migrations.addrecipeTag.resources

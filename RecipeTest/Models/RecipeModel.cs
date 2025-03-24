@@ -18,6 +18,8 @@ namespace RecipeTest.Models
         public virtual DbSet<Users> User { get; set; }
         public virtual DbSet<Follows> Follows { get; set; }
         public virtual DbSet<Favorites> Favorites { get; set; }
+        public virtual DbSet<Tags> Tags { get; set; }
+        public virtual DbSet<RecipeTags> RecipeTags { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

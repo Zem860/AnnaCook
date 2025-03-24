@@ -8,6 +8,30 @@ namespace RecipeTest.Pages
 {
     public class RecipeRelated
     {
+        public class UserRecipeDetail
+        {
+            public string RecipeIntro { get; set; }
+            public decimal CookingTime { get; set; }
+            public decimal Portion { get; set; }
+            public List<UserIngredients> Ingredients{ get; set; }
+            public List <string> Tags { get; set; }
+        }
+
+        public class UserIngredients
+        {
+            public string IngredientName { get; set; }
+            public decimal IngredientAmount { get; set; }
+            public string IngredientUnit { get; set; }
+            public bool IsFlavoring { get; set; } // true = 調味料, false = 食材
+
+        }
+
+            public class UserTags
+        {
+            public string Tag { get; set; }
+
+        }
+
         public class RecipeCard
         {
             public int RecipeId { get; set; }

@@ -117,3 +117,6 @@ C:\2025\RecipeTest\RecipeTest\obj\Debug\RecipeTest.Migrations.changeusertousers.
 C:\2025\RecipeTest\RecipeTest\obj\Debug\RecipeTest.Migrations.addcommentstable.resources
 C:\2025\RecipeTest\RecipeTest\obj\Debug\RecipeTest.Migrations.changecommentstable.resources
 C:\2025\RecipeTest\RecipeTest\obj\Debug\RecipeTest.Migrations.addratingtable.resources
+C:\2025\RecipeTest\RecipeTest\obj\Debug\RecipeTest.Migrations.changedatesettingandrequiredrecipename.resources
+C:\2025\RecipeTest\RecipeTest\obj\Debug\RecipeTest.Migrations.ChangeTags.resources
+C:\2025\RecipeTest\RecipeTest\obj\Debug\RecipeTest.Migrations.testPut.resources

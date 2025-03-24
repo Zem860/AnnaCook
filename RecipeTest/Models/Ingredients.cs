@@ -29,9 +29,10 @@ namespace RecipeTest.Models
         [Display(Name ="是否為食材")]
         public bool IsFlavoring {  get; set; }
         [Required]
-        [Column(TypeName = "int")]
+        [Column(TypeName = "decimal")]
         [Display(Name = "數量")]
-        public int Amount { get; set; }
+        public decimal Amount { get; set; }
+
         [Required]
         [MaxLength(20)]
         [Column(TypeName ="nvarchar")]

@@ -33,5 +33,6 @@ namespace RecipeTest.Models
         [Display(Name = "更新時間")]
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
 
+
     }
 }

@@ -13,42 +13,42 @@ namespace RecipeTest.Controllers
     public class RecipeController : ApiController
     {
         private RecipeModel db = new RecipeModel();
-        [HttpGet]
-        [Route("api/recipes")]
-        public IHttpActionResult getAllRecipeData()
-        {
-            var RecipesWithPhotos = db.Recipes
-                .GroupJoin(
-                    db.RecipePhotos,              // 內表：RecipePhotos
-                    recipe => recipe.Id,          // 外鍵 (Recipe.Id)
-                    photo => photo.RecipeId,      // 內鍵 (RecipePhotos.RecipeId)
-                    (recipe, photos) => new RecipeCard      // 先處理 Recipe 與 RecipePhotos
-                    {
-                        RecipeId = recipe.Id,
-                        RecipeName = recipe.RecipeName,
-                        CoverPhoto = photos.FirstOrDefault(p => p.IsCover == true).ImgUrl,
-                        RecipeIntro = recipe.RecipeIntro,
-                        CookingTime = recipe.CookingTime.ToString(),
-                        Portion = recipe.Portion,
-                        Rating = recipe.Rating,
-                    }
-                );
+        //[HttpGet]
+        //[Route("api/recipes")]
+        //public IHttpActionResult getAllRecipeData()
+        //{
+        //    var RecipesWithPhotos = db.Recipes
+        //        .GroupJoin(
+        //            db.RecipePhotos,              // 內表：RecipePhotos
+        //            recipe => recipe.Id,          // 外鍵 (Recipe.Id)
+        //            photo => photo.RecipeId,      // 內鍵 (RecipePhotos.RecipeId)
+        //            (recipe, photos) => new RecipeCard      // 先處理 Recipe 與 RecipePhotos
+        //            {
+        //                RecipeId = recipe.Id,
+        //                RecipeName = recipe.RecipeName,
+        //                CoverPhoto = photos.FirstOrDefault(p => p.IsCover == true).ImgUrl,
+        //                RecipeIntro = recipe.RecipeIntro,
+        //                CookingTime = recipe.CookingTime.ToString(),
+        //                Portion = recipe.Portion,
+        //                Rating = recipe.Rating,
+        //            }
+        //        );
 
-            var RecipesWithDetails = RecipesWithPhotos
-                .GroupJoin(
-                    db.Ingredients,               // 內表：Ingredients
-                    r => r.RecipeId,             // 外鍵 (Recipe.Id)
-                    ingredient => ingredient.RecipeId, // 內鍵 (Ingredients.RecipeId)
-                    (recipeWithPhoto, ingredients) => new
-                    {
-                        Recipe = recipeWithPhoto,
-                        Ingredients = ingredients.ToList() // 轉換為 List
-                    }
-                );
+        //    var RecipesWithDetails = RecipesWithPhotos
+        //        .GroupJoin(
+        //            db.Ingredients,               // 內表：Ingredients
+        //            r => r.RecipeId,             // 外鍵 (Recipe.Id)
+        //            ingredient => ingredient.RecipeId, // 內鍵 (Ingredients.RecipeId)
+        //            (recipeWithPhoto, ingredients) => new
+        //            {
+        //                Recipe = recipeWithPhoto,
+        //                Ingredients = ingredients.ToList() // 轉換為 List
+        //            }
+        //        );
               
 
-            return Ok(RecipesWithDetails);
-        }
+        //    return Ok(RecipesWithDetails);
+        //}
 
         [HttpGet]
         [Route("api/recipes/{id}")]

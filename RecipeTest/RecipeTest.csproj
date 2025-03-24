@@ -188,6 +188,8 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\RecipeController.cs" />
+    <Compile Include="Controllers\TestRecipeController.cs" />
+    <Compile Include="Controllers\TestUserController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
@@ -216,6 +218,18 @@
     <Compile Include="Migrations\202503221405035_add-rating-table.cs" />
     <Compile Include="Migrations\202503221405035_add-rating-table.Designer.cs">
       <DependentUpon>202503221405035_add-rating-table.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202503240225469_change-date-setting-and-required-recipename.cs" />
+    <Compile Include="Migrations\202503240225469_change-date-setting-and-required-recipename.Designer.cs">
+      <DependentUpon>202503240225469_change-date-setting-and-required-recipename.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202503240453253_Change-Tags.cs" />
+    <Compile Include="Migrations\202503240453253_Change-Tags.Designer.cs">
+      <DependentUpon>202503240453253_Change-Tags.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202503240505466_testPut.cs" />
+    <Compile Include="Migrations\202503240505466_testPut.Designer.cs">
+      <DependentUpon>202503240505466_testPut.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Comments.cs" />
@@ -399,6 +413,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202503221405035_add-rating-table.resx">
       <DependentUpon>202503221405035_add-rating-table.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202503240225469_change-date-setting-and-required-recipename.resx">
+      <DependentUpon>202503240225469_change-date-setting-and-required-recipename.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202503240453253_Change-Tags.resx">
+      <DependentUpon>202503240453253_Change-Tags.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202503240505466_testPut.resx">
+      <DependentUpon>202503240505466_testPut.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

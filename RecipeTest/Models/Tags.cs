@@ -19,10 +19,15 @@ namespace RecipeTest.Models
         [Column(TypeName = "nvarchar")]
         [Display(Name = "標籤名稱")]
         public string TagName { get; set; }
+
         [Column(TypeName = "DATETIME")]
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        [Display(Name = "創建時間")]
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
+
         [Column(TypeName = "DATETIME")]
-        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+        [Display(Name = "更新時間")]
+        public DateTime UpdatedAt { get; set; } = DateTime.Now;
+
         public virtual ICollection<RecipeTags> RecipeTags { get; set; }
 
     }

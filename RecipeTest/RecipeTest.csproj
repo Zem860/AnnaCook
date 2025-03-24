@@ -205,11 +205,24 @@
     <Compile Include="Migrations\202503220330059_change-user-to-users.Designer.cs">
       <DependentUpon>202503220330059_change-user-to-users.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202503220346164_add-comments-table.cs" />
+    <Compile Include="Migrations\202503220346164_add-comments-table.Designer.cs">
+      <DependentUpon>202503220346164_add-comments-table.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202503220357293_change-comments-table.cs" />
+    <Compile Include="Migrations\202503220357293_change-comments-table.Designer.cs">
+      <DependentUpon>202503220357293_change-comments-table.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202503221405035_add-rating-table.cs" />
+    <Compile Include="Migrations\202503221405035_add-rating-table.Designer.cs">
+      <DependentUpon>202503221405035_add-rating-table.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Comments.cs" />
     <Compile Include="Models\Favorites.cs" />
     <Compile Include="Models\Follows.cs" />
     <Compile Include="Models\Ingredients.cs" />
+    <Compile Include="Models\Ratings.cs" />
     <Compile Include="Models\RecipeModel.cs" />
     <Compile Include="Models\Recipes.cs" />
     <Compile Include="Models\RecipePhotos.cs" />
@@ -377,6 +390,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202503220330059_change-user-to-users.resx">
       <DependentUpon>202503220330059_change-user-to-users.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202503220346164_add-comments-table.resx">
+      <DependentUpon>202503220346164_add-comments-table.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202503220357293_change-comments-table.resx">
+      <DependentUpon>202503220357293_change-comments-table.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202503221405035_add-rating-table.resx">
+      <DependentUpon>202503221405035_add-rating-table.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

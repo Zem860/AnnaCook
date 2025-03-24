@@ -40,15 +40,14 @@ namespace RecipeTest.Models
         [Display(Name = "影片結束秒數")]
         public int VideoEnd { get; set; }
 
-        [Required]
         [Column(TypeName = "DATETIME")]
         [Display(Name = "創建時間")]
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        [Required]
         [Column(TypeName = "DATETIME")]
         [Display(Name = "更新時間")]
-        public DateTime UpdatedAt { get; set;} = DateTime.UtcNow;
+        public DateTime UpdatedAt { get; set; } = DateTime.Now;
+
         public virtual ICollection<StepPhotos> StepPhotos { get; set; }
         public virtual ICollection<SubSteps> SubSteps { get; set; }
 

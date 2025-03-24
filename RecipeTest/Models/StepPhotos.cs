@@ -23,14 +23,14 @@ namespace RecipeTest.Models
         [Column(TypeName ="bit")]
         [Display(Name ="是否為封面")]
         public bool IsCover {  get; set; }
-        [Required]
+
         [Column(TypeName = "DATETIME")]
         [Display(Name = "創建時間")]
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        [Required]
         [Column(TypeName = "DATETIME")]
         [Display(Name = "更新時間")]
-        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime UpdatedAt { get; set; } = DateTime.Now;
+
     }
 }

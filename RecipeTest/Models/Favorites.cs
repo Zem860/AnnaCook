@@ -14,8 +14,13 @@ public class Favorites
     [Column(Order = 1)]
     public int RecipeId { get; set; }
 
-    public DateTime CreatedAt { get; set; }
-    public DateTime UpdatedAt { get; set; }
+    [Column(TypeName = "DATETIME")]
+    [Display(Name = "創建時間")]
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+    [Column(TypeName = "DATETIME")]
+    [Display(Name = "更新時間")]
+    public DateTime UpdatedAt { get; set; } = DateTime.Now;
 
     [JsonIgnore]
     public virtual Users User { get; set; }

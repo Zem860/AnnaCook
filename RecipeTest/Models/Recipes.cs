@@ -56,13 +56,15 @@ namespace RecipeTest.Models
         [Column(TypeName ="nvarchar")]
         [Display(Name ="食譜影片Id")]
         public string RecipeVideoLink { get; set; } = null;
+
         [Column(TypeName = "DATETIME")]
         [Display(Name = "創建時間")]
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         [Column(TypeName = "DATETIME")]
-        [Display(Name ="更新時間")]
-        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+        [Display(Name = "更新時間")]
+        public DateTime UpdatedAt { get; set; } = DateTime.Now;
+
         public virtual ICollection<RecipePhotos> RecipesPhotos { get; set; }
         public virtual ICollection<Ingredients> Ingredients { get; set; }
         public virtual ICollection<Steps> Steps { get; set; }
@@ -72,6 +74,9 @@ namespace RecipeTest.Models
         public virtual ICollection<Favorites>Favorites { get; set; }
         public virtual ICollection<RecipeTags> RecipeTags { get; set; }
 
+        public virtual ICollection<Comments> Comments { get; set; }
+
+        public virtual ICollection<Ratings> Ratings { get; set; }
         //internal static void Add(string recipeName)
         //{
         //    throw new NotImplementedException();

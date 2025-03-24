@@ -8,26 +8,30 @@ using Newtonsoft.Json;
 
 namespace RecipeTest.Models
 {
-    public class RecipePhotos
+    public class Comments
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Display(Name ="食譜圖片編號")]
+        [Display(Name = "編號")]
         public int Id { get; set; }
+        [Required]
+
+        public int UserId { get; set; }
+        [JsonIgnore]
+        [ForeignKey("UserId")]
+        public virtual Users Users { get; set; }
 
         [Required]
-        public int RecipeId {  get; set; }
+        public int RecipeId { get; set; }
         [JsonIgnore]
         [ForeignKey("RecipeId")]
-        public virtual Recipes Recipe { get; set; }
-        [Required]
-        [Column(TypeName ="nvarchar(max)")]
-        [Display(Name ="圖片位置")]
-        public string ImgUrl {  get; set; }
+        public virtual Recipes Recipes { get; set; }
 
-        [Column(TypeName = "bit")]
-        [Display(Name = "是否為封面")]
-        public bool IsCover { get; set; } = true;
+        [Required]
+        [MaxLength(500)]
+        [Column(TypeName = "nvarchar")]
+        [Display(Name = "留言內容")]
+        public string CommentContent { get; set; }
 
         [Column(TypeName = "DATETIME")]
         [Display(Name = "創建時間")]

@@ -114,3 +114,6 @@ C:\2025\RecipeTest\RecipeTest\obj\Debug\RecipeTest.Migrations.fixModelNameDouble
 C:\2025\RecipeTest\RecipeTest\obj\Debug\RecipeTest.csproj.GenerateResource.cache
 C:\2025\RecipeTest\RecipeTest\obj\Debug\RecipeTest.Migrations.addrecipeTag.resources
 C:\2025\RecipeTest\RecipeTest\obj\Debug\RecipeTest.Migrations.changeusertousers.resources
+C:\2025\RecipeTest\RecipeTest\obj\Debug\RecipeTest.Migrations.addcommentstable.resources
+C:\2025\RecipeTest\RecipeTest\obj\Debug\RecipeTest.Migrations.changecommentstable.resources
+C:\2025\RecipeTest\RecipeTest\obj\Debug\RecipeTest.Migrations.addratingtable.resources

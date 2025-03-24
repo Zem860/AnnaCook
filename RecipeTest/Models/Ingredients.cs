@@ -37,15 +37,15 @@ namespace RecipeTest.Models
         [Column(TypeName ="nvarchar")]
         [Display(Name ="單位")]
         public string Unit { get; set; }
-        [Required]
+
         [Column(TypeName = "DATETIME")]
         [Display(Name = "創建時間")]
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        [Required]
         [Column(TypeName = "DATETIME")]
         [Display(Name = "更新時間")]
-        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime UpdatedAt { get; set; } = DateTime.Now;
+
 
     }
 }

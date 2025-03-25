@@ -50,51 +50,51 @@ namespace RecipeTest.Controllers
         //    return Ok(RecipesWithDetails);
         //}
 
-        [HttpGet]
-        [Route("api/recipes/{id}")]
-        public IHttpActionResult getOneRecipe()
-        {
+        //[HttpGet]
+        //[Route("api/recipes/{id}")]
+        //public IHttpActionResult getOneRecipe()
+        //{
 
-            var RecipeWithCover = db.Recipes
-                .GroupJoin(
-                db.RecipePhotos,
-                recipe => recipe.Id,
-                photo => photo.RecipeId,
-                (recipe, photo) => new RecipeCard
-                {
-                    RecipeId = recipe.Id,
-                    RecipeName = recipe.RecipeName,
-                    CoverPhoto = photo.FirstOrDefault(p => p.IsCover == true).ImgUrl,
-                    RecipeIntro = recipe.RecipeIntro,
-                    CookingTime = recipe.CookingTime.ToString(),
-                    Portion = recipe.Portion,
-                    Rating = recipe.Rating
-                }
-                );
-            var RecipeWithIngredient = RecipeWithCover
-            .GroupJoin(
-                db.Ingredients,
-                r => r.RecipeId,
-                ingredient => ingredient.RecipeId,
-                (recipeAndCover, Ingredient) => new
-                {
-                    recipe = recipeAndCover,
+        //    var RecipeWithCover = db.Recipes
+        //        .GroupJoin(
+        //        db.RecipePhotos,
+        //        recipe => recipe.Id,
+        //        photo => photo.RecipeId,
+        //        (recipe, photo) => new RecipeCard
+        //        {
+        //            RecipeId = recipe.Id,
+        //            RecipeName = recipe.RecipeName,
+        //            CoverPhoto = photo.FirstOrDefault(p => p.IsCover == true).ImgUrl,
+        //            RecipeIntro = recipe.RecipeIntro,
+        //            CookingTime = recipe.CookingTime.ToString(),
+        //            Portion = recipe.Portion,
+        //            Rating = recipe.Rating
+        //        }
+        //        );
+        //    var RecipeWithIngredient = RecipeWithCover
+        //    .GroupJoin(
+        //        db.Ingredients,
+        //        r => r.RecipeId,
+        //        ingredient => ingredient.RecipeId,
+        //        (recipeAndCover, Ingredient) => new
+        //        {
+        //            recipe = recipeAndCover,
 
-                    Ingredients = Ingredient.Select(i=>new { 
-                       IngredientName = i.IngredientName,
-                       IngredientAmount = i.Amount,
-                       IngredientUnit = i.Unit,
-                       IngredientFlavoring = i.IsFlavoring
+        //            Ingredients = Ingredient.Select(i=>new { 
+        //               IngredientName = i.IngredientName,
+        //               IngredientAmount = i.Amount,
+        //               IngredientUnit = i.Unit,
+        //               IngredientFlavoring = i.IsFlavoring
 
-                    })
-                }
+        //            })
+        //        }
 
-                );
+        //        );
 
 
 
-            return Ok(RecipeWithIngredient);
-        }
+        //    return Ok(RecipeWithIngredient);
+        //}
 
 
         [HttpGet]

@@ -191,7 +191,6 @@
     <Compile Include="Controllers\TestRecipeController.cs" />
     <Compile Include="Controllers\TestUserController.cs" />
     <Compile Include="Controllers\UserController.cs" />
-    <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -230,6 +229,10 @@
     <Compile Include="Migrations\202503240505466_testPut.cs" />
     <Compile Include="Migrations\202503240505466_testPut.Designer.cs">
       <DependentUpon>202503240505466_testPut.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202503250343168_makeDesNull.cs" />
+    <Compile Include="Migrations\202503250343168_makeDesNull.Designer.cs">
+      <DependentUpon>202503250343168_makeDesNull.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Comments.cs" />
@@ -422,6 +425,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202503240505466_testPut.resx">
       <DependentUpon>202503240505466_testPut.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202503250343168_makeDesNull.resx">
+      <DependentUpon>202503250343168_makeDesNull.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -15,6 +15,7 @@ namespace RecipeTest.Models
         public virtual DbSet<Ingredients> Ingredients { get; set; }
         public virtual DbSet<StepPhotos> StepPhotos { get; set; }
         public virtual DbSet<SubSteps> SubSteps { get; set; }
+        public virtual DbSet<Steps> Steps { get; set; }
         public virtual DbSet<Users> User { get; set; }
         public virtual DbSet<Follows> Follows { get; set; }
         public virtual DbSet<Favorites> Favorites { get; set; }

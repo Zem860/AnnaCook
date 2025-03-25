@@ -25,7 +25,6 @@ namespace RecipeTest.Models
         [Display(Name = "步驟")]
         public int StepOrder { get; set; }
 
-        [Required]
         [MaxLength(100)]
         [Column(TypeName = "nvarchar")]
         [Display(Name = "步驟說明")]

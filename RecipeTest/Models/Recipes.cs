@@ -57,6 +57,10 @@ namespace RecipeTest.Models
         [Display(Name ="食譜影片Id")]
         public string RecipeVideoLink { get; set; } = null;
 
+        //[Column(TypeName = "decimal")]
+        //[Display(Name = "食譜影片時長")]
+        //public decimal? RecipeVideoDuration { get; set; }  // 單位：秒，nullable 比較安全
+
         [Column(TypeName = "DATETIME")]
         [Display(Name = "創建時間")]
         public DateTime CreatedAt { get; set; } = DateTime.Now;

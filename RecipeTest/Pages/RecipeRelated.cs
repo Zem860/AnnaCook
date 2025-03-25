@@ -8,6 +8,20 @@ namespace RecipeTest.Pages
 {
     public class RecipeRelated
     {
+
+        public class StepUpdateListDto
+        {
+            public string VideoUrl { get; set; }
+            public List<StepDto> Steps { get; set; }
+        }
+        public class StepDto
+        {
+            public int StepId { get; set; }
+            public string Description { get; set; }  // 對應說明
+            public int StartTime { get; set; }       // 對應影片開始秒數
+            public int EndTime { get; set; }         // 對應影片結束秒數
+
+        }
         public class UserRecipeDetail
         {
             public string RecipeIntro { get; set; }

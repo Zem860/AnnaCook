@@ -186,10 +186,10 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Controllers\CommentsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\RecipeController.cs" />
     <Compile Include="Controllers\TestRecipeController.cs" />
-    <Compile Include="Controllers\TestUserController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -234,6 +234,14 @@
     <Compile Include="Migrations\202503250343168_makeDesNull.Designer.cs">
       <DependentUpon>202503250343168_makeDesNull.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202503260714552_fix-user.cs" />
+    <Compile Include="Migrations\202503260714552_fix-user.Designer.cs">
+      <DependentUpon>202503260714552_fix-user.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202503260729428_removesaltpwd.cs" />
+    <Compile Include="Migrations\202503260729428_removesaltpwd.Designer.cs">
+      <DependentUpon>202503260729428_removesaltpwd.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Comments.cs" />
     <Compile Include="Models\Favorites.cs" />
@@ -249,6 +257,7 @@
     <Compile Include="Models\SubSteps.cs" />
     <Compile Include="Models\Tags.cs" />
     <Compile Include="Models\Users.cs" />
+    <Compile Include="Pages\ComplexUserRecipe.cs" />
     <Compile Include="Pages\RecipeRelated.cs" />
     <Compile Include="Pages\UserRelated.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -325,6 +334,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="userPhotos\" />
+    <Folder Include="Views\Comments\" />
     <Folder Include="Views\Recipe\" />
   </ItemGroup>
   <ItemGroup>
@@ -428,6 +438,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202503250343168_makeDesNull.resx">
       <DependentUpon>202503250343168_makeDesNull.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202503260714552_fix-user.resx">
+      <DependentUpon>202503260714552_fix-user.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202503260729428_removesaltpwd.resx">
+      <DependentUpon>202503260729428_removesaltpwd.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -20,7 +20,7 @@ namespace RecipeTest.Security
                 { "Id", user.Id },
                 { "Account", user.Account },
                 { "AccountName", user.AccountName },
-                { "Exp", DateTime.UtcNow.AddMinutes(3).ToString() } // 設定 Unix 時間戳
+                { "Exp", DateTime.UtcNow.AddMinutes(3).ToString("o") } // 設定 Unix 時間戳
             };
             var token = JWT.Encode(payload, Encoding.UTF8.GetBytes(secretKey), JwsAlgorithm.HS512);
             return token;

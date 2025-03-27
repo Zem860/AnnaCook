@@ -10,6 +10,11 @@ namespace RecipeTest.Models
 {
     public class Recipes
     {
+        //函式建構子constructor
+        //public Recipes()
+        //{
+        //    RecipesPhotos = new List<RecipePhotos>();
+        //}
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Display(Name ="食譜編號")]

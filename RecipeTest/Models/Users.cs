@@ -14,19 +14,18 @@ namespace RecipeTest.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Display(Name ="編號")]
         public int Id { get; set; }
-        [Required (ErrorMessage="{0}必填")]
+
         [MaxLength(100)]
         [Column(TypeName ="nvarchar")]
         public string AccountEmail {  get; set; }
         [Required(ErrorMessage = "{0}必填")]
         [MaxLength(100)]
         [Display(Name = "密碼")]
-        public byte[] PasswordHash { get; set; } // 儲存哈希值
+        public string PasswordHash { get; set; } // 儲存哈希值
 
-        [Required(ErrorMessage = "{0}必填")]
         [MaxLength(100)]
         [Display(Name = "鹽巴")]
-        public byte[] Salt { get; set; } // 改為 byte[] 存儲安全的鹽值
+        public string Salt { get; set; } // 改為 byte[] 存儲安全的鹽值
 
         [Required(ErrorMessage ="{0}必填")]
         [MaxLength(50)]

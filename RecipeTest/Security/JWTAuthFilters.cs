@@ -2,8 +2,10 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Web;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
@@ -27,6 +29,7 @@ namespace MyWebApiProject.Security
             var request = actionContext.Request;
 
             // 有取到 JwtToken 後，判斷授權格式不存在且不正確時，沒toekn不是熊仁
+
             if (request.Headers.Authorization == null || request.Headers.Authorization.Scheme != "Bearer")
             {
                 // 可考慮配合前端專案開發期限，不修改 StatusCode 預設 200，將請求失敗搭配 Status: false 供前端判斷
@@ -51,6 +54,8 @@ namespace MyWebApiProject.Security
                     var jwtObject = GetToken(request.Headers.Authorization.Parameter);
 
                     // 檢查有效期限是否過期，如 JwtToken 過期，需導引重新登入
+                    HttpContext.Current.Items["jwtUser"] = jwtObject;
+
                     if (IsTokenExpired(jwtObject["Exp"].ToString()))
                     {
                         string messageJson = JsonConvert.SerializeObject(new { Status = false, Message = "請重新登入" }); // JwtToken 過期，需導引重新登入

@@ -22,6 +22,9 @@ namespace RecipeTest.Models
         public virtual DbSet<Tags> Tags { get; set; }
         public virtual DbSet<RecipeTags> RecipeTags { get; set; }
 
+        public virtual DbSet<Comments> Comments { get; set; }
+        public virtual DbSet<Ratings> Ratings { get; set; }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
 

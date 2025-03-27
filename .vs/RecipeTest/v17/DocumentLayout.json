@@ -3,48 +3,100 @@
   "WorkspaceRootPath": "C:\\2025\\RecipeTest\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|c:\\2025\\recipetest\\recipetest\\controllers\\testrecipecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|c:\\2025\\recipetest\\recipetest\\controllers\\commentscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|solutionrelative:recipetest\\controllers\\commentscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|c:\\2025\\recipetest\\recipetest\\models\\recipes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|solutionrelative:recipetest\\models\\recipes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|c:\\2025\\recipetest\\recipetest\\models\\comments.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|solutionrelative:recipetest\\models\\comments.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|c:\\2025\\recipetest\\recipetest\\models\\ratings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|solutionrelative:recipetest\\models\\ratings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|C:\\2025\\RecipeTest\\recipetest\\controllers\\testrecipecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|solutionrelative:recipetest\\controllers\\testrecipecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|C:\\2025\\RecipeTest\\recipetest\\pages\\reciperelated.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|solutionrelative:recipetest\\pages\\reciperelated.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|C:\\2025\\RecipeTest\\recipetest\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|solutionrelative:recipetest\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|C:\\2025\\RecipeTest\\recipetest\\models\\recipes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|solutionrelative:recipetest\\models\\recipes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|C:\\2025\\RecipeTest\\recipetest\\controllers\\recipecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|solutionrelative:recipetest\\controllers\\recipecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|c:\\2025\\recipetest\\recipetest\\pages\\complexuserrecipe.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|solutionrelative:recipetest\\pages\\complexuserrecipe.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|C:\\2025\\RecipeTest\\recipetest\\models\\recipemodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|solutionrelative:recipetest\\models\\recipemodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|c:\\2025\\recipetest\\recipetest\\controllers\\recipecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|solutionrelative:recipetest\\controllers\\recipecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|c:\\2025\\recipetest\\recipetest\\models\\users.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|solutionrelative:recipetest\\models\\users.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|c:\\2025\\recipetest\\recipetest\\controllers\\testusercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|solutionrelative:recipetest\\controllers\\testusercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|C:\\2025\\RecipeTest\\recipetest\\pages\\userrelated.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|solutionrelative:recipetest\\pages\\userrelated.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|C:\\2025\\RecipeTest\\recipetest\\models\\steps.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|solutionrelative:recipetest\\models\\steps.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|c:\\2025\\recipetest\\recipetest\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|solutionrelative:recipetest\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|c:\\2025\\recipetest\\recipetest\\migrations\\202503250343168_makedesnull.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|solutionrelative:recipetest\\migrations\\202503250343168_makedesnull.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|C:\\2025\\RecipeTest\\recipetest\\security\\jwtauthfilters.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|solutionrelative:recipetest\\security\\jwtauthfilters.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|C:\\2025\\RecipeTest\\recipetest\\security\\userencryption.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|solutionrelative:recipetest\\security\\userencryption.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|c:\\2025\\recipetest\\recipetest\\models\\recipephotos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|solutionrelative:recipetest\\models\\recipephotos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|C:\\2025\\RecipeTest\\recipetest\\security\\jwtauthutil.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|solutionrelative:recipetest\\security\\jwtauthutil.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|C:\\2025\\RecipeTest\\recipetest\\pages\\reciperelated.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|solutionrelative:recipetest\\pages\\reciperelated.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|C:\\2025\\RecipeTest\\recipetest\\migrations\\202503260729428_removesaltpwd.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|solutionrelative:recipetest\\migrations\\202503260729428_removesaltpwd.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|C:\\2025\\RecipeTest\\recipetest\\models\\stepphotos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|solutionrelative:recipetest\\models\\stepphotos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|C:\\2025\\RecipeTest\\recipetest\\migrations\\202503260714552_fix-user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|solutionrelative:recipetest\\migrations\\202503260714552_fix-user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|C:\\2025\\RecipeTest\\recipetest\\models\\ingredients.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|solutionrelative:recipetest\\models\\ingredients.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|C:\\2025\\RecipeTest\\recipetest\\migrations\\202503240505466_testput.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|solutionrelative:recipetest\\migrations\\202503240505466_testput.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|C:\\2025\\RecipeTest\\recipetest\\models\\steps.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|solutionrelative:recipetest\\models\\steps.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|c:\\2025\\recipetest\\recipetest\\models\\stepphotos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|solutionrelative:recipetest\\models\\stepphotos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|C:\\2025\\RecipeTest\\recipetest\\migrations\\202503250343168_makedesnull.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|solutionrelative:recipetest\\migrations\\202503250343168_makedesnull.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|C:\\2025\\RecipeTest\\recipetest\\migrations\\202503240505466_testput.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|solutionrelative:recipetest\\migrations\\202503240505466_testput.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{DD2BB65A-DB93-416F-A956-DCA89632EE02}|RecipeTest\\RecipeTest.csproj|C:\\2025\\RecipeTest\\recipetest\\models\\substeps.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -58,11 +110,204 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Comments.cs",
+              "DocumentMoniker": "C:\\2025\\RecipeTest\\RecipeTest\\Models\\Comments.cs",
+              "RelativeDocumentMoniker": "RecipeTest\\Models\\Comments.cs",
+              "ToolTip": "C:\\2025\\RecipeTest\\RecipeTest\\Models\\Comments.cs",
+              "RelativeToolTip": "RecipeTest\\Models\\Comments.cs",
+              "ViewState": "AgIAABgAAAAAAAAAAAAQwCkAAAAyAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-27T08:12:46.533Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "HomeController.cs",
+              "DocumentMoniker": "C:\\2025\\RecipeTest\\RecipeTest\\Controllers\\HomeController.cs",
+              "RelativeDocumentMoniker": "RecipeTest\\Controllers\\HomeController.cs",
+              "ToolTip": "C:\\2025\\RecipeTest\\RecipeTest\\Controllers\\HomeController.cs",
+              "RelativeToolTip": "RecipeTest\\Controllers\\HomeController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-27T07:59:30.552Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "CommentsController.cs",
+              "DocumentMoniker": "C:\\2025\\RecipeTest\\RecipeTest\\Controllers\\CommentsController.cs",
+              "RelativeDocumentMoniker": "RecipeTest\\Controllers\\CommentsController.cs",
+              "ToolTip": "C:\\2025\\RecipeTest\\RecipeTest\\Controllers\\CommentsController.cs",
+              "RelativeToolTip": "RecipeTest\\Controllers\\CommentsController.cs",
+              "ViewState": "AgIAAFQAAAAAAAAAAAASwGUAAAAxAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-27T07:38:08.635Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Recipes.cs",
+              "DocumentMoniker": "C:\\2025\\RecipeTest\\RecipeTest\\Models\\Recipes.cs",
+              "RelativeDocumentMoniker": "RecipeTest\\Models\\Recipes.cs",
+              "ToolTip": "C:\\2025\\RecipeTest\\RecipeTest\\Models\\Recipes.cs",
+              "RelativeToolTip": "RecipeTest\\Models\\Recipes.cs",
+              "ViewState": "AgIAADwAAAAAAAAAAAAMwEoAAAAyAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-27T04:58:03.885Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Ratings.cs",
+              "DocumentMoniker": "C:\\2025\\RecipeTest\\RecipeTest\\Models\\Ratings.cs",
+              "RelativeDocumentMoniker": "RecipeTest\\Models\\Ratings.cs",
+              "ToolTip": "C:\\2025\\RecipeTest\\RecipeTest\\Models\\Ratings.cs",
+              "RelativeToolTip": "RecipeTest\\Models\\Ratings.cs",
+              "ViewState": "AgIAABYAAAAAAAAAAAAUwCYAAAAyAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-27T04:32:15.044Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "RecipePhotos.cs",
+              "DocumentMoniker": "C:\\2025\\RecipeTest\\RecipeTest\\Models\\RecipePhotos.cs",
+              "RelativeDocumentMoniker": "RecipeTest\\Models\\RecipePhotos.cs",
+              "ToolTip": "C:\\2025\\RecipeTest\\RecipeTest\\Models\\RecipePhotos.cs",
+              "RelativeToolTip": "RecipeTest\\Models\\RecipePhotos.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-27T04:01:43.824Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 7,
+              "Title": "ComplexUserRecipe.cs",
+              "DocumentMoniker": "C:\\2025\\RecipeTest\\RecipeTest\\Pages\\ComplexUserRecipe.cs",
+              "RelativeDocumentMoniker": "RecipeTest\\Pages\\ComplexUserRecipe.cs",
+              "ToolTip": "C:\\2025\\RecipeTest\\RecipeTest\\Pages\\ComplexUserRecipe.cs",
+              "RelativeToolTip": "RecipeTest\\Pages\\ComplexUserRecipe.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAwwBcAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-27T02:44:55.644Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "UserEncryption.cs",
+              "DocumentMoniker": "C:\\2025\\RecipeTest\\RecipeTest\\Security\\UserEncryption.cs",
+              "RelativeDocumentMoniker": "RecipeTest\\Security\\UserEncryption.cs",
+              "ToolTip": "C:\\2025\\RecipeTest\\RecipeTest\\Security\\UserEncryption.cs",
+              "RelativeToolTip": "RecipeTest\\Security\\UserEncryption.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-26T05:15:29.761Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "UserController.cs",
+              "DocumentMoniker": "C:\\2025\\RecipeTest\\RecipeTest\\Controllers\\UserController.cs",
+              "RelativeDocumentMoniker": "RecipeTest\\Controllers\\UserController.cs",
+              "ToolTip": "C:\\2025\\RecipeTest\\RecipeTest\\Controllers\\UserController.cs",
+              "RelativeToolTip": "RecipeTest\\Controllers\\UserController.cs",
+              "ViewState": "AgIAAJcAAAAAAAAAAAAcwJAAAABVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-26T06:32:18.261Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "UserRelated.cs",
+              "DocumentMoniker": "C:\\2025\\RecipeTest\\RecipeTest\\Pages\\UserRelated.cs",
+              "RelativeDocumentMoniker": "RecipeTest\\Pages\\UserRelated.cs",
+              "ToolTip": "C:\\2025\\RecipeTest\\RecipeTest\\Pages\\UserRelated.cs",
+              "RelativeToolTip": "RecipeTest\\Pages\\UserRelated.cs",
+              "ViewState": "AgIAABYAAAAAAAAAAAAUwAsAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-26T08:04:16.505Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "JWTAuthFilters.cs",
+              "DocumentMoniker": "C:\\2025\\RecipeTest\\RecipeTest\\Security\\JWTAuthFilters.cs",
+              "RelativeDocumentMoniker": "RecipeTest\\Security\\JWTAuthFilters.cs",
+              "ToolTip": "C:\\2025\\RecipeTest\\RecipeTest\\Security\\JWTAuthFilters.cs",
+              "RelativeToolTip": "RecipeTest\\Security\\JWTAuthFilters.cs",
+              "ViewState": "AgIAAB8AAAAAAAAAAAAAwFIAAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-26T08:32:41.582Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "JwtAuthUtil.cs",
+              "DocumentMoniker": "C:\\2025\\RecipeTest\\RecipeTest\\Security\\JwtAuthUtil.cs",
+              "RelativeDocumentMoniker": "RecipeTest\\Security\\JwtAuthUtil.cs",
+              "ToolTip": "C:\\2025\\RecipeTest\\RecipeTest\\Security\\JwtAuthUtil.cs",
+              "RelativeToolTip": "RecipeTest\\Security\\JwtAuthUtil.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAABUAAAA0AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-26T08:28:02.63Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "202503260729428_removesaltpwd.cs",
+              "DocumentMoniker": "C:\\2025\\RecipeTest\\RecipeTest\\Migrations\\202503260729428_removesaltpwd.cs",
+              "RelativeDocumentMoniker": "RecipeTest\\Migrations\\202503260729428_removesaltpwd.cs",
+              "ToolTip": "C:\\2025\\RecipeTest\\RecipeTest\\Migrations\\202503260729428_removesaltpwd.cs",
+              "RelativeToolTip": "RecipeTest\\Migrations\\202503260729428_removesaltpwd.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAA/AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-26T07:29:49.59Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "202503260714552_fix-user.cs",
+              "DocumentMoniker": "C:\\2025\\RecipeTest\\RecipeTest\\Migrations\\202503260714552_fix-user.cs",
+              "RelativeDocumentMoniker": "RecipeTest\\Migrations\\202503260714552_fix-user.cs",
+              "ToolTip": "C:\\2025\\RecipeTest\\RecipeTest\\Migrations\\202503260714552_fix-user.cs",
+              "RelativeToolTip": "RecipeTest\\Migrations\\202503260714552_fix-user.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-26T07:15:02.366Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Users.cs",
+              "DocumentMoniker": "C:\\2025\\RecipeTest\\RecipeTest\\Models\\Users.cs",
+              "RelativeDocumentMoniker": "RecipeTest\\Models\\Users.cs",
+              "ToolTip": "C:\\2025\\RecipeTest\\RecipeTest\\Models\\Users.cs",
+              "RelativeToolTip": "RecipeTest\\Models\\Users.cs",
+              "ViewState": "AgIAABMAAAAAAAAAAAAQwDgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-26T06:39:18.483Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
               "Title": "202503250343168_makeDesNull.cs",
               "DocumentMoniker": "C:\\2025\\RecipeTest\\RecipeTest\\Migrations\\202503250343168_makeDesNull.cs",
               "RelativeDocumentMoniker": "RecipeTest\\Migrations\\202503250343168_makeDesNull.cs",
@@ -70,25 +315,11 @@
               "RelativeToolTip": "RecipeTest\\Migrations\\202503250343168_makeDesNull.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-25T03:43:20.38Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-25T03:43:20.38Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "TestUserController.cs",
-              "DocumentMoniker": "C:\\2025\\RecipeTest\\RecipeTest\\Controllers\\TestUserController.cs",
-              "RelativeDocumentMoniker": "RecipeTest\\Controllers\\TestUserController.cs",
-              "ToolTip": "C:\\2025\\RecipeTest\\RecipeTest\\Controllers\\TestUserController.cs",
-              "RelativeToolTip": "RecipeTest\\Controllers\\TestUserController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-25T02:27:13.595Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 18,
               "Title": "StepPhotos.cs",
               "DocumentMoniker": "C:\\2025\\RecipeTest\\RecipeTest\\Models\\StepPhotos.cs",
               "RelativeDocumentMoniker": "RecipeTest\\Models\\StepPhotos.cs",
@@ -96,51 +327,49 @@
               "RelativeToolTip": "RecipeTest\\Models\\StepPhotos.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-25T02:20:03.299Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-25T02:20:03.299Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 4,
               "Title": "TestRecipeController.cs",
               "DocumentMoniker": "C:\\2025\\RecipeTest\\RecipeTest\\Controllers\\TestRecipeController.cs",
               "RelativeDocumentMoniker": "RecipeTest\\Controllers\\TestRecipeController.cs",
               "ToolTip": "C:\\2025\\RecipeTest\\RecipeTest\\Controllers\\TestRecipeController.cs",
               "RelativeToolTip": "RecipeTest\\Controllers\\TestRecipeController.cs",
-              "ViewState": "AgIAAJUCAAAAAAAAAAAkwJsCAAAaAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAhAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-03-25T01:09:57.305Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 16,
               "Title": "RecipeRelated.cs",
               "DocumentMoniker": "C:\\2025\\RecipeTest\\RecipeTest\\Pages\\RecipeRelated.cs",
               "RelativeDocumentMoniker": "RecipeTest\\Pages\\RecipeRelated.cs",
               "ToolTip": "C:\\2025\\RecipeTest\\RecipeTest\\Pages\\RecipeRelated.cs",
               "RelativeToolTip": "RecipeTest\\Pages\\RecipeRelated.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAwwBAAAAAcAAAAAAAAAA==",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAxwBAAAAAcAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-03-16T03:14:09.44Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 20,
               "Title": "Ingredients.cs",
               "DocumentMoniker": "C:\\2025\\RecipeTest\\RecipeTest\\Models\\Ingredients.cs",
               "RelativeDocumentMoniker": "RecipeTest\\Models\\Ingredients.cs",
               "ToolTip": "C:\\2025\\RecipeTest\\RecipeTest\\Models\\Ingredients.cs",
               "RelativeToolTip": "RecipeTest\\Models\\Ingredients.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAARAAAAAAAAAA==",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAjwAgAAAAbAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-21T02:44:46.128Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-21T02:44:46.128Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 23,
               "Title": "202503240505466_testPut.cs",
               "DocumentMoniker": "C:\\2025\\RecipeTest\\RecipeTest\\Migrations\\202503240505466_testPut.cs",
               "RelativeDocumentMoniker": "RecipeTest\\Migrations\\202503240505466_testPut.cs",
@@ -148,38 +377,24 @@
               "RelativeToolTip": "RecipeTest\\Migrations\\202503240505466_testPut.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-24T05:05:51.447Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-24T05:05:51.447Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 8,
               "Title": "RecipeModel.cs",
               "DocumentMoniker": "C:\\2025\\RecipeTest\\RecipeTest\\Models\\RecipeModel.cs",
               "RelativeDocumentMoniker": "RecipeTest\\Models\\RecipeModel.cs",
               "ToolTip": "C:\\2025\\RecipeTest\\RecipeTest\\Models\\RecipeModel.cs",
               "RelativeToolTip": "RecipeTest\\Models\\RecipeModel.cs",
-              "ViewState": "AgIAABYAAAAAAAAAAAAmwBsAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAywBgAAAA9AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-03-12T04:02:08.001Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Recipes.cs",
-              "DocumentMoniker": "C:\\2025\\RecipeTest\\RecipeTest\\Models\\Recipes.cs",
-              "RelativeDocumentMoniker": "RecipeTest\\Models\\Recipes.cs",
-              "ToolTip": "C:\\2025\\RecipeTest\\RecipeTest\\Models\\Recipes.cs",
-              "RelativeToolTip": "RecipeTest\\Models\\Recipes.cs",
-              "ViewState": "AgIAADUAAAAAAAAAAAA2wD0AAABSAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-19T06:42:20.366Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 24,
               "Title": "SubSteps.cs",
               "DocumentMoniker": "C:\\2025\\RecipeTest\\RecipeTest\\Models\\SubSteps.cs",
               "RelativeDocumentMoniker": "RecipeTest\\Models\\SubSteps.cs",
@@ -187,12 +402,11 @@
               "RelativeToolTip": "RecipeTest\\Models\\SubSteps.cs",
               "ViewState": "AgIAABMAAAAAAAAAAAAQwCIAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-12T07:17:10.597Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-12T07:17:10.597Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 21,
               "Title": "Steps.cs",
               "DocumentMoniker": "C:\\2025\\RecipeTest\\RecipeTest\\Models\\Steps.cs",
               "RelativeDocumentMoniker": "RecipeTest\\Models\\Steps.cs",
@@ -200,18 +414,17 @@
               "RelativeToolTip": "RecipeTest\\Models\\Steps.cs",
               "ViewState": "AgIAACMAAAAAAAAAAAAtwC8AAAAyAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-21T02:47:14.232Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-21T02:47:14.232Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 6,
               "Title": "RecipeController.cs",
               "DocumentMoniker": "C:\\2025\\RecipeTest\\RecipeTest\\Controllers\\RecipeController.cs",
               "RelativeDocumentMoniker": "RecipeTest\\Controllers\\RecipeController.cs",
               "ToolTip": "C:\\2025\\RecipeTest\\RecipeTest\\Controllers\\RecipeController.cs",
               "RelativeToolTip": "RecipeTest\\Controllers\\RecipeController.cs",
-              "ViewState": "AgIAADgAAAAAAAAAAAAvwJQAAAAWAAAAAAAAAA==",
+              "ViewState": "AgIAAHgAAAAAAAAAAAAmwIgAAAAWAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-03-25T01:03:11.509Z",
               "EditorCaption": ""

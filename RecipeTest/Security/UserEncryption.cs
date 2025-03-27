@@ -1,17 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Web;
 using System.Security.Cryptography;
 using System.Text;
 using Konscious.Security.Cryptography;
-using System.Web.UI.WebControls;
-using RecipeTest.Models;
+using static RecipeTest.Pages.UserRelated;
 
 namespace RecipeTest.Security
 {
     public class UserEncryption
     {
+        public UserDto GetUserFromJWT()
+        {
+            var payload = HttpContext.Current.Items["jwtUser"] as Dictionary<string, object>;
+
+            return new UserDto
+            {
+                Id = int.Parse(payload["Id"].ToString()),
+                AccountEmail = payload["Account"].ToString(),
+                AccountName = payload["AccountName"].ToString(),
+            };
+
+        }
         public byte[] createSalt()
         {
             var buffer = new byte[16];

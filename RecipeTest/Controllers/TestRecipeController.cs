@@ -240,6 +240,7 @@ namespace RecipeTest.Controllers
                 Directory.CreateDirectory(localStorragePath);
 
             }
+
             var provider = await Request.Content.ReadAsMultipartAsync();
             var contents = provider.Contents;
             //取得食譜名稱
@@ -317,7 +318,7 @@ namespace RecipeTest.Controllers
             }
         }
 
-
+        //--------------------食譜細項上傳(步驟2)--------------------------------
         //step2 上傳食譜細項(修改)
         [HttpPut]
         [Route("api/recipes/step2/{id}")]
@@ -326,7 +327,9 @@ namespace RecipeTest.Controllers
         {
             var user = userhash.GetUserFromJWT();
             var recipe = db.Recipes.FirstOrDefault(r => r.Id == id && r.UserId == user.Id);
-            if ( recipe ==null)
+            //理論上這個食譜，的published應該是都可以但是必須對上userId不然是不能修改的
+            bool hasRecipe = recipe != null;
+            if (!hasRecipe)
             {
                 return NotFound();
             }
@@ -336,21 +339,22 @@ namespace RecipeTest.Controllers
             recipe.UpdatedAt = DateTime.Now;
             db.SaveChanges();
 
+            // ToList() 表示先將查詢結果拉到記憶體中，雖然變成 List，但裡面的實體仍然被 DbContext 追蹤。
+            // 這樣做是為了避免之後查詢還沒執行就先操作，或在操作過程中資料被改變（如同一時間的新增、刪除、更新等切片問題）。
+            // 也能確保 RemoveRange 時資料是穩定一致的。
             var oldIngredients = db.Ingredients.Where(i => i.RecipeId == id).ToList();
             db.Ingredients.RemoveRange(oldIngredients);
             foreach(var ing in recipeDetail.Ingredients)
             {
-                db.Ingredients.Add(new Ingredients
-                {
-
-                    RecipeId = id,
-                    IngredientName = ing.IngredientName,
-                    IsFlavoring = ing.IsFlavoring,
-                    Amount = ing.IngredientAmount,
-                    Unit = ing.IngredientUnit,
-                    CreatedAt = DateTime.Now,
-                    UpdatedAt = DateTime.Now,
-                });
+                var ingredients = new Ingredients();
+                ingredients.RecipeId = id;
+                ingredients.IngredientName = ing.IngredientName;
+                ingredients.IsFlavoring = ing.IsFlavoring;
+                ingredients.Amount = ing.IngredientAmount;
+                ingredients.Unit = ing.IngredientUnit;
+                ingredients.CreatedAt = DateTime.Now;
+                ingredients.UpdatedAt = DateTime.Now;
+                db.Ingredients.Add(ingredients);
             }
             db.SaveChanges();
 
@@ -362,8 +366,9 @@ namespace RecipeTest.Controllers
                 var normalizedTag = tag.Trim().ToLower();
                 // 嘗試找到既有 Tag
                 var existingTag = db.Tags.FirstOrDefault(t => t.TagName.ToLower() == normalizedTag);
+                bool alreadyExist = existingTag != null;
                 // 若沒有則新增
-                if (existingTag == null)
+                if (!alreadyExist)
                 {
                     existingTag = new Tags();
                     existingTag.TagName = tag.Trim();
@@ -383,12 +388,18 @@ namespace RecipeTest.Controllers
 
             }
             db.SaveChanges();
-                var res = new
+            //--------------------試做refreshToken-----------------------------------
+            string token = userhash.GetRawTokenFromHeader();
+            var payload = JwtAuthUtil.GetPayload(token);
+            var newToken = jwt.ExpRefreshToken(payload);
+
+            var res = new
                 {
                     StatusCode = 200,
                     msg = "食譜更新成功",
                     Id = id,
-                };
+                newToken = newToken,
+            };
                 return Ok(res);
             }
         //[HttpPut]
@@ -502,6 +513,9 @@ namespace RecipeTest.Controllers
         //    }
         //}
         //step3上傳影片
+        //--------------------------------上傳影片-----------------------------------
+
+
         [HttpPut]
         [Route("api/recipes/{id}/video")]
         [JwtAuthFilter]
@@ -509,7 +523,8 @@ namespace RecipeTest.Controllers
         {
             var user = userhash.GetUserFromJWT();
             var recipe = db.Recipes.FirstOrDefault(r => r.Id == id && r.UserId == user.Id);
-            if (recipe == null)
+            bool hasRecipe = recipe != null;
+            if (!hasRecipe)
             {
                 return NotFound();
             }
@@ -517,15 +532,29 @@ namespace RecipeTest.Controllers
             {
                 if (!Request.Content.IsMimeMultipartContent())
                     return BadRequest("請使用 Multipart 表單上傳影片");
+                // 🎯 圖片上傳的情境：使用內建的 Request.Content.ReadAsMultipartAsync()
+                // 系統會自動使用預設 Provider（可能是記憶體或磁碟），接收整個表單資料
+                // 通常用於小型檔案（圖片、文字欄位），資料讀入後常轉為 byte[] 再寫入本地
+
+                // 🎯 影片上傳的情境：為了支援 Vimeo 的 TUS 串流協定
+                // 我們主動提供一個 MemoryStream 的 Provider，讓系統將上傳資料寫入記憶體中
 
                 var provider = new MultipartMemoryStreamProvider();
+                // ⛳️ 將 multipart/form-data 的內容讀進 provider（由你準備）
+                // 系統會將每個欄位（例如 video）分開儲存在 provider.Contents 裡
                 await Request.Content.ReadAsMultipartAsync(provider);
-                var file = provider.Contents.FirstOrDefault();
+                // 📌 尋找欄位名稱為 "video" 的檔案內容
+
+                var file = provider.Contents.FirstOrDefault(c => c.Headers.ContentDisposition.Name.Trim('"') == "video");
                 if (file == null)
                     return BadRequest("未收到影片檔案");
 
+                // 🎥 取得影片的串流（不一次吃進記憶體，而是邊讀邊傳）
+                // Vimeo 的 tus 協定要求使用串流上傳
                 var fileStream = await file.ReadAsStreamAsync();
                 var fileSize = fileStream.Length;
+                // 取得影片總大小（Vimeo 建立 tus session 時需要知道 size）
+
                 Console.WriteLine($"影片大小: {fileSize} bytes");
 
                 using (var client = new HttpClient())
@@ -535,6 +564,7 @@ namespace RecipeTest.Controllers
                     string videoTitle = $"AC_{Guid.NewGuid()}";
 
                     // 1️⃣ 建立 Vimeo 影片上傳請求
+
                     var requestBody = new
                     {
                         name = videoTitle,
@@ -602,13 +632,18 @@ namespace RecipeTest.Controllers
                                 recipe.RecipeVideoLink = videoUri;
                                 //recipe.RecipeVideoDuration = (status == "complete") ? duration : null;
                                 db.SaveChanges();
+                                //--------------------試做refreshToken-----------------------------------
+                                string token = userhash.GetRawTokenFromHeader();
+                                var payload = JwtAuthUtil.GetPayload(token);
+                                var newToken = jwt.ExpRefreshToken(payload);
 
                                 return Ok(new
                                 {
                                     message = "影片上傳成功",
                                     videoUri,
                                     //duration = recipe.RecipeVideoDuration,
-                                    status
+                                    status,
+                                    newToken = newToken,
                                 });
                             }
                             else
@@ -628,6 +663,7 @@ namespace RecipeTest.Controllers
                 return InternalServerError(ex);
             }
         }
+        //---------------------------------------刪除食譜-----------------------------------------------
         [HttpDelete]
         [Route("api/recipes/{id}")]
         [JwtAuthFilter]

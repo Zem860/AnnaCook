@@ -1,0 +1,27 @@
+﻿<main>
+    <h1>Recipes</h1>
+
+    @{
+        var recipes = ViewBag.Recipes;
+    }
+
+
+    @if (recipes != null)
+    {
+        <ul>
+            @foreach (var r in recipes)
+            {
+
+                <li>@r.RecipeName</li>
+                <li>@foreach (var p in r.Photos) { 
+                        <img src=@p />
+                }</li> 
+                <p>@r.RecipeIntro</p>
+                <p>@r.CookingTime</p><p>分鐘</p>
+                <p>@r.Portion 人份</p>
+                <p>@r.Rating</p>
+
+     }
+        </ul>
+    }
+</main>

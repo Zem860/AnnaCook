@@ -16,6 +16,7 @@ using System.IO;
 using MailKit.Search;
 using Org.BouncyCastle.Bcpg;
 using System.Web.Http.Results;
+using Jose;
 
 
 namespace RecipeTest.Controllers
@@ -26,6 +27,8 @@ namespace RecipeTest.Controllers
         private UserEncryption userhash = new UserEncryption();
         private string localStorragePath = HttpContext.Current.Server.MapPath("~/UserPhotos");
         private string[] allowedExtensions = { ".jpg", ".jpeg", ".png" };
+        private JwtAuthUtil jwt = new JwtAuthUtil();
+
         //-------------------------------------------------------------------------------------------
         //這隻是會判斷是否為作者根據它顯示不同的profile
         [HttpGet]
@@ -34,6 +37,8 @@ namespace RecipeTest.Controllers
         {
             bool isMe = false;
             var user = db.Users.FirstOrDefault(u => u.DisplayId == displayId);
+            int? currentUserId = null;
+
             if (user == null)
             {
                 return NotFound();
@@ -44,6 +49,8 @@ namespace RecipeTest.Controllers
             {
                 try
                 {
+                    var payload = JwtAuthUtil.GetPayload(token);
+                    currentUserId = (int?)payload["Id"];
                     isMe = userhash.IsSelf(Request.Headers.Authorization?.Parameter, displayId);
                 }
                 catch (Exception ex)
@@ -58,6 +65,7 @@ namespace RecipeTest.Controllers
             {
                 userId = user.Id,
                 displayId = user.DisplayId,
+                isFollowing = db.Follows.Any(f =>f.UserId ==currentUserId  && f.FollowedUserId ==user.Id),
                 accountName = user.AccountName,
                 profilePhoto = user.AccountProfilePhoto,
                 userIntro = user.UserIntro,
@@ -147,7 +155,7 @@ namespace RecipeTest.Controllers
         [HttpGet]
         [Route("api/user/{displayId}/author-recipes")]
         [JwtAuthFilter]
-        public IHttpActionResult GetAuthorRecipes(string displayId, bool isPublished = true, int skip = 0, int take = 3) //預設是看有發布的要看未發布的要另外加
+        public IHttpActionResult GetAuthorRecipes(string displayId, bool isPublished = true, int page=1) //預設是看有發布的要看未發布的要另外加
         {
             var user = userhash.GetUserFromJWT();
             if (user.DisplayId != displayId)
@@ -157,6 +165,8 @@ namespace RecipeTest.Controllers
 
             var recipes = db.Recipes.Where(r => r.UserId == user.Id && r.IsPublished == isPublished).OrderByDescending(r => r.CreatedAt);
             int totalCount = recipes.Count();
+            int skip = (page - 1) * 3;
+            int take = 3;
             bool hasMore = (skip + take) < totalCount;
             var result = recipes.Skip(skip).Take(take).ToList();
             var data = result.Select(r => new
@@ -177,18 +187,24 @@ namespace RecipeTest.Controllers
                .Average(), 1),
                 commentCount = db.Comments.Count(c => c.RecipeId == r.Id),
                 favoritedCount = db.Favorites.Count(f => f.RecipeId == r.Id),
-                image = db.RecipePhotos
+                coverPhoto = db.RecipePhotos
              .Where(p => p.RecipeId == r.Id && p.IsCover)
              .Select(p => p.ImgUrl)
              .FirstOrDefault(),
             }).ToList();
 
+            //--------------------試做refreshToken-----------------------------------
+            string token = userhash.GetRawTokenFromHeader();
+            var payload = JwtAuthUtil.GetPayload(token);
+            var newToken = jwt.ExpRefreshToken(payload);
 
             return Ok(new
             {
                 statusCode = 200,
                 totalCount = totalCount,
-                data = data
+                hasMore = hasMore,
+                data = data,
+                newToken = newToken
             });
         }
         //-----------------------------獲取以收藏食譜(作者)----------------------
@@ -196,28 +212,32 @@ namespace RecipeTest.Controllers
         [Route("api/user/{displayId}/author-favorite-follow")]
         [JwtAuthFilter]
         public IHttpActionResult GetUserFavoritesAndFollows(
-           string displayId,
-           string table = "favorite",
-           int skip = 0,
-           int take = 3)
+            string displayId,
+            string table = "favorite", int page = 1)
         {
-            bool hasMore = false;
             var user = userhash.GetUserFromJWT();
             if (user.DisplayId != displayId)
             {
-                return Unauthorized(); // 防止別人偷打
+                return Unauthorized();
             }
+
+            if (page < 1) page = 1;
+            int take = 3;
+            int skip = (page - 1) * take;
 
             int totalCount = 0;
             object result = null;
             string msg = "";
 
+            var token = userhash.GetRawTokenFromHeader();
+            var payload = JwtAuthUtil.GetPayload(token);
+            var newToken = jwt.ExpRefreshToken(payload);
+
             if (table == "follow")
             {
-                var data = db.Follows.Where(f => f.UserId == user.Id);
+                var data = db.Follows.Where(f => f.UserId == user.Id).OrderByDescending(f => f.CreatedAt);
                 totalCount = data.Count();
-                hasMore = (skip + take) < totalCount;
-                result = data.OrderByDescending(f => f.CreatedAt).Skip(skip).Take(take).Select(f => new
+                result = data.Skip(skip).Take(take).Select(f => new
                 {
                     id = f.FollowedUser.Id,
                     displayId = f.FollowedUser.DisplayId,
@@ -231,10 +251,9 @@ namespace RecipeTest.Controllers
             }
             else if (table == "favorite")
             {
-                var data = db.Favorites.Where(f => f.UserId == user.Id);
+                var data = db.Favorites.Where(f => f.UserId == user.Id).OrderByDescending(f => f.CreatedAt);
                 totalCount = data.Count();
-                hasMore = (skip + take) < totalCount;
-                result = data.OrderByDescending(f=>f.CreatedAt).Skip(skip).Take(take).Select(f => new
+                result = data.Skip(skip).Take(take).Select(f => new
                 {
                     id = f.Recipe.Id,
                     displayId = f.Recipe.DisplayId,
@@ -259,12 +278,14 @@ namespace RecipeTest.Controllers
             return Ok(new
             {
                 StatusCode = 200,
-                hasMore,
-                msg,
+                hasMore = (skip + take) < totalCount,
                 totalCount,
-                data = result
+                msg,
+                data = result,
+                newToken = newToken
             });
         }
+
 
 
 
@@ -313,6 +334,11 @@ namespace RecipeTest.Controllers
 
             }
             existingUser.UpdatedAt = DateTime.Now;
+
+            //--------------------試做refreshToken-----------------------------------
+            string token = userhash.GetRawTokenFromHeader();
+            var payload = JwtAuthUtil.GetPayload(token);
+            var newToken = jwt.ExpRefreshToken(payload);
             db.SaveChanges();
             return Ok(new
             {
@@ -323,7 +349,8 @@ namespace RecipeTest.Controllers
                     accountName = existingUser.AccountName,
                     userIntro = existingUser.UserIntro,
                     profilePhoto = existingUser.AccountProfilePhoto,
-                }
+                },
+                newToken = newToken,
             });
         }
 

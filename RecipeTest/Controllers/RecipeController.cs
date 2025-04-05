@@ -115,6 +115,20 @@ namespace RecipeTest.Controllers
             {
                 recipe.ViewCount += 1;
                 db.SaveChanges();
+                bool isFavorite = false;
+                bool isFollowing = false;
+
+                string authHeader = HttpContext.Current.Request.Headers["Authorization"];
+                if (!string.IsNullOrEmpty(authHeader) && authHeader.StartsWith("Bearer "))
+                {
+                    var token = authHeader.Replace("Bearer ", "").Trim();
+                    var payload = JwtAuthUtil.GetPayload(token);
+                    int userId = (int)payload["Id"];
+
+                    isFavorite = db.Favorites.Any(f => f.UserId == userId && f.RecipeId == recipe.Id);
+                    isFollowing = db.Follows.Any(f => f.UserId == userId && f.FollowedUserId == recipe.UserId);
+                }
+
                 var recipeData = new
                 {
                     id = recipe.Id,
@@ -165,6 +179,8 @@ namespace RecipeTest.Controllers
                 var data = new
                 {
                     author = authorData,
+                    isFavorite = isFavorite,
+                    isFollowing = isFollowing,
                     recipe = recipeData,
                     ingredients = ingredients,
                     tags = tagData,

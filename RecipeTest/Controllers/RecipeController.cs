@@ -25,7 +25,7 @@ namespace RecipeTest.Controllers
     {
         public static readonly HttpMethod Patch = new HttpMethod("PATCH");
     }
-    public class TestRecipeController : ApiController
+    public class RecipeController : ApiController
     {
         private RecipeModel db = new RecipeModel();
         private string localStorragePath = HttpContext.Current.Server.MapPath("~/TestPhoto");
@@ -636,7 +636,6 @@ namespace RecipeTest.Controllers
                                 string token = userhash.GetRawTokenFromHeader();
                                 var payload = JwtAuthUtil.GetPayload(token);
                                 var newToken = jwt.ExpRefreshToken(payload);
-
                                 return Ok(new
                                 {
                                     message = "影片上傳成功",
@@ -693,13 +692,13 @@ namespace RecipeTest.Controllers
             var steps = db.Steps.Where(s => s.RecipeId == id).ToList();
             var stepIds = steps.Select(s => s.Id).ToList();
 
-            // 3-1️⃣ 刪除 SubSteps
-            var subSteps = db.SubSteps.Where(ss => stepIds.Contains(ss.StepId)).ToList();
-            db.SubSteps.RemoveRange(subSteps);
+            //// 3-1️⃣ 刪除 SubSteps
+            //var subSteps = db.SubSteps.Where(ss => stepIds.Contains(ss.StepId)).ToList();
+            //db.SubSteps.RemoveRange(subSteps);
 
-            // 3-2️⃣ 刪除 StepPhotos
-            var stepPhotos = db.StepPhotos.Where(sp => stepIds.Contains(sp.StepId)).ToList();
-            db.StepPhotos.RemoveRange(stepPhotos);
+            //// 3-2️⃣ 刪除 StepPhotos
+            //var stepPhotos = db.StepPhotos.Where(sp => stepIds.Contains(sp.StepId)).ToList();
+            //db.StepPhotos.RemoveRange(stepPhotos);
 
             // 3-3️⃣ 刪除 Steps
             db.Steps.RemoveRange(steps);
@@ -712,92 +711,23 @@ namespace RecipeTest.Controllers
             db.Favorites.RemoveRange(favorites);
             // 4️⃣ 刪除 Recipe 本身
             db.Recipes.Remove(recipe);
+
             db.SaveChanges();
+            //--------------------試做refreshToken-----------------------------------
+            string token = userhash.GetRawTokenFromHeader();
+            var payload = JwtAuthUtil.GetPayload(token);
+            var newToken = jwt.ExpRefreshToken(payload);
             var res = new
             {
                 StatusCode = 200,
                 msg = "食譜及其相關資料刪除成功",
-                Id = id
+                Id = id,
+                newToken = newToken
             };
             return Ok(res);
         }
 
-        //刪除食材
-        [HttpDelete]
-        [Route("api/recipes/{recipeId}/ingredient/{ingredientId}")]
-        [JwtAuthFilter]
-        public IHttpActionResult DeleteIngredient(int recipeId, int ingredientId)
-        {
-            var user = userhash.GetUserFromJWT();
-            var recipe = db.Recipes.FirstOrDefault(r => r.Id == recipeId && r.UserId == user.Id);
-            if (recipe ==null)
-            {
-                return NotFound();
-            }
-            //不想寫兩次所以用外鍵關聯的寫法
-            var ingredient = db.Ingredients.FirstOrDefault(i => i.Id == ingredientId && i.RecipeId == recipeId);
-            if (ingredient == null || recipe.UserId!=user.Id)
-            {
-                return NotFound();
-            }
-            db.Ingredients.Remove(ingredient);
-            db.SaveChanges();
-            var res = new
-            {
-                StatusCode = 200,
-                msg = "食材刪除成功",
-                Id = ingredientId,
-            };
-            return Ok(res);
-        }
-
-      
-
-      
-
-        [HttpPost]
-        [Route("api/recipes/{id}/steps")]
-        public IHttpActionResult CreateStep(int id)
-        {
-            var recipeExists = db.Recipes.Any(r => r.Id == id);
-            if (!recipeExists)
-            {
-                return NotFound(); // 或 BadRequest("該食譜不存在")
-            }
-
-            int latestOrder = db.Steps.Where(s => s.RecipeId == id)
-                .Select(s => s.StepOrder)
-                .DefaultIfEmpty(0)
-                .Max();
-            decimal startTime = db.Steps.Where(s => s.RecipeId == id)
-            .Select(s => s.StepOrder)
-            .DefaultIfEmpty(0)
-            .Max();
-            int defaultDuration = 10; // 預設 10 秒
-
-            var step = new Steps
-            {
-                RecipeId = id,
-                StepOrder = latestOrder + 1,
-                VideoStart = Convert.ToInt32(startTime),
-                VideoEnd = Convert.ToInt32(startTime + defaultDuration),
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now,
-            };
-
-            db.Steps.Add(step);
-            db.SaveChanges();
-
-            var res = new
-            {
-                StatusCode = 200,
-                msg = $"步驟{step.Id}新增成功",
-                stepId = step.Id,
-            };
-
-            return Ok(res);
-        }
-
+        //---------------------------------------更新食譜步驟-----------------------------------------------
         [HttpPut]
         [Route("api/recipes/{id}/steps/bulk")]
         [JwtAuthFilter]
@@ -830,15 +760,20 @@ namespace RecipeTest.Controllers
             }
 
             db.SaveChanges();
+            //--------------------試做refreshToken-----------------------------------
+            string token = userhash.GetRawTokenFromHeader();
+            var payload = JwtAuthUtil.GetPayload(token);
+            var newToken = jwt.ExpRefreshToken(payload);
 
             return Ok(new
             {
                 StatusCode = 200,
                 msg = "步驟已成功更新（舊的已清除）",
-                stepCount = steps.Count
+                stepCount = steps.Count,
+                newToken = newToken,
             });
         }
-
+        //------------------------------------食譜發布狀態更新-----------------------------------
         [HttpPatch]
         [Route("api/recipes/{id}/publish")]
         [JwtAuthFilter]
@@ -886,31 +821,47 @@ namespace RecipeTest.Controllers
         }
 
 
+        //----------多餘的和前端對完之後可以刪------------------------------------------------------------------------------------------
         [HttpPut]
         [Route("api/recipes/{id}/steps/{stepId}")]
+        [JwtAuthFilter]
         public IHttpActionResult UpdateStep(int id, int stepId, StepDto stepData)
         {
-            var step =  db.Steps.FirstOrDefault(s => s.Id == stepId && s.RecipeId == id);
+            var user = userhash.GetUserFromJWT();
+            //檢查源頭的主人是不是同一個人
+            var recipe = db.Recipes.FirstOrDefault(r => r.Id == id && r.UserId == user.Id);
+            if (recipe == null)
+            {
+                return NotFound();
+            }
+            var step = db.Steps.FirstOrDefault(s => s.Id == stepId && s.RecipeId == id);
             if (step == null)
             {
                 return NotFound();
             }
 
-            
+
             step.StepDescription = stepData.Description;
             step.VideoStart = stepData.StartTime;
             step.VideoEnd = stepData.EndTime;
             step.UpdatedAt = DateTime.Now;
             db.SaveChanges();
 
+            //--------------------試做refreshToken-----------------------------------
+            string token = userhash.GetRawTokenFromHeader();
+            var payload = JwtAuthUtil.GetPayload(token);
+            var newToken = jwt.ExpRefreshToken(payload);
+
             var res = new
             {
                 StatusCode = 200,
                 msg = $"步驟更新成功",
                 stepId = stepId,
+                newToken = newToken,
             };
             return Ok(res);
         }
+
 
         [HttpDelete]
         [Route("api/recipes/{id}/steps/{stepId}")]
@@ -931,7 +882,7 @@ namespace RecipeTest.Controllers
                 int deletedOrder = step.StepOrder;
                 var followingSteps = db.Steps.Where(s => s.RecipeId == id && s.StepOrder > deletedOrder).ToList();
 
-                foreach(var s in followingSteps)
+                foreach (var s in followingSteps)
                 {
                     s.StepOrder -= 1;
                     s.UpdatedAt = DateTime.Now;
@@ -941,11 +892,17 @@ namespace RecipeTest.Controllers
                 db.SaveChanges();
             }
 
+            //--------------------試做refreshToken-----------------------------------
+            string token = userhash.GetRawTokenFromHeader();
+            var payload = JwtAuthUtil.GetPayload(token);
+            var newToken = jwt.ExpRefreshToken(payload);
+
             var res = new
             {
                 StatusCode = hasData ? 200 : 404,
                 msg = hasData ? $"刪除成功" : $"步驟不存在",
-                Id=stepId,
+                Id = stepId,
+                newToken = newToken,
             };
 
             return Ok(res);

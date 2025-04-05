@@ -907,5 +907,40 @@ namespace RecipeTest.Controllers
 
             return Ok(res);
         }
+
+        [HttpDelete]
+        [Route("api/recipes/{recipeId}/ingredient/{ingredientId}")]
+        [JwtAuthFilter]
+        public IHttpActionResult DeleteIngredient(int recipeId, int ingredientId)
+        {
+            var user = userhash.GetUserFromJWT();
+            var recipe = db.Recipes.FirstOrDefault(r => r.Id == recipeId && r.UserId == user.Id);
+            if (recipe == null)
+            {
+                return NotFound();
+            }
+            string ingName = "";
+            //不想寫兩次所以用外鍵關聯的寫法
+            var ingredient = db.Ingredients.FirstOrDefault(i => i.Id == ingredientId && i.RecipeId == recipeId);
+            if (ingredient == null || recipe.UserId != user.Id)
+            {
+                return NotFound();
+            }
+            ingName = ingredient.IngredientName;
+            db.Ingredients.Remove(ingredient);
+            db.SaveChanges();
+            //--------------------試做refreshToken-----------------------------------
+            string token = userhash.GetRawTokenFromHeader();
+            var payload = JwtAuthUtil.GetPayload(token);
+            var newToken = jwt.ExpRefreshToken(payload);
+            var res = new
+            {
+                StatusCode = 200,
+                msg = $"{ingName}食材刪除成功",
+                Id = ingredientId,
+            };
+            return Ok(res);
+        }
+
     }
 }

@@ -11,12 +11,17 @@ using RecipeTest.Security;
 using static RecipeTest.Pages.UserRelated;
 using MyWebApiProject.Security;
 using Antlr.Runtime.Tree;
+using Jose;
 namespace RecipeTest.Controllers
 {
     public class UsersRecipeController : ApiController
     {
         private RecipeModel db = new RecipeModel();
         private UserEncryption userhash = new UserEncryption();
+        private JwtAuthUtil jwt = new JwtAuthUtil();
+
+        //---------------------獲取食譜評分評論------------------------------
+
         [HttpGet]
         [Route("api/recipes/{recipeId}/rating-comment")]
         public IHttpActionResult getRatingComment(int recipeId, int page = 1)
@@ -59,6 +64,8 @@ namespace RecipeTest.Controllers
             return Ok(res);
         }
 
+        //---------------------新增食譜評分與評論------------------------------
+
         [HttpPost]
         [Route("api/recipes/{recipeId}/rating-comment")]
         [JwtAuthFilter]
@@ -69,12 +76,13 @@ namespace RecipeTest.Controllers
             var recipe = db.Recipes.FirstOrDefault(r => r.Id == recipeId);
             if (recipe.UserId == user.Id)
             {
-                return BadRequest("自己不要給自己評分");
+                return BadRequest("自己不能給自己評分");
             }
 
             // 檢查是否已評分
             var rating = db.Ratings.FirstOrDefault(r => r.UserId == user.Id && r.RecipeId == recipeId);
-            if (rating != null)
+            bool hasRating = (rating != null);
+            if (hasRating)
             {
                 return BadRequest("你已經評分過了");
             } else
@@ -99,18 +107,31 @@ namespace RecipeTest.Controllers
                         comment.CreatedAt = DateTime.Now;
                         comment.UpdatedAt = DateTime.Now;
                         db.Comments.Add(comment);
-                        db.SaveChanges();
-
                     }
+
+                    db.SaveChanges();
+                    //計算平均評分
                     var ratings = db.Ratings.Where(r => r.RecipeId == recipeId);
                     var avg = Math.Round(ratings.Average(r => r.Rating), 1);
-                    bool hasRecipe = (recipe != null);
-                    if (hasRecipe)
+                    recipe.Rating = (decimal)avg;
+                    db.SaveChanges(); // 儲存所有變更
+                   //--------------------試做refreshToken-----------------------------------
+                    string token = userhash.GetRawTokenFromHeader();
+                    var payload = JwtAuthUtil.GetPayload(token);
+                    var newToken = jwt.ExpRefreshToken(payload);
+                    var res = new
                     {
-                        recipe.Rating = (decimal)avg;
-                        db.SaveChanges();
-                    }
+                        msg = "評分與留言成功",
+                        data = new
+                        {
+                            recipeId = recipeId,
+                            rating = dto.Rating,
+                            comment = dto.CommentContent,
+                            newToken = newToken,
+                        }
+                    };
 
+                    return Ok(res);
                 }
                 catch(Exception ex)
                 {
@@ -120,22 +141,10 @@ namespace RecipeTest.Controllers
                         error = ex.Message
                     });
                 }
-            }
-            var res = new
-            {
-                msg = "評分與留言成功",
-                data = new
-                {
-                    recipeId = recipeId,
-                    rating = dto.Rating,
-                    comment = dto.CommentContent
-                }
-            };
-
-            return Ok(res);         
+            }       
         }
 
-
+        //---------------------使用者退追-------------------------------
         [HttpDelete]
         [Route("api/users/{id}/follow")]
         [JwtAuthFilter]
@@ -144,19 +153,27 @@ namespace RecipeTest.Controllers
             var user = userhash.GetUserFromJWT();
             var follow = db.Follows.FirstOrDefault(f => f.UserId == user.Id && f.FollowedUserId == id);
             bool hasData = follow != null;
+            var newToken = "";
             if (hasData)
             {
                 db.Follows.Remove(follow);
                 db.SaveChanges();
+                //--------------------試做refreshToken-----------------------------------
+                string token = userhash.GetRawTokenFromHeader();
+                var payload = JwtAuthUtil.GetPayload(token);
+                newToken = jwt.ExpRefreshToken(payload);
             }
+
             var res = new
             {
                 StatusCode = hasData ? 200 : 400,
                 msg = hasData ? "取消追蹤成功" : "找不到這筆追蹤",
+                Id = hasData?id:-1,
+                newToken = hasData ? newToken : null,
             };
             return Ok(res);
         }
-
+        //---------------------使用者追隨-------------------------------
         [HttpPost]
         [Route("api/users/{id}/follow")]
         [JwtAuthFilter]
@@ -166,6 +183,12 @@ namespace RecipeTest.Controllers
             if (user.Id == id)
             {
                 return BadRequest("使用者不能追蹤自己");
+            }
+            var target = db.Users.FirstOrDefault(u => u.Id == id);
+            bool hasTarget = target != null;
+            if (!hasTarget)
+            {
+                return BadRequest("找不到這個使用者");
             }
             var follow = db.Follows.FirstOrDefault(f => f.UserId == user.Id && f.FollowedUserId == id);
             bool hasData = follow != null;
@@ -180,16 +203,23 @@ namespace RecipeTest.Controllers
             follows.UpdatedAt = DateTime.Now;
             db.Follows.Add(follows);
             db.SaveChanges();
-
+            //--------------------試做refreshToken-----------------------------------
+            string token = userhash.GetRawTokenFromHeader();
+            var payload = JwtAuthUtil.GetPayload(token);
+            var newToken = jwt.ExpRefreshToken(payload);
             var res = new
             {
                 StatusCode = 200,
                 msg = "追蹤成功",
+                Id = id,
+                newToken = newToken,
 
             };
 
             return Ok(res);
         }
+
+        //---------------------使用者取消收藏食譜-------------------------------
         [HttpDelete]
         [Route("api/recipes/{id}/favorite")]
         [JwtAuthFilter]
@@ -198,38 +228,65 @@ namespace RecipeTest.Controllers
             var user = userhash.GetUserFromJWT();
             var favorite = db.Favorites.FirstOrDefault(f => f.UserId == user.Id && f.RecipeId == id);
             bool hasData = favorite != null;
+            var newToken = "";
             if (hasData)
             {
                 db.Favorites.Remove(favorite);
                 db.SaveChanges();
+                //--------------------試做refreshToken-----------------------------------
+                string token = userhash.GetRawTokenFromHeader();
+                var payload = JwtAuthUtil.GetPayload(token);
+                newToken = jwt.ExpRefreshToken(payload);
             }
 
             var res = new
             {
                 StatusCode = hasData ? 200 : 400,
                 msg = hasData ? "移除收藏成功" : "找不到這筆收藏",
+                id = hasData ? id:-1,
+                newToken = hasData?newToken:null,
             };
             return Ok(res);
         }
 
-
+        //---------------------使用者收藏食譜-------------------------------
         [HttpPost]
         [Route("api/recipes/{id}/favorite")]
         [JwtAuthFilter]
         public IHttpActionResult AddFavorite(int id)
         {
             var user = userhash.GetUserFromJWT();
+            var recipe = db.Recipes.FirstOrDefault(r => r.Id == id);
+            if (recipe == null)
+            {
+                return BadRequest("找不到該食譜");
+            }
             var favorite = db.Favorites.FirstOrDefault(f => f.UserId == user.Id && f.RecipeId == id);
-            if (favorite != null)
+            bool hasData = favorite != null;
+            if (hasData)
             {
                 return BadRequest("已收藏");
             }
             favorite = new Favorites();
             favorite.UserId = user.Id;
             favorite.RecipeId = id;
+            favorite.CreatedAt = DateTime.Now;
+            favorite.UpdatedAt = DateTime.Now;
             db.Favorites.Add(favorite);
             db.SaveChanges();
-            return Ok(new { msg = "收藏成功" });
+            //--------------------試做refreshToken-----------------------------------
+            string token = userhash.GetRawTokenFromHeader();
+            var payload = JwtAuthUtil.GetPayload(token);
+            var newToken = jwt.ExpRefreshToken(payload);
+
+            var res = new
+            {
+                StatusCode = 200,
+                msg = "收藏成功",
+                Id = id,
+                newToken = newToken,
+            };
+            return Ok(res);
         }
 
         [HttpDelete]

@@ -12,6 +12,7 @@ using static RecipeTest.Pages.UserRelated;
 using MyWebApiProject.Security;
 using Antlr.Runtime.Tree;
 using Jose;
+using Org.BouncyCastle.Asn1.Crmf;
 namespace RecipeTest.Controllers
 {
     public class UsersRecipeController : ApiController
@@ -19,6 +20,34 @@ namespace RecipeTest.Controllers
         private RecipeModel db = new RecipeModel();
         private UserEncryption userhash = new UserEncryption();
         private JwtAuthUtil jwt = new JwtAuthUtil();
+
+        //--------------分享食譜----------------
+        [HttpPost]
+        [Route("api/recipes/{id}/share")]
+        [JwtAuthFilter]
+        public IHttpActionResult ShareRecipe(int id)
+        {
+            var recipe = db.Recipes.FirstOrDefault(r => r.Id == id);
+            if (recipe == null)
+            {
+                return NotFound();
+            }
+
+            // 限制只能分享公開食譜
+            if (!recipe.IsPublished)
+            {
+                return Ok(new { StatusCode = 400, msg = "尚未公開的食譜無法分享" });
+            }
+
+            recipe.SharedCount += 1;
+            db.SaveChanges();
+
+            return Ok(new
+            {
+                StatusCode = 200,
+                msg = "分享成功"
+            });
+        }
 
         //---------------------獲取食譜評分評論------------------------------
 

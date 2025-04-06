@@ -221,6 +221,25 @@ namespace RecipeTest.Controllers
             {
                 return NotFound();
             }
+            if (!recipe.IsPublished)
+            {
+                // 判斷是否為作者本人
+                string authHeader = HttpContext.Current.Request.Headers["Authorization"];
+                if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
+                {
+                    return Ok(new { StatusCode = 401, msg = "尚未公開的食譜無法觀看教學" });
+                }
+
+                var token = authHeader.Replace("Bearer ", "").Trim();
+                var payload = JwtAuthUtil.GetPayload(token);
+                int userId = (int)payload["Id"];
+
+                // 不是作者就不能看
+                if (recipe.UserId != userId)
+                {
+                    return Ok(new { StatusCode = 401, msg = "尚未公開的食譜無法觀看教學" });
+                }
+            }
             var stepsData = recipe.Steps.Select(s => new
             {
                 id = s.Id,

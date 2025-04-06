@@ -106,6 +106,7 @@ namespace RecipeTest.Controllers
 
         //--------------------瀏覽單一食譜-----------------------------------------
         //食譜內頁get//食譜細項
+        //目前是想說不限制食譜的狀態(草稿/已發布)都可以看，因為作者可能會想要看
         [HttpGet]
         [Route("api/recipes/{id}")]
         public IHttpActionResult GetRecipe(int id)
@@ -118,6 +119,7 @@ namespace RecipeTest.Controllers
                 db.SaveChanges();
                 bool isFavorite = false;
                 bool isFollowing = false;
+                bool isAuthor = false;
 
                 string authHeader = HttpContext.Current.Request.Headers["Authorization"];
                 if (!string.IsNullOrEmpty(authHeader) && authHeader.StartsWith("Bearer "))
@@ -125,9 +127,13 @@ namespace RecipeTest.Controllers
                     var token = authHeader.Replace("Bearer ", "").Trim();
                     var payload = JwtAuthUtil.GetPayload(token);
                     int userId = (int)payload["Id"];
-
+                    isAuthor = recipe.UserId == userId;
                     isFavorite = db.Favorites.Any(f => f.UserId == userId && f.RecipeId == recipe.Id);
                     isFollowing = db.Follows.Any(f => f.UserId == userId && f.FollowedUserId == recipe.UserId);
+                }
+                if (!recipe.IsPublished && !isAuthor)
+                {
+                    return Ok( new { StatusCode = 401, msg = "非作者不能偷看草稿" }); // ⛔️ 非作者不能看草稿
                 }
 
                 var recipeData = new
@@ -179,6 +185,7 @@ namespace RecipeTest.Controllers
                 //);
                 var data = new
                 {
+                    isAuthor = isAuthor,
                     author = authorData,
                     isFavorite = isFavorite,
                     isFollowing = isFollowing,

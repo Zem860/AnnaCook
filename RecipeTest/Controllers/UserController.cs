@@ -68,7 +68,7 @@ namespace RecipeTest.Controllers
                 isFollowing = db.Follows.Any(f =>f.UserId ==currentUserId  && f.FollowedUserId ==user.Id),
                 accountName = user.AccountName,
                 profilePhoto = user.AccountProfilePhoto,
-                userIntro = user.UserIntro,
+                description = user.UserIntro,
                 recipeCount = db.Recipes.Count(r => r.UserId == user.Id),
                 followerCount = db.Follows.Count(f => f.FollowedUserId == user.Id),
             };
@@ -81,7 +81,9 @@ namespace RecipeTest.Controllers
                 userId = user.Id,
                 displayId = user.DisplayId,
                 accountName = user.AccountName,
-
+                accountEmail=user.AccountEmail,
+                profilePhoto = user.AccountProfilePhoto,
+                description = user.UserIntro,
                 followingCount = db.Follows.Count(f => f.UserId == user.Id),
                 followerCount = db.Follows.Count(f => f.FollowedUserId == user.Id),
 

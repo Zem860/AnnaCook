@@ -45,7 +45,7 @@ namespace RecipeTest.Controllers
             {
                 id = r.Id,
                 recipeName = r.RecipeName,
-                coverPhoto = r.RecipesPhotos.FirstOrDefault().ImgUrl,
+                coverPhoto = r.RecipesPhotos.FirstOrDefault(p=>p.IsCover).ImgUrl,
                 description = r.RecipeIntro,
                 portion = r.Portion,
                 cookingTime = r.CookingTime,

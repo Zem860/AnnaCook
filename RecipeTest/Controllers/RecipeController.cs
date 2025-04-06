@@ -18,6 +18,7 @@ using Newtonsoft.Json.Linq;
 using RecipeTest.Security;
 using MyWebApiProject.Security;
 using RecipeTest.Enums;
+using Org.BouncyCastle.Asn1.X509;
 
 namespace RecipeTest.Controllers
 {
@@ -960,9 +961,6 @@ namespace RecipeTest.Controllers
                     newToken = newToken,
                 };
                 return Ok(res);
-
-
-
             }
             catch
             {
@@ -974,9 +972,79 @@ namespace RecipeTest.Controllers
                 return Ok(res);
             }
         }
+        //---------------------------------------獲取食譜的草稿--------------------------------------
+        [HttpGet]
+        [Route("api/recipes/{id}/draft")]
+        [JwtAuthFilter]
+        public IHttpActionResult getRecipeDraft(int id)
+        {
+            var user = userhash.GetUserFromJWT();
+            //有設定只能獲取草稿
+            var recipe = db.Recipes.FirstOrDefault(r => r.Id == id && r.UserId == user.Id && !r.IsPublished);
+            if (recipe == null)
+            {
+                return NotFound();
+            }
+            var recipeData = new
+            {
+                id = recipe.Id,
+                displayId = recipe.DisplayId,             
+                recipeName = recipe.RecipeName,
+                isPublished = recipe.IsPublished,
+                coverPhoto = recipe.RecipesPhotos.FirstOrDefault(p => p.IsCover)?.ImgUrl,
+                description = recipe.RecipeIntro,
+                cookingTime = recipe.CookingTime,
+                portion = recipe.Portion,
+                videoId = recipe.RecipeVideoLink,
+            };
+            var ingredients = recipe.Ingredients.Where(i => i.RecipeId == id);
+
+            var ingredientData = ingredients.Select(i => new
+            {
+                ingredientId = i.Id,
+                ingredientName = i.IngredientName,
+                ingredientAmount = i.Amount,
+                ingredientUnit = i.Unit,
+                isFlavoring = i.IsFlavoring,
+            }).ToList();
+            var tagsPointer = recipe.RecipeTags.Where(rt => rt.RecipeId == id);
+            var tagData = tagsPointer.Select(t => new
+            {
+                tagId =t.Tags.Id,
+                tagName = t.Tags.TagName,
+            }).ToList();
+            var steps = recipe.Steps.Where(s=>s.RecipeId==id).OrderBy(s => s.StepOrder).ToList();
+            var stepData = steps.Select(s => new
+            {
+                stepId = s.Id,
+                stepOrder = s.StepOrder,
+                stepDescription = s.StepDescription,
+                videoStart = s.VideoStart,
+                videoEnd = s.VideoEnd,
+            }).ToList();
 
 
-            [HttpDelete]
+            //--------------------試做refreshToken-----------------------------------
+            string token = userhash.GetRawTokenFromHeader();
+            var payload = JwtAuthUtil.GetPayload(token);
+            var newToken = jwt.ExpRefreshToken(payload);
+            var res = new
+            {
+                StatusCode = 200,
+                msg = "草稿獲取成功",
+                recipe = recipeData,
+                ingredients = ingredientData,
+                tags = tagData,
+                steps = stepData,
+                newToken = newToken,
+            };
+
+
+
+            return Ok(res);
+        }
+
+        [HttpDelete]
         [Route("api/recipes/{id}/steps/{stepId}")]
         [JwtAuthFilter]
         public IHttpActionResult DeleteStep(int id, int stepId)

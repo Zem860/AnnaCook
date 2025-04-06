@@ -18,8 +18,8 @@ namespace RecipeTest.Pages
         {
             public int StepId { get; set; }
             public string Description { get; set; }  // 對應說明
-            public int StartTime { get; set; }       // 對應影片開始秒數
-            public int EndTime { get; set; }         // 對應影片結束秒數
+            public decimal StartTime { get; set; }       // 對應影片開始秒數
+            public decimal EndTime { get; set; }         // 對應影片結束秒數
 
         }
         public class UserRecipeDetail

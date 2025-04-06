@@ -30,14 +30,14 @@ namespace RecipeTest.Models
         [Display(Name = "步驟說明")]
         public string StepDescription { get; set; }
         [Required]
-        [Column(TypeName = "int")]
+        [Column(TypeName = "decimal")]
         [Display(Name = "影片開始秒數")]
-        public int VideoStart { get; set; }
+        public decimal VideoStart { get; set; }
 
         [Required]
-        [Column(TypeName = "int")]
+        [Column(TypeName = "decimal")]
         [Display(Name = "影片結束秒數")]
-        public int VideoEnd { get; set; }
+        public decimal VideoEnd { get; set; }
 
         [Column(TypeName = "DATETIME")]
         [Display(Name = "創建時間")]

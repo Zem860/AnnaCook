@@ -878,8 +878,105 @@ namespace RecipeTest.Controllers
             return Ok(res);
         }
 
+        //---------------------------------------更新食譜的封面以及名稱-------------------------------------
+        [HttpPut]
+        [Route("api/recipes/{id}/name-photos")]
+        [JwtAuthFilter]
+        public async Task<IHttpActionResult> UpdateRecipeTitleAndPhoto(int id)
+        {
+            var user = userhash.GetUserFromJWT();
+            if (!Request.Content.IsMimeMultipartContent())
+            {
+                return BadRequest("請使用multipart/form-data");
+            }
+            if (!Directory.Exists(localStorragePath))
+            {
+                Directory.CreateDirectory(localStorragePath);
+            }
 
-        [HttpDelete]
+            var provider = await Request.Content.ReadAsMultipartAsync();
+            var contents = provider.Contents;
+            //取得食譜名稱
+            string recipeName = contents.FirstOrDefault(c => c.Headers.ContentDisposition.Name.Trim('"') == "recipeName").ReadAsStringAsync().Result;
+            if (string.IsNullOrEmpty(recipeName))
+            {
+                return BadRequest("食譜名稱為必填欄位");
+
+            }
+            try
+            {
+                var recipe = db.Recipes.FirstOrDefault(r => r.Id == id && r.UserId == user.Id);
+                if (recipe == null)
+                {
+                    return Ok(new { StatusCode = 400, msg = "查無此食譜" });
+                }
+                recipe.RecipeName = recipeName;
+                recipe.UpdatedAt = DateTime.Now;
+                //db.SaveChanges();
+                //處理圖片-----------------------------------------------------------------
+                var photo = contents.FirstOrDefault(c => c.Headers.ContentDisposition.Name.Trim('"') == "photo");
+                if (photo == null)
+                {
+                    return BadRequest("請上傳圖片");
+                }
+                string fileName = photo.Headers.ContentDisposition.FileName.Trim('"');
+                string extension = Path.GetExtension(fileName).ToLower();
+                if (!allowedExtensions.Contains(extension))
+                {
+                    return BadRequest("檔案格式錯誤");
+                }
+                //重新命名檔案(並確認相對與實體路徑)
+                string newFileName = Guid.NewGuid().ToString("N") + extension;
+                string relativePath = "/TestPhoto/" + newFileName;
+                string fullPath = Path.Combine(localStorragePath, newFileName);
+                //把圖片檔案抓出來
+                byte[] fileBytes = await photo.ReadAsByteArrayAsync();
+                File.WriteAllBytes(fullPath, fileBytes);
+                var recipePhoto = new RecipePhotos();
+                recipePhoto.RecipeId = id;
+                recipePhoto.ImgUrl = relativePath;
+                recipePhoto.IsCover = true;
+                recipePhoto.CreatedAt = DateTime.Now;
+                recipePhoto.UpdatedAt = DateTime.Now;
+                var recipePhotos = db.RecipePhotos.Where(rp => rp.RecipeId == id).ToList();
+                foreach (var rp in recipePhotos)
+                {
+                    rp.IsCover = false;
+                    rp.UpdatedAt = DateTime.Now;
+                }
+                db.RecipePhotos.Add(recipePhoto);
+                db.SaveChanges();
+
+                //--------------------試做refreshToken-----------------------------------
+                string token = userhash.GetRawTokenFromHeader();
+                var payload = JwtAuthUtil.GetPayload(token);
+                var newToken = jwt.ExpRefreshToken(payload);
+
+                var res = new
+                {
+                    StatusCode = 200,
+                    msg = "食譜名稱圖片更新成功",
+                    Id = recipe.Id,
+                    newToken = newToken,
+                };
+                return Ok(res);
+
+
+
+            }
+            catch
+            {
+                var res = new
+                {
+                    StatusCode = 500,
+                    msg = "食譜名稱圖片更新失敗",
+                };
+                return Ok(res);
+            }
+        }
+
+
+            [HttpDelete]
         [Route("api/recipes/{id}/steps/{stepId}")]
         [JwtAuthFilter]
         public IHttpActionResult DeleteStep(int id, int stepId)

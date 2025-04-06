@@ -366,6 +366,7 @@ namespace RecipeTest.Controllers
             }
         }
         //---------------------以下暫時保留------------------------------
+        //---------------------使用者刪除評分評論------------------------
         [HttpDelete]
         [Route("api/recipes/{recipeId}/rating-comment")]
         [JwtAuthFilter]
@@ -375,7 +376,7 @@ namespace RecipeTest.Controllers
             var rating = db.Ratings.FirstOrDefault(r => r.UserId == user.Id && r.RecipeId == recipeId);
             if (rating == null)
             {
-                return BadRequest("你尚未評分");
+                return Ok(new { StatusCode=400, msg="你尚未評分"});
             }
             else
             {
@@ -384,6 +385,7 @@ namespace RecipeTest.Controllers
                     db.Ratings.Remove(rating);
                     var comments = db.Comments.FirstOrDefault(c => c.UserId == user.Id && c.RecipeId == recipeId);
                     db.Comments.Remove(comments);
+                    db.SaveChanges();
                     var ratings = db.Ratings.Where(r => r.RecipeId == recipeId);
                     var avg = Math.Round(ratings.Average(r => r.Rating), 1);
                     var recipe = db.Recipes.FirstOrDefault(r => r.Id == recipeId);
@@ -403,13 +405,20 @@ namespace RecipeTest.Controllers
                     });
                 }
             }
+
+            //--------------------試做refreshToken-----------------------------------
+            string token = userhash.GetRawTokenFromHeader();
+            var payload = JwtAuthUtil.GetPayload(token);
+            var newToken = jwt.ExpRefreshToken(payload);
             var res = new
             {
+                StatusCode = 200,
                 msg = "刪除評分與留言成功",
                 data = new
                 {
                     recipeId = recipeId
-                }
+                },
+                newToken = newToken,
             };
             return Ok(res);
         }

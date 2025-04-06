@@ -261,6 +261,14 @@ namespace RecipeTest.Controllers
             {
                 return BadRequest("找不到該食譜");
             }
+            if (!recipe.IsPublished)
+            {
+                return Ok(new {
+                    StatusCode = 401,
+                    msg= "該食譜尚未公開不能收藏",
+                });
+            }
+
             var favorite = db.Favorites.FirstOrDefault(f => f.UserId == user.Id && f.RecipeId == id);
             bool hasData = favorite != null;
             if (hasData)

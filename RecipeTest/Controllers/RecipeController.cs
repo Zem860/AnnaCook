@@ -296,8 +296,25 @@ namespace RecipeTest.Controllers
             try
             {
                 //建立唯一顯示ID
-                int count = db.Recipes.Count();
-                string displayId = "R" + (count + 1).ToString("D6");
+                // 建立唯一顯示ID（避免重複）
+                string lastDisplayId = db.Recipes
+                    .OrderByDescending(r => r.DisplayId)
+                    .Select(r => r.DisplayId)
+                    .FirstOrDefault();
+
+                int number = 0;
+                if (!string.IsNullOrEmpty(lastDisplayId) && lastDisplayId.Length == 7)
+                {
+                    int.TryParse(lastDisplayId.Substring(1), out number);
+                }
+                string displayId = "R" + (number + 1).ToString("D6");
+
+                // （可選）加保險防呆
+                if (db.Recipes.Any(r => r.DisplayId == displayId))
+                {
+                    return BadRequest("DisplayId 重複，請再試一次");
+                }
+
                 var recipe = new Recipes();
                 recipe.RecipeName = recipeName;
                 recipe.DisplayId = displayId;
@@ -615,7 +632,12 @@ namespace RecipeTest.Controllers
                         {
                             approach = "tus",
                             size = fileSize
+                        },
+                        privacy = new
+                        {
+                            view = "anybody" // 設定為公開
                         }
+
                     };
 
                     var content = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");

@@ -20,6 +20,7 @@ using System.Web.Configuration;
 using MyWebApiProject.Security;
 using Org.BouncyCastle.Asn1.Ocsp;
 using static RecipeTest.Pages.UserRelated;
+using System.Text.RegularExpressions;
 
 
 namespace RecipeTest.Controllers
@@ -45,11 +46,17 @@ namespace RecipeTest.Controllers
         [Route("api/auth/register")]
         public IHttpActionResult LocalRegister(UserRelated.ClientRegisterData request)
         {
-        var userExist = db.Users.FirstOrDefault(u => u.AccountEmail == request.AccountEmail);
+            var userExist = db.Users.FirstOrDefault(u => u.AccountEmail == request.AccountEmail);
             bool alreadyRegistered = userExist != null;
             if (!alreadyRegistered)
             {
                 string password = request.Password;
+                // 用正則表達式檢查密碼格式
+                string pattern = @"^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$";
+                if (!Regex.IsMatch(password, pattern))
+                {
+                    return Ok(new { StatusCode = 400, msg = "密碼格式錯誤，需至少8碼，包含至少一個大寫英文字母與一個數字" });
+                }
                 byte[] salt = userhash.createSalt();
                 string stringSalt = Convert.ToBase64String(salt);
                 byte[] hashedPassword = userhash.HashPassword(password, salt);

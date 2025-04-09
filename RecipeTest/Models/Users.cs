@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Newtonsoft.Json;
 using System.ComponentModel;
 using RecipeTest.Enums;
+using System.Web.UI.WebControls;
 namespace RecipeTest.Models
 {
     public class Users
@@ -56,6 +57,10 @@ namespace RecipeTest.Models
         [Column(TypeName = "bit")]
         [Display(Name = "是否以驗證")]
         public bool IsVerified { get; set; } = false;
+
+        [Column(TypeName ="bit")]
+        [Display(Name = "是否已停權")]
+        public bool IsBanned { get; set; } = false;
 
 
         [Column(TypeName = "DATETIME")]

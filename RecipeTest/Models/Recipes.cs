@@ -42,7 +42,7 @@ namespace RecipeTest.Models
         [Display(Name = "瀏覽次數")]
         public int ViewCount { get; set; } = 0;
         [Required]
-        [MaxLength(20)]
+        [MaxLength(24)]
         [Display(Name = "食譜名稱")]
 
         [Column(TypeName ="nvarchar")]

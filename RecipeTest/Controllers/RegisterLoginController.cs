@@ -252,17 +252,17 @@ namespace RecipeTest.Controllers
 
             // ✅ 將 user JSON 做 Base64（避免中文亂碼）
             // 若有 emoji、中文會亂掉，因此建議轉成 base64，對安全也更好
-            string base64User = Convert.ToBase64String(Encoding.UTF8.GetBytes(userJson));
+            //string base64User = Convert.ToBase64String(Encoding.UTF8.GetBytes(userJson));
 
             // ✅ 把 token 和 base64User 安全傳給前端
-            return Redirect($"{frontendCallback}?token={token}&user={base64User}");
+            //return Redirect($"{frontendCallback}?token={token}&user={base64User}");
 
-            //return Ok(new
-            //{
-            //    StatusCode = 200,
-            //    msg = "Google 登入成功",
-            //    token = token
-            //});
+            return Ok(new
+            {
+                StatusCode = 200,
+                msg = "Google 登入成功",
+                token = token
+            });
 
         }
 

@@ -24,6 +24,9 @@ namespace RecipeTest.Models
 
         public virtual DbSet<Comments> Comments { get; set; }
         public virtual DbSet<Ratings> Ratings { get; set; }
+        public virtual DbSet<AdTags> AdTags { get; set; }
+        public virtual DbSet<AdImgs> AdImgs { get; set; }
+        public virtual DbSet<Advertisement> Advertisements { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

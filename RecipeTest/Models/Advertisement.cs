@@ -28,6 +28,10 @@ namespace RecipeTest.Models
         [Display(Name= "點擊數")]
         public int ClickCount { get; set; } = 0;
 
+        [Column(TypeName ="int")]
+        [Display(Name = "曝光數")]
+        public int ExposureCount { get; set; } = 0;
+
         [Column(TypeName = "bit")]
         [Display(Name = "是否上架")]
         public bool IsEnabled { get; set; } = false;

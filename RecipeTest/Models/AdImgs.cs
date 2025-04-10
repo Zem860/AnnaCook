@@ -29,7 +29,7 @@ namespace RecipeTest.Models
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         [Column(TypeName = "DATETIME")]
         [Display(Name = "更新時間")]
-        public DateTime UdateTime { get; set; } = DateTime.Now;
+        public DateTime UpdatedAt { get; set; } = DateTime.Now;
 
 
     }

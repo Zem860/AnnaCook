@@ -51,12 +51,12 @@ namespace RecipeTest.Controllers
             if (!alreadyRegistered)
             {
                 string password = request.Password;
-                // 用正則表達式檢查密碼格式
-                string pattern = @"^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$";
-                if (!Regex.IsMatch(password, pattern))
-                {
-                    return Ok(new { StatusCode = 400, msg = "密碼格式錯誤，需至少8碼，包含至少一個大寫英文字母與一個數字" });
-                }
+                //// 用正則表達式檢查密碼格式
+                //string pattern = @"^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$";
+                //if (!Regex.IsMatch(password, pattern))
+                //{
+                //    return Ok(new { StatusCode = 400, msg = "密碼格式錯誤，需至少8碼，包含至少一個大寫英文字母與一個數字" });
+                //}
                 byte[] salt = userhash.createSalt();
                 string stringSalt = Convert.ToBase64String(salt);
                 byte[] hashedPassword = userhash.HashPassword(password, salt);
@@ -81,6 +81,7 @@ namespace RecipeTest.Controllers
                     UserRole = UserRoles.User,
                     LoginProvider = LoginProvider.Local,
                     IsVerified = false,
+                    IsBanned = false,
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now,
                 };
@@ -147,13 +148,13 @@ namespace RecipeTest.Controllers
         {
             string googleAuthUrl = $"https://accounts.google.com/o/oauth2/v2/auth" +
                             $"?client_id={clientId}" +
-                            $"&redirect_uri={redirectUri}" +
+                            $"&redirect_uri={redirectUri}" + //參數成功時要導轉的頁面回到哪裡去
                             $"&response_type=code" +
                             $"&scope=openid%20email%20profile" +
                             $"&access_type=offline" +
                             $"&prompt=consent";
-
-            return Redirect(googleAuthUrl);
+            //return Redirect(googleAuthUrl);
+            return Ok(new { StatusCode = 200, msg = "google登入網址", redirectUri = googleAuthUrl});
         }
 
         [HttpGet]
@@ -169,7 +170,7 @@ namespace RecipeTest.Controllers
             {
                 var content = new FormUrlEncodedContent(new Dictionary<string, string>
             {
-                { "code", code},
+                { "code",code},
                 { "client_id", clientId},
                 { "client_secret", clientSecret},
                 { "redirect_uri", redirectUri},
@@ -221,6 +222,7 @@ namespace RecipeTest.Controllers
                     user.LoginProvider = LoginProvider.Google;
                     user.UserRole = UserRoles.User;
                     user.IsVerified = true;
+                    user.IsBanned = false;
                     user.CreatedAt = DateTime.Now;
                     user.UpdatedAt = DateTime.Now;
                     db.Users.Add(user);
@@ -252,7 +254,7 @@ namespace RecipeTest.Controllers
 
             // ✅ 將 user JSON 做 Base64（避免中文亂碼）
             // 若有 emoji、中文會亂掉，因此建議轉成 base64，對安全也更好
-            //string base64User = Convert.ToBase64String(Encoding.UTF8.GetBytes(userJson));
+            string base64User = Convert.ToBase64String(Encoding.UTF8.GetBytes(userJson));
 
             // ✅ 把 token 和 base64User 安全傳給前端
             //return Redirect($"{frontendCallback}?token={token}&user={base64User}");
@@ -271,7 +273,6 @@ namespace RecipeTest.Controllers
         public IHttpActionResult login([FromBody] UserRelated.UserLoginData request)
         {
             var user = db.Users.FirstOrDefault(u => u.AccountEmail == request.AccountEmail && u.IsVerified == true);
-            Console.Write(user.IsVerified);
             if (user == null)
             {
                 var resError = new

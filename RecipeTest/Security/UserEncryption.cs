@@ -15,6 +15,21 @@ namespace RecipeTest.Security
 {
     public class UserEncryption
     {
+
+        public string getClientIp()
+        {
+            var request = HttpContext.Current?.Request;
+            var ip = request?.ServerVariables["X-Forwarded-For"];
+            if (string.IsNullOrEmpty(ip))
+            {
+                ip = request?.UserHostAddress;
+            }
+            if (!string.IsNullOrEmpty(ip) && ip.Contains(","))
+            {
+                ip=ip.Split(',')[0].Trim();
+            }
+            return ip ?? "unkenown";
+        } 
         public bool IsSelf(string token, string displayId)
         {
             try

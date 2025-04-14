@@ -27,7 +27,8 @@ namespace RecipeTest.Models
         public virtual DbSet<AdTags> AdTags { get; set; }
         public virtual DbSet<AdImgs> AdImgs { get; set; }
         public virtual DbSet<Advertisement> Advertisements { get; set; }
-        public virtual DbSet<AdDisplayPage> AdDisplayPage { get; set; }
+        public virtual DbSet<AdMonthlyPerformance> AdMonthlyPerformances { get; set; }
+        public virtual DbSet<LoginRecords> LoginRecords { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

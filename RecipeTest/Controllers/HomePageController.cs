@@ -13,13 +13,13 @@ namespace RecipeTest.Controllers
     {
         RecipeModel db = new RecipeModel();
         //首頁get下方以排序
-
+        //Emma改設定了要改變
         [HttpGet]
-        [Route("api/home/recipes/by-tag/{tag}")]
+        [Route("api/home/recipes/by-tag/{tag}")] //not ok
         public IHttpActionResult GetTagRecipes(string tag, int page=1)
         {
             const int pageSize = 6;
-            var recipes = db.Recipes.Where(r => r.IsPublished && r.RecipeTags.Any(rt => rt.Tags.TagName.Contains(tag))).OrderByDescending(r=>r.CreatedAt).Skip(0).Take(pageSize);
+            var recipes = db.Recipes.Where(r => r.IsPublished && !r.IsDeleted && !r.IsArchived&& r.RecipeTags.Any(rt => rt.Tags.TagName.Contains(tag))).OrderByDescending(r=>r.CreatedAt).Skip(0).Take(pageSize);
             int count = recipes.Count();
             var data = recipes.Select(r => new
             {
@@ -41,13 +41,13 @@ namespace RecipeTest.Controllers
         }
 
         [HttpGet]
-        [Route("api/home/recipes")]
+        [Route("api/home/recipes")] //ok
         public IHttpActionResult GetRecipes(string type = "latest", int page = 1)
         {
             const int pageSize = 5;
             var query = db.Recipes.AsQueryable();
             int skip = ((page - 1) * pageSize);
-            query = query.Where(r => r.IsPublished == true); // 只選擇已發布的食譜
+            query = query.Where(r => r.IsPublished == true && !r.IsArchived && !r.IsDeleted); // 只選擇已發布的食譜
 
             switch (type.ToLower())
             {

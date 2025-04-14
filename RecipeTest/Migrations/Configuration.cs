@@ -5,251 +5,217 @@
     using System.Data.Entity.Migrations;
     using System.Linq;
     using RecipeTest.Models;
+    using Newtonsoft.Json;
+    using System.IO;
+    using System.Collections.Generic;
+    using RecipeTest.SeedData;
+    using System.Security.Cryptography;
+    using RecipeTest.Security;
 
     internal sealed class Configuration : DbMigrationsConfiguration<RecipeTest.Models.RecipeModel>
     {
+
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
         }
 
+
         protected override void Seed(RecipeTest.Models.RecipeModel context)
         {
-//            context.Recipes.AddOrUpdate(r => r.Id,
-//                new Recipes
-//                {
-//                    Id = 3010,
-//                    UserId = 2,
-//                    RecipeName = "奶油蘑菇雞",
-//                    IsPublished = true,
-//                    RecipeIntro = "濃郁奶香搭配鮮嫩雞肉，晚餐簡單又高級。",
-//                    CookingTime = 35.00m,
-//                    Portion = 2.00m,
-//                    Rating = 4.6m,
-//                    RecipeVideoLink = "https://youtu.be/creamy_mushroom_chicken",
-//                    CreatedAt = DateTime.Now,
-//                    UpdatedAt = DateTime.Now,
-//                    DisplayId = "R000011",
-//                    ViewCount = 880,
-//                    SharedCount = 51
-//                },
-//new Recipes
-//{
-//    Id = 3011,
-//    UserId = 2,
-//    RecipeName = "韓式泡菜豆腐鍋",
-//    IsPublished = true,
-//    RecipeIntro = "香辣開胃，適合冷天的一鍋暖食！",
-//    CookingTime = 40.00m,
-//    Portion = 3.00m,
-//    Rating = 4.8m,
-//    RecipeVideoLink = "https://youtu.be/kimchi_tofu_stew",
-//    CreatedAt = DateTime.Now,
-//    UpdatedAt = DateTime.Now,
-//    DisplayId = "R000012",
-//    ViewCount = 1530,
-//    SharedCount = 73
-//},
-//new Recipes
-//{
-//    Id = 3012,
-//    UserId = 2,
-//    RecipeName = "蒜香四季豆炒肉末",
-//    IsPublished = true,
-//    RecipeIntro = "快速家常料理，香氣十足，超下飯！",
-//    CookingTime = 20.00m,
-//    Portion = 2.00m,
-//    Rating = 4.4m,
-//    RecipeVideoLink = "https://youtu.be/garlic_greenbeans_pork",
-//    CreatedAt = DateTime.Now,
-//    UpdatedAt = DateTime.Now,
-//    DisplayId = "R000013",
-//    ViewCount = 670,
-//    SharedCount = 33
-//}
+            //    var userPath = @"C:\Users\zemmy\Downloads\users.json";
+            //    if (!File.Exists(userPath))
+            //    {
+            //        Console.WriteLine("❌ JSON file not found: " + userPath);
+            //        return;
+            //    }
 
+            //    // 反序列化：支援多筆使用者（請確保 JSON 格式是陣列）
+            //    var userList = JsonConvert.DeserializeObject<List<Users>>(File.ReadAllText(userPath));
 
+            //    // 這裡統一建立一組密碼的 salt 與 hash
+            //    var encryption = new UserEncryption();
+            //    byte[] salt = encryption.createSalt();
+            //    string saltString = Convert.ToBase64String(salt);
+            //    byte[] hash = encryption.HashPassword("ABC123123123", salt);
+            //    string hashString = Convert.ToBase64String(hash);
 
-//                );
-          
-//            context.Recipes.AddOrUpdate(
-//    r => r.Id,
+            //    // 從資料庫抓出目前已存在的最大 M 使用者
+            //    var existingMIds = context.Users
+            //        .Where(u => u.DisplayId.StartsWith("M"))
+            //        .Select(u => u.DisplayId)
+            //        .ToList();
 
-//        new Recipes
-//        {
-//            Id = 3001,
-//            UserId = 1,
-//            RecipeName = "經典炒蛋",
-//            IsPublished = true,
-//            RecipeIntro = "簡單快速的炒蛋做法，適合新手上手。",
-//            CookingTime = 10.00m,
-//            Portion = 2.00m,
-//            Rating = 4.5m,
-//            RecipeVideoLink = "https://youtu.be/simple_scrambled_eggs",
-//            CreatedAt = DateTime.Now,
-//            UpdatedAt = DateTime.Now,
-//            DisplayId = "R000001",
-//            ViewCount = 100,
-//            SharedCount = 20
-//        },
-//    new Recipes
-//    {
-//        Id = 3002,
-//        UserId = 1,
-//        RecipeName = "番茄炒蛋",
-//        IsPublished = true,
-//        RecipeIntro = "經典家常菜，酸甜開胃。",
-//        CookingTime = 12.00m,
-//        Portion = 2.00m,
-//        Rating = 4.7m,
-//        RecipeVideoLink = "https://youtu.be/tomato_eggs",
-//        CreatedAt = DateTime.Now,
-//        UpdatedAt = DateTime.Now,
-//        DisplayId = "R000002",
-//        ViewCount = 150,
-//        SharedCount = 25
-//    },
-//    new Recipes
-//    {
-//        Id = 3003,
-//        UserId = 1,
-//        RecipeName = "日式咖哩飯",
-//        IsPublished = true,
-//        RecipeIntro = "甜中帶鹹的日式咖哩，溫暖人心。",
-//        CookingTime = 40.00m,
-//        Portion = 3.00m,
-//        Rating = 4.8m,
-//        RecipeVideoLink = "https://youtu.be/japanese_curry",
-//        CreatedAt = DateTime.Now,
-//        UpdatedAt = DateTime.Now,
-//        DisplayId = "R000003",
-//        ViewCount = 300,
-//        SharedCount = 40
-//    },
-//    new Recipes
-//    {
-//        Id = 3004,
-//        UserId = 1,
-//        RecipeName = "奶油培根義大利麵",
-//        IsPublished = true,
-//        RecipeIntro = "濃郁奶油醬搭配香脆培根，美味又滿足。",
-//        CookingTime = 25.00m,
-//        Portion = 2.00m,
-//        Rating = 4.6m,
-//        RecipeVideoLink = "https://youtu.be/cream_bacon_pasta",
-//        CreatedAt = DateTime.Now,
-//        UpdatedAt = DateTime.Now,
-//        DisplayId = "R000004",
-//        ViewCount = 220,
-//        SharedCount = 30
-//    },
-//    new Recipes
-//    {
-//        Id = 3005,
-//        UserId = 1,
-//        RecipeName = "韓式泡菜煎餅",
-//        IsPublished = true,
-//        RecipeIntro = "外酥內嫩的韓式小吃，辣中帶酸。",
-//        CookingTime = 20.00m,
-//        Portion = 2.00m,
-//        Rating = 4.4m,
-//        RecipeVideoLink = "https://youtu.be/kimchi_pancake",
-//        CreatedAt = DateTime.Now,
-//        UpdatedAt = DateTime.Now,
-//        DisplayId = "R000005",
-//        ViewCount = 180,
-//        SharedCount = 18
-//    },
-//    new Recipes
-//    {
-//        Id = 3006,
-//        UserId = 1,
-//        RecipeName = "麻婆豆腐",
-//        IsPublished = true,
-//        RecipeIntro = "香麻帶辣的四川風味，超下飯！",
-//        CookingTime = 18.00m,
-//        Portion = 3.00m,
-//        Rating = 4.9m,
-//        RecipeVideoLink = "https://youtu.be/mapo_tofu",
-//        CreatedAt = DateTime.Now,
-//        UpdatedAt = DateTime.Now,
-//        DisplayId = "R000006",
-//        ViewCount = 450,
-//        SharedCount = 55
-//    },
-//    new Recipes
-//    {
-//        Id = 3007,
-//        UserId = 1,
-//        RecipeName = "三杯雞",
-//        IsPublished = true,
-//        RecipeIntro = "台灣經典料理，九層塔香氣撲鼻。",
-//        CookingTime = 30.00m,
-//        Portion = 4.00m,
-//        Rating = 4.8m,
-//        RecipeVideoLink = "https://youtu.be/three_cup_chicken",
-//        CreatedAt = DateTime.Now,
-//        UpdatedAt = DateTime.Now,
-//        DisplayId = "R000007",
-//        ViewCount = 510,
-//        SharedCount = 60
-//    },
-//    new Recipes
-//    {
-//        Id = 3008,
-//        UserId = 1,
-//        RecipeName = "香煎鯖魚",
-//        IsPublished = true,
-//        RecipeIntro = "外酥內嫩的日式家常魚料理。",
-//        CookingTime = 15.00m,
-//        Portion = 1.00m,
-//        Rating = 4.3m,
-//        RecipeVideoLink = "https://youtu.be/mackerel_pan_fry",
-//        CreatedAt = DateTime.Now,
-//        UpdatedAt = DateTime.Now,
-//        DisplayId = "R000008",
-//        ViewCount = 230,
-//        SharedCount = 22
-//    },
-//    new Recipes
-//    {
-//        Id = 3009,
-//        UserId = 1,
-//        RecipeName = "鮮蝦蒸蛋",
-//        IsPublished = true,
-//        RecipeIntro = "滑嫩蒸蛋搭配鮮蝦，營養又美味。",
-//        CookingTime = 20.00m,
-//        Portion = 2.00m,
-//        Rating = 4.6m,
-//        RecipeVideoLink = "https://youtu.be/shrimp_steamed_egg",
-//        CreatedAt = DateTime.Now,
-//        UpdatedAt = DateTime.Now,
-//        DisplayId = "R000009",
-//        ViewCount = 310,
-//        SharedCount = 26
-//    },
-//    new Recipes
-//    {
-//        Id = 3010,
-//        UserId = 1,
-//        RecipeName = "蔥油餅",
-//        IsPublished = true,
-//        RecipeIntro = "酥脆又有層次的蔥油餅，早餐或點心都適合。",
-//        CookingTime = 30.00m,
-//        Portion = 3.00m,
-//        Rating = 4.7m,
-//        RecipeVideoLink = "https://youtu.be/scallion_pancake",
-//        CreatedAt = DateTime.Now,
-//        UpdatedAt = DateTime.Now,
-//        DisplayId = "R000010",
-//        ViewCount = 400,
-//        SharedCount = 38
-//    }
-//);
+            //    int lastNumber = 0;
+            //    if (existingMIds.Any())
+            //    {
+            //        lastNumber = existingMIds
+            //            .Select(id => int.TryParse(id.Substring(1), out int num) ? num : 0)
+            //            .Max();
+            //    }
 
+            //    foreach (var user in userList)
+            //    {
+            //        if (user != null)
+            //        {
+            //            user.DisplayId = "M" + (++lastNumber).ToString("D6");
+            //            user.Salt = saltString;
+            //            user.PasswordHash = hashString;
+            //            user.AccountProfilePhoto = "/UserPhotos/" + "M" + (lastNumber).ToString("D6"); // 預設圖片
+            //            user.IsVerified = true;
+            //            user.IsBanned = false;
+            //            user.LoginProvider = RecipeTest.Enums.LoginProvider.Local;
+            //            user.UserRole = RecipeTest.Enums.UserRoles.User;
+            //            user.CreatedAt = DateTime.Now;
+            //            user.UpdatedAt = DateTime.Now;
 
-            context.SaveChanges();
+            //            context.Users.AddOrUpdate(user); // 或 Add(user)
+            //        }
+            //    }
+            //context.SaveChanges(); // 移出迴圈，只存一次
+
+            //1️⃣ 確保 Admin 存在
+            var admin = context.Users.FirstOrDefault(u => u.AccountEmail == "admin@annacook.com");
+            if (admin == null)
+            {
+                var encryption = new UserEncryption();
+                byte[] salt = encryption.createSalt();
+                string saltString = Convert.ToBase64String(salt);
+                byte[] hash = encryption.HashPassword("ABC123123123", salt);
+                string hashString = Convert.ToBase64String(hash);
+                admin = new Users
+                {
+                    DisplayId = "A000001",
+                    AccountEmail = "admin@annacook.com",
+                    PasswordHash = hashString,
+                    Salt = saltString,
+                    AccountName = "Admin",
+                    UserIntro = "我是管理員",
+                    IsVerified = true,
+                    IsBanned = false,
+                    CreatedAt = DateTime.Now,
+                    UpdatedAt = DateTime.Now,
+                    LoginProvider = RecipeTest.Enums.LoginProvider.Local,
+                    UserRole = RecipeTest.Enums.UserRoles.Admin,
+                };
+
+                context.Users.Add(admin);
+                context.SaveChanges(); // 拿到 admin.Id
+            }
+
+            //// 🔍 讀 JSON
+            //var jsonPath = @"C:\Users\zemmy\Downloads\sample40.json";
+            //if (!File.Exists(jsonPath))
+            //{
+            //    Console.WriteLine("❌ JSON file not found: " + jsonPath);
+            //    return;
+            //}
+
+            //var recipeList = JsonConvert.DeserializeObject<List<SeedRecipe>>(File.ReadAllText(jsonPath));
+            //if (recipeList == null || !recipeList.Any())
+            //{
+            //    Console.WriteLine("❌ No recipes found.");
+            //    return;
+            //}
+
+            //// 🔍 取得 User 2 和 3
+            //var user2 = context.Users.FirstOrDefault(u => u.Id == 2);
+            //var user3 = context.Users.FirstOrDefault(u => u.Id == 3);
+            //if (user2 == null || user3 == null)
+            //{
+            //    Console.WriteLine("❌ 使用者 ID=2 或 3 不存在，無法寫入食譜！");
+            //    return;
+            //}
+
+            //var rand = new Random();
+            //int lastRecipeNum = 0;
+
+            //Console.WriteLine($"✅ Loaded {recipeList.Count} recipes from JSON");
+
+            //foreach (var recipe in recipeList)
+            //{
+            //    if (recipe?.Detail == null || recipe.Steps == null) continue;
+
+            //    var selectedUser = rand.Next(0, 2) == 0 ? user2 : user3;
+
+            //    var newRecipe = new Recipes
+            //    {
+            //        RecipeName = recipe.RecipeName,
+            //        RecipeIntro = recipe.Detail.RecipeIntro ?? "",
+            //        CookingTime = recipe.Detail.CookingTime,
+            //        Portion = recipe.Detail.Portion,
+            //        IsPublished = true,
+            //        ViewCount = rand.Next(0, 100),
+            //        DisplayId = "R" + (++lastRecipeNum).ToString("D6"),
+            //        CreatedAt = DateTime.Now,
+            //        UpdatedAt = DateTime.Now,
+            //        UserId = selectedUser.Id, // ⭐ 寫 UserId 更穩
+
+            //        Ingredients = recipe.Detail.Ingredients?.Select(i => new Ingredients
+            //        {
+            //            IngredientName = i.IngredientName,
+            //            Amount = i.Amount,
+            //            Unit = i.Unit,
+            //            IsFlavoring = i.IsFlavoring,
+            //            CreatedAt = DateTime.Now,
+            //            UpdatedAt = DateTime.Now
+            //        }).ToList(),
+
+            //        Steps = recipe.Steps?.Select((s, index) => new Steps
+            //        {
+            //            StepOrder = index + 1,
+            //            StepDescription = s.Description,
+            //            VideoStart = s.StartTime,
+            //            VideoEnd = s.EndTime,
+            //            CreatedAt = DateTime.Now
+            //        }).ToList(),
+
+            //        RecipeTags = new List<RecipeTags>(),
+            //        RecipesPhotos = new List<RecipePhotos>()
+            //    };
+
+            //    // ⭐ Tags
+            //    foreach (var tagName in recipe.Detail.Tags ?? new List<string>())
+            //    {
+            //        var tag = context.Tags.FirstOrDefault(t => t.TagName == tagName);
+            //        if (tag == null)
+            //        {
+            //            tag = new Tags { TagName = tagName, CreatedAt = DateTime.Now };
+            //            context.Tags.Add(tag);
+            //            context.SaveChanges(); // 拿到 tag.Id
+            //        }
+
+            //        newRecipe.RecipeTags.Add(new RecipeTags
+            //        {
+            //            Tags = tag,
+            //            CreatedAt = DateTime.Now
+            //        });
+            //    }
+
+            //    // ⭐ 食譜封面照片
+            //    newRecipe.RecipesPhotos.Add(new RecipePhotos
+            //    {
+            //        ImgUrl = $"/TestPhoto/{newRecipe.DisplayId}.png",
+            //        CreatedAt = DateTime.Now,
+            //        UpdatedAt = DateTime.Now
+            //    });
+
+            //    context.Recipes.AddOrUpdate(newRecipe);
+            //    try
+            //    {
+            //        context.SaveChanges();
+            //        Console.WriteLine($"✅ 成功寫入：{newRecipe.RecipeName} 給 UserId={selectedUser.Id}");
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        Console.WriteLine("❌ SaveChanges 發生錯誤: " + ex.Message);
+            //        if (ex.InnerException != null)
+            //            Console.WriteLine("🔎 Inner: " + ex.InnerException.Message);
+            //        throw;
+            //    }
+            //}
+
+            //Console.WriteLine("✅ All recipes and photos saved!");
         }
-
     }
 }

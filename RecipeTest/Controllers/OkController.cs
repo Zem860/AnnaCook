@@ -19,7 +19,8 @@ namespace RecipeTest.Controllers
         [Route("api/Ok")]
         public IHttpActionResult SayOk()
         {
-            return Ok(new { message = "Ok" });
+            string ip = userhash.getClientIp();
+            return Ok(new { message = "Ok", ip=ip });
         }
 
         [HttpGet]

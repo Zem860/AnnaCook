@@ -51,9 +51,18 @@ namespace RecipeTest.Models
         [Column(TypeName = "bit")]
         [Display(Name ="已發布")]
         public bool IsPublished { get; set; } = false;
+
+        [Column(TypeName = "bit")]
+        [Display(Name = "已封存")]
+        public bool IsArchived { get; set; } = false;
+
+        [Column(TypeName = "bit")]
+        [Display(Name = "是否刪除")]
+        public bool IsDeleted { get; set; } = false;
         [MaxLength(500)]
         [Column(TypeName ="nvarchar")]
         public string RecipeIntro { get; set; } = null;
+
 
         [Column(TypeName = "decimal")]
         [Display(Name = "烹調時間")]

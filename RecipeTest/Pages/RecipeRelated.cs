@@ -8,6 +8,11 @@ namespace RecipeTest.Pages
 {
     public class RecipeRelated
     {
+        private Recipes GetValidRecipe(int id)
+        {
+            RecipeModel db = new RecipeModel();
+            return db.Recipes.FirstOrDefault(r => r.Id == id && !r.IsDeleted);
+        }
 
         public class StepUpdateListDto
         {

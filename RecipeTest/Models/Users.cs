@@ -62,6 +62,17 @@ namespace RecipeTest.Models
         [Display(Name = "是否已停權")]
         public bool IsBanned { get; set; } = false;
 
+        [Column(TypeName ="bit")]
+        [Display(Name = "是否可上傳")]
+        public bool IsUploadable { get; set; } = true;
+        [Column(TypeName = "bit")]
+        [Display(Name = "是否可評論")]
+        public bool IsCommentable { get; set; } = true;
+
+        [Column(TypeName = "bit")]
+        [Display(Name = "是否刪除")]
+        public bool IsDeleted { get; set; } = false;
+
 
         [Column(TypeName = "DATETIME")]
         [Display(Name = "創建時間")]

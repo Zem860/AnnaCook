@@ -121,17 +121,14 @@ namespace RecipeTest.Security
         //後端從前端的bearer取出token資料做驗證以及取出使用者資料
         {
             var payload = HttpContext.Current.Items["jwtUser"] as Dictionary<string, object>;
-
-            return new UserDto
-            {
-                Id = Convert.ToInt32(payload["Id"]),
-                AccountEmail = payload["AccountEmail"].ToString(),
-                DisplayId = payload["DisplayId"].ToString(), // ✅ 加這行
-                AccountName = payload["AccountName"].ToString(),
-                ProfilePhoto = payload.ContainsKey("ProfilePhoto") ? payload["ProfilePhoto"]?.ToString() : null,
-                Role = Convert.ToInt32(payload["Role"]),
-                LoginProvider = Convert.ToInt32(payload["LoginProvider"])
-            };
+            var userData = new UserDto();
+            userData.Id = Convert.ToInt32(payload["Id"]);
+            userData.AccountEmail = payload["AccountEmail"].ToString();
+            userData.DisplayId = payload["DisplayId"].ToString(); // ✅ 加這行
+            userData.ProfilePhoto = payload.ContainsKey("ProfilePhoto") ? payload["ProfilePhoto"]?.ToString() : null;
+            userData.Role = Convert.ToInt32(payload["Role"]);
+            userData.LoginProvider = Convert.ToInt32(payload["LoginProvider"]);
+            return userData;
 
         }
         public byte[] createSalt()

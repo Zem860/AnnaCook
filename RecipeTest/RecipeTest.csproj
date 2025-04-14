@@ -204,6 +204,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Controllers\AdController.cs" />
     <Compile Include="Controllers\ExtraController.cs" />
     <Compile Include="Controllers\HomePageController.cs" />
     <Compile Include="Controllers\UnsureController.cs" />
@@ -211,90 +212,29 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\OkController.cs" />
     <Compile Include="Controllers\RegisterLoginController.cs" />
-    <Compile Include="Controllers\TestRecipeController.cs" />
+    <Compile Include="Controllers\RecipeController.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Enums\AdDisplayPage.cs" />
+    <Compile Include="Enums\LoginActions.cs" />
     <Compile Include="Enums\LoginProvider.cs" />
     <Compile Include="Enums\UserRole.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202503211635274_fix-ModelName-DoubleForeignKey.cs" />
-    <Compile Include="Migrations\202503211635274_fix-ModelName-DoubleForeignKey.Designer.cs">
-      <DependentUpon>202503211635274_fix-ModelName-DoubleForeignKey.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202503220300483_add-recipeTag.cs" />
-    <Compile Include="Migrations\202503220300483_add-recipeTag.Designer.cs">
-      <DependentUpon>202503220300483_add-recipeTag.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202503220330059_change-user-to-users.cs" />
-    <Compile Include="Migrations\202503220330059_change-user-to-users.Designer.cs">
-      <DependentUpon>202503220330059_change-user-to-users.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202503220346164_add-comments-table.cs" />
-    <Compile Include="Migrations\202503220346164_add-comments-table.Designer.cs">
-      <DependentUpon>202503220346164_add-comments-table.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202503220357293_change-comments-table.cs" />
-    <Compile Include="Migrations\202503220357293_change-comments-table.Designer.cs">
-      <DependentUpon>202503220357293_change-comments-table.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202503221405035_add-rating-table.cs" />
-    <Compile Include="Migrations\202503221405035_add-rating-table.Designer.cs">
-      <DependentUpon>202503221405035_add-rating-table.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202503240225469_change-date-setting-and-required-recipename.cs" />
-    <Compile Include="Migrations\202503240225469_change-date-setting-and-required-recipename.Designer.cs">
-      <DependentUpon>202503240225469_change-date-setting-and-required-recipename.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202503240453253_Change-Tags.cs" />
-    <Compile Include="Migrations\202503240453253_Change-Tags.Designer.cs">
-      <DependentUpon>202503240453253_Change-Tags.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202503240505466_testPut.cs" />
-    <Compile Include="Migrations\202503240505466_testPut.Designer.cs">
-      <DependentUpon>202503240505466_testPut.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202503250343168_makeDesNull.cs" />
-    <Compile Include="Migrations\202503250343168_makeDesNull.Designer.cs">
-      <DependentUpon>202503250343168_makeDesNull.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202503260714552_fix-user.cs" />
-    <Compile Include="Migrations\202503260714552_fix-user.Designer.cs">
-      <DependentUpon>202503260714552_fix-user.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202503260729428_removesaltpwd.cs" />
-    <Compile Include="Migrations\202503260729428_removesaltpwd.Designer.cs">
-      <DependentUpon>202503260729428_removesaltpwd.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202503290956540_userTableChanged.cs" />
-    <Compile Include="Migrations\202503290956540_userTableChanged.Designer.cs">
-      <DependentUpon>202503290956540_userTableChanged.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202503291147274_adduserIntro.cs" />
-    <Compile Include="Migrations\202503291147274_adduserIntro.Designer.cs">
-      <DependentUpon>202503291147274_adduserIntro.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202503300527047_addVerifyColumnInUserTable.cs" />
-    <Compile Include="Migrations\202503300527047_addVerifyColumnInUserTable.Designer.cs">
-      <DependentUpon>202503300527047_addVerifyColumnInUserTable.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202504010148440_add-RecipeDisplayIdViewCount.cs" />
-    <Compile Include="Migrations\202504010148440_add-RecipeDisplayIdViewCount.Designer.cs">
-      <DependentUpon>202504010148440_add-RecipeDisplayIdViewCount.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202504010251459_add-requiretoUserRecipe.cs" />
-    <Compile Include="Migrations\202504010251459_add-requiretoUserRecipe.Designer.cs">
-      <DependentUpon>202504010251459_add-requiretoUserRecipe.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202504010802126_change-column.cs" />
-    <Compile Include="Migrations\202504010802126_change-column.Designer.cs">
-      <DependentUpon>202504010802126_change-column.cs</DependentUpon>
+    <Compile Include="Migrations\202504140234041_rebuild-AnnaCook.cs" />
+    <Compile Include="Migrations\202504140234041_rebuild-AnnaCook.Designer.cs">
+      <DependentUpon>202504140234041_rebuild-AnnaCook.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\AdImgs.cs" />
+    <Compile Include="Models\AdMonthlyPerformance.cs" />
+    <Compile Include="Models\AdTags.cs" />
+    <Compile Include="Models\Advertisement.cs" />
     <Compile Include="Models\Comments.cs" />
     <Compile Include="Models\Favorites.cs" />
     <Compile Include="Models\Follows.cs" />
     <Compile Include="Models\Ingredients.cs" />
+    <Compile Include="Models\LoginRecords.cs" />
     <Compile Include="Models\Ratings.cs" />
     <Compile Include="Models\RecipeModel.cs" />
     <Compile Include="Models\Recipes.cs" />
@@ -312,6 +252,8 @@
     <Compile Include="Security\JWTAuthFilters.cs" />
     <Compile Include="Security\JwtAuthUtil.cs" />
     <Compile Include="Security\UserEncryption.cs" />
+    <Compile Include="SeedData\SeedRecipe.cs" />
+    <Compile Include="SeedData\SeedUser.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />
@@ -458,59 +400,8 @@
     <Content Include="Scripts\jquery-3.7.0.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202503211635274_fix-ModelName-DoubleForeignKey.resx">
-      <DependentUpon>202503211635274_fix-ModelName-DoubleForeignKey.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202503220300483_add-recipeTag.resx">
-      <DependentUpon>202503220300483_add-recipeTag.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202503220330059_change-user-to-users.resx">
-      <DependentUpon>202503220330059_change-user-to-users.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202503220346164_add-comments-table.resx">
-      <DependentUpon>202503220346164_add-comments-table.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202503220357293_change-comments-table.resx">
-      <DependentUpon>202503220357293_change-comments-table.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202503221405035_add-rating-table.resx">
-      <DependentUpon>202503221405035_add-rating-table.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202503240225469_change-date-setting-and-required-recipename.resx">
-      <DependentUpon>202503240225469_change-date-setting-and-required-recipename.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202503240453253_Change-Tags.resx">
-      <DependentUpon>202503240453253_Change-Tags.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202503240505466_testPut.resx">
-      <DependentUpon>202503240505466_testPut.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202503250343168_makeDesNull.resx">
-      <DependentUpon>202503250343168_makeDesNull.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202503260714552_fix-user.resx">
-      <DependentUpon>202503260714552_fix-user.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202503260729428_removesaltpwd.resx">
-      <DependentUpon>202503260729428_removesaltpwd.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202503290956540_userTableChanged.resx">
-      <DependentUpon>202503290956540_userTableChanged.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202503291147274_adduserIntro.resx">
-      <DependentUpon>202503291147274_adduserIntro.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202503300527047_addVerifyColumnInUserTable.resx">
-      <DependentUpon>202503300527047_addVerifyColumnInUserTable.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202504010148440_add-RecipeDisplayIdViewCount.resx">
-      <DependentUpon>202504010148440_add-RecipeDisplayIdViewCount.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202504010251459_add-requiretoUserRecipe.resx">
-      <DependentUpon>202504010251459_add-requiretoUserRecipe.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202504010802126_change-column.resx">
-      <DependentUpon>202504010802126_change-column.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202504140234041_rebuild-AnnaCook.resx">
+      <DependentUpon>202504140234041_rebuild-AnnaCook.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

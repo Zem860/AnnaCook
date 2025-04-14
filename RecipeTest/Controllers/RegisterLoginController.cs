@@ -21,6 +21,7 @@ using MyWebApiProject.Security;
 using Org.BouncyCastle.Asn1.Ocsp;
 using static RecipeTest.Pages.UserRelated;
 using System.Text.RegularExpressions;
+using System.Data.Entity.Core.Common.CommandTrees;
 
 
 namespace RecipeTest.Controllers
@@ -34,13 +35,8 @@ namespace RecipeTest.Controllers
         private string clientSecret = ConfigurationManager.AppSettings["GoogleClientSecret"];
         private string redirectUri = ConfigurationManager.AppSettings["GoogleRedirectUrl"];
         private string verifyUrl = ConfigurationManager.AppSettings["VerifyAPI"];
+        private string dummyPassword = ConfigurationManager.AppSettings["dummyPassword"];
         
-        [HttpGet]
-        [Route("api/auth/ok")]
-        public IHttpActionResult OkDesu()
-        {
-            return Ok("ok");
-        }
         //傳統註冊
         [HttpPost]
         [Route("api/auth/register")]
@@ -82,6 +78,9 @@ namespace RecipeTest.Controllers
                     LoginProvider = LoginProvider.Local,
                     IsVerified = false,
                     IsBanned = false,
+                    IsUploadable = true,
+                    IsCommentable = true,
+                    IsDeleted = false,
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now,
                 };
@@ -162,6 +161,8 @@ namespace RecipeTest.Controllers
         public async Task<IHttpActionResult> googleRegister(string code)
         {
             Users user = new Users(); // ✅ 把 user 拉到外面
+            LoginRecords loginTimeRecord = new LoginRecords();
+
             if (string.IsNullOrEmpty(code))
             {
                 return BadRequest("未收到授權碼");
@@ -191,8 +192,16 @@ namespace RecipeTest.Controllers
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
                 var userInfoResponse = await client.GetAsync("https://www.googleapis.com/oauth2/v2/userinfo");
                 var userInfoJson = await userInfoResponse.Content.ReadAsStringAsync();
+                //--------------------------紀錄登入ip--------------------------------
+                string ip = userhash.getClientIp();
+                loginTimeRecord.IpAddress = ip;
+
                 if (!userInfoResponse.IsSuccessStatusCode)
                 {
+                    loginTimeRecord.LoginAction = (int)LoginActions.LoginFail;
+                    loginTimeRecord.ActionTime = DateTime.Now;
+                    db.LoginRecords.Add(loginTimeRecord);
+                    db.SaveChanges();
                     return BadRequest("google user info error");
                 }
 
@@ -209,10 +218,8 @@ namespace RecipeTest.Controllers
                     // 建立一組亂數密碼（雖然不會使用）
                     var salt = userhash.createSalt();
                     var stringSalt = Convert.ToBase64String(salt);
-                    var dummyPassword = "GoogleUser123!";
                     var hash = userhash.HashPassword(dummyPassword, salt);
                     var stringHash = Convert.ToBase64String(hash);
-
                     user.DisplayId = displayId;
                     user.AccountEmail = email;
                     user.AccountName = name;
@@ -223,6 +230,9 @@ namespace RecipeTest.Controllers
                     user.UserRole = UserRoles.User;
                     user.IsVerified = true;
                     user.IsBanned = false;
+                    user.IsUploadable = true;
+                    user.IsCommentable = true;
+                    user.IsDeleted = false;
                     user.CreatedAt = DateTime.Now;
                     user.UpdatedAt = DateTime.Now;
                     db.Users.Add(user);
@@ -237,13 +247,19 @@ namespace RecipeTest.Controllers
                     user = dbuser;
                 }
             }
-
+            //---------紀錄登入時間-----------------
+            loginTimeRecord.LoginAction = (int)LoginActions.LoginSuccess;
+            loginTimeRecord.ActionTime = DateTime.Now;
+            db.LoginRecords.Add(loginTimeRecord);
+            db.SaveChanges();
+            //------------JWT--------------
             var jwt = new JwtAuthUtil();
             var userToken = new UserRelated.UserTokenData();
             userToken.Id = user.Id;
             userToken.DisplayId = user.DisplayId;
             userToken.AccountEmail = user.AccountEmail;
             userToken.AccountName = user.AccountName;
+            userToken.DisplayId = user.DisplayId;
             userToken.ProfilePhoto = user.AccountProfilePhoto;
             userToken.Role = (int)user.UserRole;
 
@@ -267,7 +283,6 @@ namespace RecipeTest.Controllers
             });
 
         }
-
         [HttpPost]
         [Route("api/auth/login")]
         public IHttpActionResult login([FromBody] UserRelated.UserLoginData request)
@@ -285,8 +300,17 @@ namespace RecipeTest.Controllers
             var salt = Convert.FromBase64String(user.Salt);
             var hash = userhash.HashPassword(request.Password, salt);
             var stringHash = Convert.ToBase64String(hash);
+            //取得使用者ip~成功或錯誤都記起來
+            string ip = userhash.getClientIp();
+            LoginRecords loginTimeRecord = new LoginRecords();
+            loginTimeRecord.UserId = user.Id;
+            loginTimeRecord.ActionTime = DateTime.Now;
+            loginTimeRecord.IpAddress = ip;
             if (user.PasswordHash != stringHash)
             {
+                loginTimeRecord.LoginAction = (int)LoginActions.LoginFail;
+                db.LoginRecords.Add(loginTimeRecord);
+                db.SaveChanges();
                 var resError = new
                 {
                     StatusCode = 400,
@@ -294,14 +318,19 @@ namespace RecipeTest.Controllers
                 };
                 return Ok(resError);
             }
-            var userToken = new UserTokenData
-            {
-                Id = user.Id,
-                AccountEmail = user.AccountEmail,
-                AccountName = user.AccountName,
-                DisplayId = user.DisplayId,
-            };
+            loginTimeRecord.LoginAction = (int)LoginActions.LoginSuccess;
+
+            db.LoginRecords.Add(loginTimeRecord);
+            db.SaveChanges();
+            //---------------------------------
+            var userToken = new UserTokenData();
+            userToken.Id = user.Id;
+            userToken.AccountEmail = user.AccountEmail;
+            userToken.AccountName = user.AccountName;
+            userToken.Role = (int)user.UserRole;
+            userToken.DisplayId = user.DisplayId;
             var token = jwt.GenerateToken(userToken);
+            //------------------------------------------
             var userData = new
             {
                 userId = user.Id,
@@ -309,7 +338,8 @@ namespace RecipeTest.Controllers
                 accountEmail = user.AccountEmail,
                 accountName = user.AccountName,
                 profilePhoto = user.AccountProfilePhoto,
-                Role = (int)user.UserRole,
+                role = (int)user.UserRole,
+                roleName = user.UserRole.ToString(),
             };
             var res = new
             {

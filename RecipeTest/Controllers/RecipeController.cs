@@ -39,12 +39,12 @@ namespace RecipeTest.Controllers
         //-------------------------------搜尋食譜--------------------------------
 
         [HttpGet]
-        [Route("api/recipes/search")]
+        [Route("api/recipes/search")]//ok
         public IHttpActionResult SearchRecipe(string searchData = "", string type = "createdAt", int page = 1)
         {
             int pageSize = 10;
             var query = db.Recipes.AsQueryable();
-            query = query.Where(r => r.IsPublished == true); // 只選擇已發布的食譜
+            query = query.Where(r => r.IsPublished == true && !r.IsArchived && !r.IsDeleted); // 只選擇已發布的食譜
 
             if (!string.IsNullOrWhiteSpace(searchData))
             {
@@ -108,10 +108,10 @@ namespace RecipeTest.Controllers
         //食譜內頁get//食譜細項
         //目前是想說不限制食譜的狀態(草稿/已發布)都可以看，因為作者可能會想要看
         [HttpGet]
-        [Route("api/recipes/{id}")]
+        [Route("api/recipes/{id}")]//ok
         public IHttpActionResult GetRecipe(int id)
         {
-            var recipe = db.Recipes.FirstOrDefault(r => r.Id == id);
+            var recipe = db.Recipes.FirstOrDefault(r => r.Id == id && !r.IsArchived && !r.IsDeleted);
             bool hasRecipe = recipe != null;
             if (hasRecipe)
             {
@@ -216,10 +216,10 @@ namespace RecipeTest.Controllers
         [Route("api/recipes/{id}/teaching")]
         public IHttpActionResult GetTeaching(int id)
         {
-            var recipe = db.Recipes.FirstOrDefault(r => r.Id == id);
+            var recipe = db.Recipes.FirstOrDefault(r => r.Id == id && !r.IsArchived && !r.IsDeleted);
             if (recipe == null)
             {
-                return NotFound();
+                return Ok(new { StatusCode = 400, msg = "找不到該食譜" });
             }
             if (!recipe.IsPublished)
             {
@@ -319,6 +319,10 @@ namespace RecipeTest.Controllers
                 recipe.RecipeName = recipeName;
                 recipe.DisplayId = displayId;
                 recipe.IsPublished = false;
+                recipe.ViewCount = 0;
+                recipe.Rating = 0;
+                recipe.IsArchived = false;
+                recipe.IsDeleted = false;
                 recipe.CreatedAt = DateTime.Now;
                 recipe.UpdatedAt = DateTime.Now;
                 recipe.UserId = user.Id;
@@ -381,17 +385,17 @@ namespace RecipeTest.Controllers
         //--------------------食譜細項上傳(步驟2)--------------------------------
         //step2 上傳食譜細項(修改)
         [HttpPut]
-        [Route("api/recipes/step2/{id}")]
+        [Route("api/recipes/step2/{id}")]//ok
         [JwtAuthFilter]
         public IHttpActionResult UpdateRecipeDetail(int id, UserRecipeDetail recipeDetail)
         {
             var user = userhash.GetUserFromJWT();
-            var recipe = db.Recipes.FirstOrDefault(r => r.Id == id && r.UserId == user.Id);
+            var recipe = db.Recipes.FirstOrDefault(r => r.Id == id && !r.IsDeleted && !r.IsArchived && r.UserId == user.Id);
             //理論上這個食譜，的published應該是都可以但是必須對上userId不然是不能修改的
             bool hasRecipe = recipe != null;
             if (!hasRecipe)
             {
-                return NotFound();
+                return Ok(new { StatusCode = 400, msg = "未找到食譜" });
             }
             recipe.RecipeIntro = recipeDetail.RecipeIntro;
             recipe.CookingTime = recipeDetail.CookingTime;
@@ -444,8 +448,6 @@ namespace RecipeTest.Controllers
                 recipeTag.CreatedAt = DateTime.Now;
                 recipeTag.UpdatedAt = DateTime.Now;
                 db.RecipeTags.Add(recipeTag);
-
-
             }
             db.SaveChanges();
             //--------------------試做refreshToken-----------------------------------
@@ -462,131 +464,19 @@ namespace RecipeTest.Controllers
             };
                 return Ok(res);
             }
-        //[HttpPut]
-        //[Route("api/recipes/{id}/video")]
-        //public async Task<IHttpActionResult> UploadToVimeo(int id)
-        //{
-        //    try
-        //    {
-        //        if (!Request.Content.IsMimeMultipartContent())
-        //            return BadRequest("請使用 Multipart 表單上傳影片");
-        //        var provider = new MultipartMemoryStreamProvider();
-        //        await Request.Content.ReadAsMultipartAsync(provider);
-        //        var file = provider.Contents.FirstOrDefault();
-        //        if (file == null)
-        //            return BadRequest("未收到影片檔案");
-        //        var fileStream = await file.ReadAsStreamAsync();
-        //        var fileSize = fileStream.Length;
-        //        Console.WriteLine($"影片大小: {fileSize} bytes");
-        //        using (var client = new HttpClient())
-        //        {
-        //            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", vimeoAccessToken);
-        //            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-        //            string videoTitle = $"AC_{Guid.NewGuid()}";
-
-        //            // 1️⃣ `POST` 取得 `upload.upload_link`
-        //            var requestBody = new
-        //            {
-        //                name = videoTitle,
-        //                upload = new
-        //                {
-        //                    approach = "tus",
-        //                    size = fileSize
-        //                }
-        //            };
-
-        //            var content = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
-        //            var createVideoResponse = await client.PostAsync("https://api.vimeo.com/me/videos", content);
-        //            string errorResponse = await createVideoResponse.Content.ReadAsStringAsync();
-
-        //            if (!createVideoResponse.IsSuccessStatusCode)
-        //            {
-        //                Console.WriteLine($"Vimeo API 錯誤 (POST): {errorResponse}");
-        //                return BadRequest($"無法創建 Vimeo 上傳: {errorResponse}");
-        //            }
-
-        //            var createVideoContent = await createVideoResponse.Content.ReadAsStringAsync();
-        //            JObject createVideoJson = JObject.Parse(createVideoContent);
-        //            string uploadUrl = createVideoJson["upload"]["upload_link"]?.ToString();
-        //            string videoUri = createVideoJson["uri"]?.ToString();
-        //            if (string.IsNullOrEmpty(uploadUrl))
-        //                return BadRequest("未能取得 Vimeo 上傳 URL");
-        //            Console.WriteLine($"上傳 URL: {uploadUrl}");
-        //            // 進行 `PATCH` 上傳影片檔案的同時，加入進度檢查
-        //            using (var uploadClient = new HttpClient())
-        //            {
-        //                var uploadRequest = new HttpRequestMessage(HttpMethodExtensions.Patch, uploadUrl)
-        //                {
-        //                    Content = new StreamContent(fileStream)
-        //                };
-        //                uploadRequest.Content.Headers.ContentType = new MediaTypeHeaderValue("application/offset+octet-stream");
-        //                uploadRequest.Headers.Add("Tus-Resumable", "1.0.0");
-        //                uploadRequest.Headers.Add("Upload-Offset", "0");
-
-        //                var uploadResponse = await uploadClient.SendAsync(uploadRequest);
-        //                if (!uploadResponse.IsSuccessStatusCode)
-        //                {
-        //                    string uploadError = await uploadResponse.Content.ReadAsStringAsync();
-        //                    Console.WriteLine($"影片上傳失敗: {uploadError}");
-        //                    return BadRequest($"影片上傳失敗: {uploadError}");
-        //                }
-
-        //                // 檢查影片是否已完成上傳
-        //                var headRequest = new HttpRequestMessage(HttpMethod.Head, uploadUrl);
-        //                headRequest.Headers.Add("Tus-Resumable", "1.0.0");
-
-        //                var headResponse = await uploadClient.SendAsync(headRequest);
-        //                if (headResponse.IsSuccessStatusCode)
-        //                {
-        //                    var uploadOffset = headResponse.Headers.GetValues("Upload-Offset").FirstOrDefault();
-        //                    var uploadLength = headResponse.Headers.GetValues("Upload-Length").FirstOrDefault();
-        //                    var videoInfoResponse = await client.GetAsync($"https://api.vimeo.com{videoUri}");
-        //                    var videoInfoJson = await videoInfoResponse.Content.ReadAsStringAsync();
-        //                    JObject videoInfo = JObject.Parse(videoInfoJson);
-
-        //                    var duration = videoInfo["duration"]?.Value<decimal>();
-        //                    var status = videoInfo["transcode"]?["status"]?.ToString();
-        //                    if (uploadOffset == uploadLength && status == "complete")
-        //                    {
-        //                        //將id存入資料庫
-        //                        var recipe = db.Recipes.FirstOrDefault(r=>r.Id == id);
-        //                        recipe.RecipeVideoLink = videoUri;
-        //                        recipe.RecipeVideoDuration = duration;
-        //                        db.SaveChanges();
-        //                    }
-        //                    else
-        //                    {
-        //                        Console.WriteLine("影片仍在上傳中，繼續上傳...");
-        //                        return BadRequest("影片尚未上傳完成，請稍後再試");
-        //                    }
-        //                }
-        //            }
-
-
-        //            return Ok(new { message = "影片上傳成功", videoUri });
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine($"內部錯誤: {ex.Message}");
-        //        return InternalServerError(ex);
-        //    }
-        //}
         //step3上傳影片
         //--------------------------------上傳影片-----------------------------------
-
-
         [HttpPut]
-        [Route("api/recipes/{id}/video")]
+        [Route("api/recipes/{id}/video")]//ok
         [JwtAuthFilter]
         public async Task<IHttpActionResult> UploadToVimeo(int id)
         {
             var user = userhash.GetUserFromJWT();
-            var recipe = db.Recipes.FirstOrDefault(r => r.Id == id && r.UserId == user.Id);
+            var recipe = db.Recipes.FirstOrDefault(r => r.Id == id &&!r.IsDeleted &&!r.IsArchived && r.UserId == user.Id);
             bool hasRecipe = recipe != null;
             if (!hasRecipe)
             {
-                return NotFound();
+                return Ok(new { StatusCode = 400, msg = "找不到該食譜" });
             }
             try
             {
@@ -637,7 +527,6 @@ namespace RecipeTest.Controllers
                         {
                             view = "anybody" // 設定為公開
                         }
-
                     };
 
                     var content = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
@@ -728,34 +617,35 @@ namespace RecipeTest.Controllers
             }
         }
         //---------------------------------------刪除食譜-----------------------------------------------
-        [HttpDelete]
-        [Route("api/recipes/{id}")]
+        [HttpPatch]
+        [Route("api/recipes/{id}")] //ok
         [JwtAuthFilter]
         public IHttpActionResult DeleteRecipe(int id)
         {
             var user = userhash.GetUserFromJWT();
             //這個寫法代表說食譜因為使用者沒對上所以找不到
-            var recipe = db.Recipes.FirstOrDefault(r => r.Id == id && r.UserId == user.Id);
+            var recipe = db.Recipes.FirstOrDefault(r => r.Id == id && !r.IsArchived &&!r.IsDeleted && r.UserId == user.Id);
             if (recipe == null)
             {
-                return NotFound();
+                return Ok(new { StatusCode = 400, msg = "找不到該食譜" });
             }
 
-            // 0️⃣ 刪除 RecipeTags（中介表）
-            var recipeTags = db.RecipeTags.Where(rt => rt.RecipeId == id).ToList();
-            db.RecipeTags.RemoveRange(recipeTags);
+            recipe.IsDeleted = true;
+            //// 0️⃣ 刪除 RecipeTags（中介表）
+            //var recipeTags = db.RecipeTags.Where(rt => rt.RecipeId == id).ToList();
+            //db.RecipeTags.RemoveRange(recipeTags);
 
-            // 1️⃣ 刪除 Ingredients
-            var ingredients = db.Ingredients.Where(i => i.RecipeId == id).ToList();
-            db.Ingredients.RemoveRange(ingredients);
+            //// 1️⃣ 刪除 Ingredients
+            //var ingredients = db.Ingredients.Where(i => i.RecipeId == id).ToList();
+            //db.Ingredients.RemoveRange(ingredients);
 
-            // 2️⃣ 刪除 RecipePhotos
-            var recipePhotos = db.RecipePhotos.Where(rp => rp.RecipeId == id).ToList();
-            db.RecipePhotos.RemoveRange(recipePhotos);
+            //// 2️⃣ 刪除 RecipePhotos
+            //var recipePhotos = db.RecipePhotos.Where(rp => rp.RecipeId == id).ToList();
+            //db.RecipePhotos.RemoveRange(recipePhotos);
 
-            // 3️⃣ 找出 Steps
-            var steps = db.Steps.Where(s => s.RecipeId == id).ToList();
-            var stepIds = steps.Select(s => s.Id).ToList();
+            //// 3️⃣ 找出 Steps
+            //var steps = db.Steps.Where(s => s.RecipeId == id).ToList();
+            //var stepIds = steps.Select(s => s.Id).ToList();
 
             //// 3-1️⃣ 刪除 SubSteps
             //var subSteps = db.SubSteps.Where(ss => stepIds.Contains(ss.StepId)).ToList();
@@ -766,16 +656,16 @@ namespace RecipeTest.Controllers
             //db.StepPhotos.RemoveRange(stepPhotos);
 
             // 3-3️⃣ 刪除 Steps
-            db.Steps.RemoveRange(steps);
+            //db.Steps.RemoveRange(steps);
             //----------------------------------------------------------------------
-            var ratings = db.Ratings.Where(r => r.RecipeId == id).ToList();
-            db.Ratings.RemoveRange(ratings);
-            var comments = db.Comments.Where(c => c.RecipeId == id).ToList();
-            db.Comments.RemoveRange(comments);
-            var favorites = db.Favorites.Where(f => f.RecipeId == id).ToList();
-            db.Favorites.RemoveRange(favorites);
-            // 4️⃣ 刪除 Recipe 本身
-            db.Recipes.Remove(recipe);
+            //var ratings = db.Ratings.Where(r => r.RecipeId == id).ToList();
+            //db.Ratings.RemoveRange(ratings);
+            //var comments = db.Comments.Where(c => c.RecipeId == id).ToList();
+            //db.Comments.RemoveRange(comments);
+            //var favorites = db.Favorites.Where(f => f.RecipeId == id).ToList();
+            //db.Favorites.RemoveRange(favorites);
+            //// 4️⃣ 刪除 Recipe 本身
+            //db.Recipes.Remove(recipe);
 
             db.SaveChanges();
             //--------------------試做refreshToken-----------------------------------
@@ -796,13 +686,13 @@ namespace RecipeTest.Controllers
         [HttpPut]
         [Route("api/recipes/{id}/steps/bulk")]
         [JwtAuthFilter]
-        public IHttpActionResult UpdateStepsBulk(int id, List<StepDto> steps)
+        public IHttpActionResult UpdateStepsBulk(int id, List<StepDto> steps) //ok
         {
             var user = userhash.GetUserFromJWT();
             // 確認該食譜存在
-            var recipe = db.Recipes.FirstOrDefault(r => r.Id == id && r.UserId == user.Id);
+            var recipe = db.Recipes.FirstOrDefault(r => r.Id == id &&!r.IsDeleted && !r.IsArchived && r.UserId == user.Id);
             if (recipe == null)
-                return NotFound();
+                return Ok(new { StatusCode = 400, msg = "找不到該食譜" });
 
             // 移除原本的所有步驟
             var originalSteps = db.Steps.Where(s => s.RecipeId == id).ToList();
@@ -840,15 +730,15 @@ namespace RecipeTest.Controllers
         }
         //------------------------------------食譜發布狀態更新-----------------------------------
         [HttpPatch]
-        [Route("api/recipes/{id}/publish")]
+        [Route("api/recipes/{id}/publish")]//ok
         [JwtAuthFilter]
         public IHttpActionResult UpdateIsPublished(int id, [FromBody] JObject data)
         {
             var user = userhash.GetUserFromJWT();
-            var recipe = db.Recipes.FirstOrDefault(r => r.Id == id && r.UserId == user.Id);
+            var recipe = db.Recipes.FirstOrDefault(r => r.Id == id && !r.IsArchived && !r.IsDeleted && r.UserId == user.Id);
             if (recipe == null)
             {
-                return NotFound();
+                return Ok(new { StatusCode = 400, msg = "未找到食譜" });
             }
 
             // 取得 isPublished 值（從 JSON body 中）
@@ -929,7 +819,7 @@ namespace RecipeTest.Controllers
 
         //---------------------------------------更新食譜的封面以及名稱-------------------------------------
         [HttpPut]
-        [Route("api/recipes/{id}/name-photos")]
+        [Route("api/recipes/{id}/name-photos")] //ok
         [JwtAuthFilter]
         public async Task<IHttpActionResult> UpdateRecipeTitleAndPhoto(int id)
         {
@@ -954,7 +844,7 @@ namespace RecipeTest.Controllers
             }
             try
             {
-                var recipe = db.Recipes.FirstOrDefault(r => r.Id == id && r.UserId == user.Id);
+                var recipe = db.Recipes.FirstOrDefault(r => r.Id == id && !r.IsDeleted && !r.IsArchived && r.UserId == user.Id);
                 if (recipe == null)
                 {
                     return Ok(new { StatusCode = 400, msg = "查無此食譜" });
@@ -1022,16 +912,16 @@ namespace RecipeTest.Controllers
         }
         //---------------------------------------獲取食譜的草稿--------------------------------------
         [HttpGet]
-        [Route("api/recipes/{id}/draft")]
+        [Route("api/recipes/{id}/draft")] //ok
         [JwtAuthFilter]
         public IHttpActionResult getRecipeDraft(int id)
         {
             var user = userhash.GetUserFromJWT();
             //有設定只能獲取草稿
-            var recipe = db.Recipes.FirstOrDefault(r => r.Id == id && r.UserId == user.Id && !r.IsPublished);
+            var recipe = db.Recipes.FirstOrDefault(r => r.Id == id && r.UserId == user.Id && !r.IsPublished &&!r.IsArchived && !r.IsDeleted);
             if (recipe == null)
             {
-                return NotFound();
+                return Ok(new{ StatusCode = 400, msg = "查無此食譜或食譜已發布" });
             }
             var recipeData = new
             {
@@ -1086,11 +976,9 @@ namespace RecipeTest.Controllers
                 steps = stepData,
                 newToken = newToken,
             };
-
-
-
             return Ok(res);
         }
+        //--------------------------------刪除步驟//留給後台//這個錢台應該不要有需要再寫------------------------------------
 
         [HttpDelete]
         [Route("api/recipes/{id}/steps/{stepId}")]
@@ -1136,7 +1024,7 @@ namespace RecipeTest.Controllers
 
             return Ok(res);
         }
-
+        //--------------------------------刪除食材//留給後台//這個錢台應該不要有需要再寫------------------------------------
         [HttpDelete]
         [Route("api/recipes/{recipeId}/ingredient/{ingredientId}")]
         [JwtAuthFilter]

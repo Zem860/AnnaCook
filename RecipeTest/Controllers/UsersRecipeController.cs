@@ -13,6 +13,7 @@ using MyWebApiProject.Security;
 using Antlr.Runtime.Tree;
 using Jose;
 using Org.BouncyCastle.Asn1.Crmf;
+using RecipeTest.Enums;
 namespace RecipeTest.Controllers
 {
     public class UsersRecipeController : ApiController
@@ -227,8 +228,17 @@ namespace RecipeTest.Controllers
         [JwtAuthFilter]
         public IHttpActionResult unfollowUser(int id)
         {
+
             var user = userhash.GetUserFromJWT();
+            var userData = db.Users.FirstOrDefault(u => u.Id == user.Id);
+            //檢查本使用者是否有權限問題
+            var checkUser = new UserEncryption();
+            var statusCheck = checkUser.GetUserStatusErrorMessage(userData);
+            if (statusCheck != null) return Ok(new { statusCode = 403, msg = statusCheck });
             var follow = db.Follows.FirstOrDefault(f => f.UserId == user.Id && f.FollowedUserId == id);
+            var targetUser = db.Users.FirstOrDefault(u => u.Id == id);
+            if (targetUser == null || targetUser.IsDeleted || targetUser.IsBanned ||targetUser.UserRole==UserRoles.Admin)
+                return Ok(new { statusCode = 404, msg = "找不到要取消追蹤的使用者或該帳號已停權" });
             bool hasData = follow != null;
             var newToken = "";
             if (hasData)
@@ -258,24 +268,28 @@ namespace RecipeTest.Controllers
         {
             var user = userhash.GetUserFromJWT();
             var userData = db.Users.FirstOrDefault(u => u.Id == user.Id);
-            var statusCheck = ValidateUserStatus(userData);
-            if (statusCheck != null) return statusCheck;
+            //檢查本使用者是否有權限問題
+            var checkUser = new UserEncryption();
+            var statusCheck = checkUser.GetUserStatusErrorMessage(userData);
+            if (statusCheck != null) return Ok(new { statusCode = 403, msg = statusCheck });
 
             if (user.Id == id)
             {
-                return BadRequest("使用者不能追蹤自己");
+                return Ok(new { StatusCode=400, msg="使用者不能追隨自己"});
             }
-            var target = db.Users.FirstOrDefault(u => u.Id == id && !u.IsBanned && !u.IsDeleted);
+            var target = db.Users.FirstOrDefault(u => u.Id == id && !u.IsBanned && !u.IsDeleted&&u.UserRole!=UserRoles.Admin);
+
             bool hasTarget = target != null;
             if (!hasTarget)
             {
-                return BadRequest("找不到這個使用者，使用者或許以停權或已被刪除");
+                return Ok(new { StatusCode = 400, msg="找不到這個使用者，使用者或許以停權或已被刪除"});
             }
             var follow = db.Follows.FirstOrDefault(f => f.UserId == user.Id && f.FollowedUserId == id);
+
             bool hasData = follow != null;
             if (hasData)
             {
-                return BadRequest("已經追蹤過了");
+                return Ok(new { StatusCode = 400, msg = "已經追蹤過了" });
             }
             var follows = new Follows();
             follows.UserId = user.Id;

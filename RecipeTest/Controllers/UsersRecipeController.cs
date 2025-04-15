@@ -53,7 +53,7 @@ namespace RecipeTest.Controllers
 
         [HttpGet]
         [Route("api/recipes/{recipeId}/rating-comment")]
-        public IHttpActionResult getRatingComment(int recipeId, int page = 1)
+        public IHttpActionResult getRatingComment(int recipeId, int number = 1)
         {
             var recipeComment = db.Comments.Where(c => c.RecipeId == recipeId &&!c.Users.IsDeleted&&!c.Users.IsBanned);
 
@@ -62,7 +62,7 @@ namespace RecipeTest.Controllers
                 return Ok(new { StatusCode=400, msg="未找到任何留言"});
             }
             int pageSize = 3;
-            int skip = (page - 1) * pageSize;
+            int skip = (number - 1) * pageSize;
             var totalCount = recipeComment.Count();
             var data = recipeComment
                 .OrderByDescending(rc => rc.CreatedAt)
@@ -321,6 +321,17 @@ namespace RecipeTest.Controllers
         public IHttpActionResult RemoveFavorite(int id)
         {
             var user = userhash.GetUserFromJWT();
+            var userData = db.Users.FirstOrDefault(u => u.Id == user.Id);
+            //檢查本使用者是否有權限問題
+            var checkUser = new UserEncryption();
+            var statusCheck = checkUser.GetUserStatusErrorMessage(userData);
+            if (statusCheck != null) return Ok(new { statusCode = 403, msg = statusCheck });
+            var recipe = db.Recipes.FirstOrDefault(r => r.Id == id && !r.IsDeleted && r.IsPublished);
+            if (recipe == null)
+            {
+                return Ok(new { statusCode = 404, msg = "找不到該食譜或已被刪除" });
+            }
+
             var favorite = db.Favorites.FirstOrDefault(f => f.UserId == user.Id && f.RecipeId == id);
             bool hasData = favorite != null;
             var newToken = "";
@@ -351,17 +362,15 @@ namespace RecipeTest.Controllers
         public IHttpActionResult AddFavorite(int id)
         {
             var user = userhash.GetUserFromJWT();
-            var recipe = db.Recipes.FirstOrDefault(r => r.Id == id);
+            var userData = db.Users.FirstOrDefault(u => u.Id == user.Id);
+            //檢查本使用者是否有權限問題
+            var checkUser = new UserEncryption();
+            var statusCheck = checkUser.GetUserStatusErrorMessage(userData);
+            if (statusCheck != null) return Ok(new { statusCode = 403, msg = statusCheck });
+            var recipe = db.Recipes.FirstOrDefault(r => r.Id == id && !r.IsDeleted && r.IsPublished);
             if (recipe == null)
             {
-                return BadRequest("找不到該食譜");
-            }
-            if (!recipe.IsPublished)
-            {
-                return Ok(new {
-                    StatusCode = 401,
-                    msg= "該食譜尚未公開不能收藏",
-                });
+                return Ok(new { statusCode = 404, msg = "找不到該食譜或已被刪除" });
             }
 
             var favorite = db.Favorites.FirstOrDefault(f => f.UserId == user.Id && f.RecipeId == id);
@@ -391,140 +400,63 @@ namespace RecipeTest.Controllers
             };
             return Ok(res);
         }
-
-        [HttpDelete]
-        [Route("api/userRating/{id}")]
-        public IHttpActionResult DeleteRating(int id)
-        {
-            var rating = db.Ratings.FirstOrDefault(r => r.RecipeId == id);
-            if (rating == null)
-            {
-                return Content(HttpStatusCode.NotFound, new { msg = "找不到這筆評分" });
-            }
-
-            db.Ratings.Remove(rating);
-            db.SaveChanges();
-
-            return Ok(new { msg = "刪除成功" });
-        }
-
-
-        [HttpPost]
-        [Route("api/recipes/{recipeId}/ratings")]
-        [JwtAuthFilter]
-        public IHttpActionResult UserRating(int recipeId, ComplexUserRecipe.RatingDto ratingDto)
-        {
-            var user = userhash.GetUserFromJWT();
-            var rating = db.Ratings.FirstOrDefault(r => r.UserId == user.Id && r.Recipes.Id == recipeId);
-            bool hasData = rating != null;
-            if (hasData)
-            {
-                return BadRequest("你已經評分過了");
-            }
-            else
-            {
-                try
-                {
-                    rating = new Ratings();
-                    rating.UserId = user.Id;
-                    rating.RecipeId = recipeId;
-                    rating.Rating = ratingDto.Rating;
-                    db.Ratings.Add(rating);
-                    db.SaveChanges(); // <== 必須先存入資料庫
-                    var RecipeRatings = db.Ratings.Where(r => r.RecipeId == recipeId);
-                    decimal AvgRating = (decimal)Math.Round(RecipeRatings.Average(r => r.Rating), 1);
-                    var recipe = db.Recipes.FirstOrDefault(r => r.Id == recipeId);
-                    bool hasRecipe = recipe != null;
-                    if (hasRecipe)
-                    {
-                        recipe.Rating = AvgRating;
-                        db.SaveChanges();
-                    }
-                    var res = new
-                    {
-                        StatusCode = 200,
-                        msg = "評分成功",
-                        data = new
-                        {
-                            recipeId = recipeId,
-                            rating = ratingDto.Rating
-                        }
-                    };
-
-                    return Ok(res);
-                }
-                catch (Exception ex)
-                {
-
-                    var res = new
-                    {
-                        StatusCode = 500,
-                        msg = "評分失敗",
-
-                    };
-
-                    return Ok(ex);
-                }
-
-            }
-        }
         //---------------------以下暫時保留------------------------------
         //---------------------使用者刪除評分評論------------------------
-        [HttpDelete]
-        [Route("api/recipes/{recipeId}/rating-comment")]
-        [JwtAuthFilter]
-        public IHttpActionResult DeleteRatingAndComment(int recipeId)
-        {
-            var user = userhash.GetUserFromJWT();
-            var rating = db.Ratings.FirstOrDefault(r => r.UserId == user.Id && r.RecipeId == recipeId);
-            if (rating == null)
-            {
-                return Ok(new { StatusCode=400, msg="你尚未評分"});
-            }
-            else
-            {
-                try
-                {
-                    db.Ratings.Remove(rating);
-                    var comments = db.Comments.FirstOrDefault(c => c.UserId == user.Id && c.RecipeId == recipeId);
-                    db.Comments.Remove(comments);
-                    db.SaveChanges();
-                    var ratings = db.Ratings.Where(r => r.RecipeId == recipeId);
-                    var avg = Math.Round(ratings.Average(r => r.Rating), 1);
-                    var recipe = db.Recipes.FirstOrDefault(r => r.Id == recipeId);
-                    bool hasRecipe = (recipe != null);
-                    if (hasRecipe)
-                    {
-                        recipe.Rating = (decimal)avg;
-                        db.SaveChanges();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    return Ok(new
-                    {
-                        msg = "刪除評分與留言失敗",
-                        error = ex.Message
-                    });
-                }
-            }
+        //[HttpDelete]
+        //[Route("api/recipes/{recipeId}/rating-comment")]
+        //[JwtAuthFilter]
+        //public IHttpActionResult DeleteRatingAndComment(int recipeId)
+        //{
+        //    var user = userhash.GetUserFromJWT();
+        //    var rating = db.Ratings.FirstOrDefault(r => r.UserId == user.Id && r.RecipeId == recipeId);
+        //    if (rating == null)
+        //    {
+        //        return Ok(new { StatusCode=400, msg="你尚未評分"});
+        //    }
+        //    else
+        //    {
+        //        try
+        //        {
+        //            db.Ratings.Remove(rating);
+        //            var comments = db.Comments.FirstOrDefault(c => c.UserId == user.Id && c.RecipeId == recipeId);
+        //            db.Comments.Remove(comments);
+        //            db.SaveChanges();
+        //            var ratings = db.Ratings.Where(r => r.RecipeId == recipeId);
+        //            var avg = Math.Round(ratings.Average(r => r.Rating), 1);
+        //            var recipe = db.Recipes.FirstOrDefault(r => r.Id == recipeId);
+        //            bool hasRecipe = (recipe != null);
+        //            if (hasRecipe)
+        //            {
+        //                recipe.Rating = (decimal)avg;
+        //                db.SaveChanges();
+        //            }
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            return Ok(new
+        //            {
+        //                msg = "刪除評分與留言失敗",
+        //                error = ex.Message
+        //            });
+        //        }
+        //    }
 
-            //--------------------試做refreshToken-----------------------------------
-            string token = userhash.GetRawTokenFromHeader();
-            var payload = JwtAuthUtil.GetPayload(token);
-            var newToken = jwt.ExpRefreshToken(payload);
-            var res = new
-            {
-                StatusCode = 200,
-                msg = "刪除評分與留言成功",
-                data = new
-                {
-                    recipeId = recipeId
-                },
-                newToken = newToken,
-            };
-            return Ok(res);
-        }
+        //    //--------------------試做refreshToken-----------------------------------
+        //    string token = userhash.GetRawTokenFromHeader();
+        //    var payload = JwtAuthUtil.GetPayload(token);
+        //    var newToken = jwt.ExpRefreshToken(payload);
+        //    var res = new
+        //    {
+        //        StatusCode = 200,
+        //        msg = "刪除評分與留言成功",
+        //        data = new
+        //        {
+        //            recipeId = recipeId
+        //        },
+        //        newToken = newToken,
+        //    };
+        //    return Ok(res);
+        //}
 
     }
 }

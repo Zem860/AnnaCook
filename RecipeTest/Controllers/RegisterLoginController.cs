@@ -181,14 +181,14 @@ namespace RecipeTest.Controllers
                 var result = await response.Content.ReadAsStringAsync();
                 if (!response.IsSuccessStatusCode)
                 {
-                    return BadRequest("google token error");
+                    return Ok(new { StatusCode = 401, msg = "google token error" });
                 }
 
                 dynamic tokenData = JsonConvert.DeserializeObject(result);
                 string accessToken = tokenData.access_token;
                 string refreshToken = tokenData.refresh_token;
                 if (string.IsNullOrEmpty(accessToken))
-                    return BadRequest("access_token 為空");
+                    return Ok(new { StatusCode = 400, msg = "access_token 為空" });
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
                 var userInfoResponse = await client.GetAsync("https://www.googleapis.com/oauth2/v2/userinfo");
                 var userInfoJson = await userInfoResponse.Content.ReadAsStringAsync();
@@ -198,11 +198,12 @@ namespace RecipeTest.Controllers
 
                 if (!userInfoResponse.IsSuccessStatusCode)
                 {
+                    loginTimeRecord.UserId = 0; // ❗此時尚未取得使用者資訊，無法指定 ID
                     loginTimeRecord.LoginAction = (int)LoginActions.LoginFail;
                     loginTimeRecord.ActionTime = DateTime.Now;
                     db.LoginRecords.Add(loginTimeRecord);
                     db.SaveChanges();
-                    return BadRequest("google user info error");
+                    return Ok(new {StatusCode=502, msg = "google user info error" });
                 }
 
                 dynamic userInfo = JsonConvert.DeserializeObject(userInfoJson);
@@ -237,6 +238,7 @@ namespace RecipeTest.Controllers
                     user.UpdatedAt = DateTime.Now;
                     db.Users.Add(user);
                     db.SaveChanges();
+                    //前面因為有dbsavechange因為怕沒有userId所以這邊要再查一次把user帶進來
                     if (user.Id == 0)
                     {
                         user = db.Users.FirstOrDefault(u => u.AccountEmail == email && u.LoginProvider == LoginProvider.Google);
@@ -248,6 +250,7 @@ namespace RecipeTest.Controllers
                 }
             }
             //---------紀錄登入時間-----------------
+            loginTimeRecord.UserId = user.Id;
             loginTimeRecord.LoginAction = (int)LoginActions.LoginSuccess;
             loginTimeRecord.ActionTime = DateTime.Now;
             db.LoginRecords.Add(loginTimeRecord);
@@ -256,7 +259,6 @@ namespace RecipeTest.Controllers
             var jwt = new JwtAuthUtil();
             var userToken = new UserRelated.UserTokenData();
             userToken.Id = user.Id;
-            userToken.DisplayId = user.DisplayId;
             userToken.AccountEmail = user.AccountEmail;
             userToken.AccountName = user.AccountName;
             userToken.DisplayId = user.DisplayId;

@@ -16,7 +16,7 @@ namespace RecipeTest.Controllers
         //Emma改設定了要改變
         [HttpGet]
         [Route("api/home/recipes/by-tag/{tag}")] //not ok
-        public IHttpActionResult GetTagRecipes(string tag, int page=1)
+        public IHttpActionResult GetTagRecipes(string tag, int number=1)
         {
             const int pageSize = 6;
             var recipes = db.Recipes.Where(r => r.IsPublished && !r.IsDeleted && !r.IsArchived&& r.RecipeTags.Any(rt => rt.Tags.TagName.Contains(tag))).OrderByDescending(r=>r.CreatedAt).Skip(0).Take(pageSize);
@@ -42,11 +42,11 @@ namespace RecipeTest.Controllers
 
         [HttpGet]
         [Route("api/home/recipes")] //ok
-        public IHttpActionResult GetRecipes(string type = "latest", int page = 1)
+        public IHttpActionResult GetRecipes(string type = "latest", int number = 1)
         {
             const int pageSize = 5;
             var query = db.Recipes.AsQueryable();
-            int skip = ((page - 1) * pageSize);
+            int skip = ((number - 1) * pageSize);
             query = query.Where(r => r.IsPublished == true && !r.IsArchived && !r.IsDeleted); // 只選擇已發布的食譜
 
             switch (type.ToLower())
@@ -66,7 +66,7 @@ namespace RecipeTest.Controllers
             }
 
             int totalCount = query.Count();
-            bool hasMore = page * pageSize < totalCount; // 判斷是否還有下一頁
+            bool hasMore = number * pageSize < totalCount; // 判斷是否還有下一頁
             var result = query.Skip(skip).Take(pageSize).Select(r => new
             {
                 id = r.Id,

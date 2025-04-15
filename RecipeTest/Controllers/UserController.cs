@@ -109,7 +109,7 @@ namespace RecipeTest.Controllers
 
         [HttpGet]
         [Route("api/user/{displayId}/recipes")]
-        public IHttpActionResult GetUserRecipes(string displayId, int page = 1)
+        public IHttpActionResult GetUserRecipes(string displayId, int number = 1)
         {
             var user = db.Users.FirstOrDefault(u => u.DisplayId == displayId);
             bool hasUser = user != null;
@@ -119,8 +119,8 @@ namespace RecipeTest.Controllers
             }
             int pageSize = 3;
             var totalCount = db.Recipes.Count(r => r.UserId == user.Id && r.IsPublished);
-            int skip = (page - 1) * pageSize;
-            bool hasMore = page * pageSize < totalCount; // 判斷是否還有下一頁
+            int skip = (number - 1) * pageSize;
+            bool hasMore = number * pageSize < totalCount; // 判斷是否還有下一頁
 
             // ✅ 取得封面圖片的食譜列表（略）
             var recipes = db.Recipes

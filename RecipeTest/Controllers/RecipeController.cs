@@ -40,7 +40,7 @@ namespace RecipeTest.Controllers
 
         [HttpGet]
         [Route("api/recipes/search")]//ok
-        public IHttpActionResult SearchRecipe(string searchData = "", string type = "createdAt", int page = 1)
+        public IHttpActionResult SearchRecipe(string searchData = "", string type = "createdAt", int number = 1)
         {
             int pageSize = 10;
             var query = db.Recipes.AsQueryable();
@@ -67,7 +67,7 @@ namespace RecipeTest.Controllers
             var totalCount = query.Count();
 
             var pagedQuery = query
-                .Skip((page - 1) * pageSize)
+                .Skip((number - 1) * pageSize)
                 .Take(pageSize);
 
             var result = pagedQuery.Select(r => new
@@ -89,13 +89,13 @@ namespace RecipeTest.Controllers
                     .FirstOrDefault()
             }).ToList();
 
-            bool hasMore = page * pageSize < totalCount; 
+            bool hasMore = number * pageSize < totalCount; 
 
             var res = new
             {
                 StatusCode = 200,
                 msg = totalCount > 0 ? $"獲取資料{result.Count}筆" : "查無資料",
-                page = $"第{page}頁",
+                number = $"page {number}",
                 hasMore = hasMore,
                 totalCount = totalCount,
                 data = result

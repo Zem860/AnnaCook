@@ -19,6 +19,7 @@ using RecipeTest.Security;
 using MyWebApiProject.Security;
 using RecipeTest.Enums;
 using Org.BouncyCastle.Asn1.X509;
+using Microsoft.Ajax.Utilities;
 
 namespace RecipeTest.Controllers
 {
@@ -30,7 +31,7 @@ namespace RecipeTest.Controllers
     {
         private RecipeModel db = new RecipeModel();
         private string localStorragePath = HttpContext.Current.Server.MapPath("~/TestPhoto");
-        private string[] allowedExtensions = { ".jpg", ".jpeg", ".png" };
+        private string[] allowedExtensions = { ".jpg", ".jpeg", ".png", ".webp" };
         private string vimeoAccessToken = ConfigurationManager.AppSettings["VimeoAccessToken"];
         private string vimeoUploadUrl = "https://api.vimeo.com/me/videos";
         private JwtAuthUtil jwt = new JwtAuthUtil();
@@ -1024,6 +1025,46 @@ namespace RecipeTest.Controllers
 
             return Ok(res);
         }
+        //--------------------------------刪除食譜-----------------------------------
+        [HttpPatch]
+        [Route("api/recipes/delete-multiple")]
+        [JwtAuthFilter]
+        public IHttpActionResult DeleteRecipes([FromBody] List<int> ids)
+        {
+            var user = userhash.GetUserFromJWT();
+
+            var userData = db.Users.FirstOrDefault(u => u.Id == user.Id);
+            //檢查本使用者是否有權限問題
+            var statusCheck = userhash.GetUserStatusErrorMessage(userData);
+            if (statusCheck != null) return Ok(new { statusCode = 403, msg = statusCheck });
+
+            var recipes = db.Recipes.Where(r=> ids.Contains(r.Id) && r.UserId == user.Id && !r.IsPublished&& !r.IsDeleted && !r.IsArchived).ToList();
+            if (recipes.Count == 0)
+            {
+                return Ok(new { StatusCode = 400, msg = "找不到符合的食譜" });
+            }
+
+            foreach(var recipe in recipes)
+            {
+                recipe.IsDeleted = true;
+            }
+
+            db.SaveChanges();
+            //--------------------試做refreshToken-----------------------------------
+            string token = userhash.GetRawTokenFromHeader();
+            var payload = JwtAuthUtil.GetPayload(token);
+            var newToken = jwt.ExpRefreshToken(payload);
+            var res = new
+            {
+                StatusCode = 200,
+                msg = $"食譜刪除成功",
+                deletedIds = recipes.Select(r => r.Id).ToList(),
+                newToken = newToken,
+            };
+            return Ok(res);
+        }
+
+
         //--------------------------------刪除食材//留給後台//這個錢台應該不要有需要再寫------------------------------------
         [HttpDelete]
         [Route("api/recipes/{recipeId}/ingredient/{ingredientId}")]

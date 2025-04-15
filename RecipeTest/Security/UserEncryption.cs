@@ -8,6 +8,8 @@ using System;
 using MailKit.Net.Smtp; // ✅ 這個才是 MailKit 的 SmtpClient
 using MimeKit;
 using System.Net.Http;
+using RecipeTest.Models;
+using System.Web.Http;
 
 
 
@@ -15,6 +17,23 @@ namespace RecipeTest.Security
 {
     public class UserEncryption
     {
+
+        public string GetUserStatusErrorMessage(Users user)
+        {
+            if (user.IsDeleted)
+                return "此帳號已被刪除，無法留言";
+
+            if (!user.IsCommentable)
+                return "你的留言權限已被限制";
+
+            if (user.IsBanned)
+                return "此帳號已被停權，請聯繫客服";
+
+            if (!user.IsUploadable)
+                return "此帳號無法上傳，請聯繫客服";
+
+            return null; // 沒問題
+        }
 
         public string getClientIp()
         {

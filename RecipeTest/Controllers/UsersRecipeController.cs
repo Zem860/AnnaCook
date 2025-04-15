@@ -20,7 +20,6 @@ namespace RecipeTest.Controllers
         private RecipeModel db = new RecipeModel();
         private UserEncryption userhash = new UserEncryption();
         private JwtAuthUtil jwt = new JwtAuthUtil();
-
         //--------------分享食譜----------------
         [HttpPost]
         [Route("api/recipes/{id}/share")]
@@ -55,11 +54,11 @@ namespace RecipeTest.Controllers
         [Route("api/recipes/{recipeId}/rating-comment")]
         public IHttpActionResult getRatingComment(int recipeId, int page = 1)
         {
-            var recipeComment = db.Comments.Where(c => c.RecipeId == recipeId);
+            var recipeComment = db.Comments.Where(c => c.RecipeId == recipeId &&!c.Users.IsDeleted&&!c.Users.IsBanned);
 
             if (!recipeComment.Any())
             {
-                return NotFound();
+                return Ok(new { StatusCode=400, msg="未找到任何留言"});
             }
             int pageSize = 3;
             int skip = (page - 1) * pageSize;
@@ -93,6 +92,50 @@ namespace RecipeTest.Controllers
             return Ok(res);
         }
 
+        //---------------------編輯評分評論------------------------------
+        [HttpPut]
+        [Route("api/recipes/{recipeId}/rating-comment")] //ok
+        [JwtAuthFilter]
+        public IHttpActionResult EditRatingAndComment(int recipeId, ComplexUserRecipe.RatingCommentDto dto)
+        {
+            var user = userhash.GetUserFromJWT();
+            var userData = db.Users.FirstOrDefault(u => u.Id == user.Id);
+            //檢查本使用者是否有權限問題
+            var checkUser = new UserEncryption();
+            var statusCheck = checkUser.GetUserStatusErrorMessage(userData);
+            if (statusCheck != null) return Ok(new { statusCode = 403, msg = statusCheck });
+
+            if (dto.Rating == 0)
+            {
+                return Ok(new { StatusCode = 401, msg = "你尚未對食譜平分" });
+            }
+            if (String.IsNullOrEmpty(dto.CommentContent))
+            {
+                return Ok(new { StatusCode = 401, msg = "您尚未對食譜有任何留言" });
+            }
+            var rating = db.Ratings.FirstOrDefault(r => r.RecipeId == recipeId && r.UserId == user.Id);
+            if (rating == null)
+            {
+                return Ok(new {StatusCode=400,msg="找不到您的評分紀錄"});
+            }
+
+            rating.Rating = dto.Rating;
+            rating.UpdatedAt = DateTime.Now;
+
+            var comment = db.Comments.FirstOrDefault(c => c.RecipeId == recipeId && c.UserId == user.Id);
+            if (comment == null)
+            {
+                return BadRequest("找不到您的留言紀錄");
+            }
+
+            comment.CommentContent = dto.CommentContent;
+            comment.UpdatedAt = DateTime.Now;
+
+            db.SaveChanges();
+
+
+            return Ok(new {StatusCode = 400, msg="修改留言成功", Id=recipeId});
+        }
         //---------------------新增食譜評分與評論------------------------------
 
         [HttpPost]
@@ -101,6 +144,11 @@ namespace RecipeTest.Controllers
         public IHttpActionResult AddRatingAndComment(int recipeId, ComplexUserRecipe.RatingCommentDto dto)
         {
             var user = userhash.GetUserFromJWT();
+            var userData = db.Users.FirstOrDefault(u => u.Id == user.Id);
+            //檢查本使用者是否有權限問題
+            var checkUser = new UserEncryption();
+            var statusCheck = checkUser.GetUserStatusErrorMessage(userData);
+            if (statusCheck != null) return Ok(new { statusCode = 403, msg = statusCheck });
 
             var recipe = db.Recipes.FirstOrDefault(r => r.Id == recipeId);
             if (recipe.UserId == user.Id)
@@ -209,15 +257,19 @@ namespace RecipeTest.Controllers
         public IHttpActionResult followUser(int id)
         {
             var user = userhash.GetUserFromJWT();
+            var userData = db.Users.FirstOrDefault(u => u.Id == user.Id);
+            var statusCheck = ValidateUserStatus(userData);
+            if (statusCheck != null) return statusCheck;
+
             if (user.Id == id)
             {
                 return BadRequest("使用者不能追蹤自己");
             }
-            var target = db.Users.FirstOrDefault(u => u.Id == id);
+            var target = db.Users.FirstOrDefault(u => u.Id == id && !u.IsBanned && !u.IsDeleted);
             bool hasTarget = target != null;
             if (!hasTarget)
             {
-                return BadRequest("找不到這個使用者");
+                return BadRequest("找不到這個使用者，使用者或許以停權或已被刪除");
             }
             var follow = db.Follows.FirstOrDefault(f => f.UserId == user.Id && f.FollowedUserId == id);
             bool hasData = follow != null;

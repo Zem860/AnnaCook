@@ -33,8 +33,17 @@ namespace RecipeTest.Models
         [Display(Name = "圖片連結")]
         public string LinkUrl { get; set; }
 
+        [Column(TypeName ="int")]
+        [Display(Name ="廣告優先順序(首頁版面)")]
+        public int? Priority { get; set; }
+
+        [Required]
+        [Column(TypeName = "nvarchar")]
+        [MaxLength(100)]
+        public string AdvertiserName { get; set; }
+
         [Column(TypeName = "decimal")]
-        [Display(Name = "廣告商品價")]
+        [Display(Name = "廣告價格")]
         public decimal? AdPrice { get; set; } = 0;
 
         [Required]
@@ -46,6 +55,7 @@ namespace RecipeTest.Models
         [Required]
         [StringLength(100)]
         [Column(TypeName ="nvarchar")]
+        [Display(Name ="廣告摘要")]
         public string AdIntro { get; set; }
 
         [Column(TypeName = "DATETIME")]

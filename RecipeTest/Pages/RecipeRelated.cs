@@ -2,12 +2,26 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Newtonsoft.Json;
 using RecipeTest.Models;
 
 namespace RecipeTest.Pages
 {
     public class RecipeRelated
     {
+        public class FeatureCustomTags
+        {
+            [JsonProperty("sectionPos")]
+            public int SectionPos { get; set; }
+            [JsonProperty("SectionName")]
+            public string SectionName { get; set; }
+            [JsonProperty("customTags")]
+            public List<string> CustomTags { get; set; }
+            [JsonProperty("isActive")]
+            public bool isActive { get; set; }
+        }
+
+
         private Recipes GetValidRecipe(int id)
         {
             RecipeModel db = new RecipeModel();

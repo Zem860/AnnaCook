@@ -23,7 +23,7 @@ namespace RecipeTest.Security
                 { "AccountName", user.AccountName },
                 { "Role", user.Role },
                 { "LoginProvider", user.LoginProvider },
-                { "Exp", DateTime.UtcNow.AddMinutes(30).ToString("o") }, // 建議設定長一點，例如 30 分
+                { "Exp", DateTime.UtcNow.AddHours(3).ToString("o") }, // 建議設定長一點，例如 30 分
             };
             var token = JWT.Encode(payload, Encoding.UTF8.GetBytes(secretKey), JwsAlgorithm.HS512);
             return token;

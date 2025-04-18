@@ -43,6 +43,11 @@ namespace RecipeTest.Models
         [Display(Name = "幣別")]
         public string Currency { get; set; }
 
+        [Required]
+        [StringLength(100)]
+        [Column(TypeName ="nvarchar")]
+        public string AdIntro { get; set; }
+
         [Column(TypeName = "DATETIME")]
         [Display(Name = "上架日期")]
         public DateTime StartDate { get; set; } = DateTime.Now;

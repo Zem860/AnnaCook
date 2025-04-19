@@ -75,33 +75,33 @@
             //context.SaveChanges(); // 移出迴圈，只存一次
 
             //1️⃣ 確保 Admin 存在
-            var admin = context.Users.FirstOrDefault(u => u.AccountEmail == "admin@annacook.com");
-            if (admin == null)
-            {
-                var encryption = new UserEncryption();
-                byte[] salt = encryption.createSalt();
-                string saltString = Convert.ToBase64String(salt);
-                byte[] hash = encryption.HashPassword("ABC123123123", salt);
-                string hashString = Convert.ToBase64String(hash);
-                admin = new Users
-                {
-                    DisplayId = "A000001",
-                    AccountEmail = "admin@annacook.com",
-                    PasswordHash = hashString,
-                    Salt = saltString,
-                    AccountName = "Admin",
-                    UserIntro = "我是管理員",
-                    IsVerified = true,
-                    IsBanned = false,
-                    CreatedAt = DateTime.Now,
-                    UpdatedAt = DateTime.Now,
-                    LoginProvider = RecipeTest.Enums.LoginProvider.Local,
-                    UserRole = RecipeTest.Enums.UserRoles.Admin,
-                };
+            //var admin = context.Users.FirstOrDefault(u => u.AccountEmail == "admin@annacook.com");
+            //if (admin == null)
+            //{
+            //    var encryption = new UserEncryption();
+            //    byte[] salt = encryption.createSalt();
+            //    string saltString = Convert.ToBase64String(salt);
+            //    byte[] hash = encryption.HashPassword("ABC123123123", salt);
+            //    string hashString = Convert.ToBase64String(hash);
+            //    admin = new Users
+            //    {
+            //        DisplayId = "A000001",
+            //        AccountEmail = "admin@annacook.com",
+            //        PasswordHash = hashString,
+            //        Salt = saltString,
+            //        AccountName = "Admin",
+            //        UserIntro = "我是管理員",
+            //        IsVerified = true,
+            //        IsBanned = false,
+            //        CreatedAt = DateTime.Now,
+            //        UpdatedAt = DateTime.Now,
+            //        LoginProvider = RecipeTest.Enums.LoginProvider.Local,
+            //        UserRole = RecipeTest.Enums.UserRoles.Admin,
+            //    };
 
-                context.Users.Add(admin);
-                context.SaveChanges(); // 拿到 admin.Id
-            }
+            //    context.Users.Add(admin);
+            //    context.SaveChanges(); // 拿到 admin.Id
+            //}
 
             //// 🔍 讀 JSON
             //var jsonPath = @"C:\Users\zemmy\Downloads\sample40.json";

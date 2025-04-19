@@ -279,6 +279,7 @@
     <Compile Include="Models\SubSteps.cs" />
     <Compile Include="Models\Tags.cs" />
     <Compile Include="Models\Users.cs" />
+    <Compile Include="Pages\AdRelated.cs" />
     <Compile Include="Pages\ComplexUserRecipe.cs" />
     <Compile Include="Pages\RecipeRelated.cs" />
     <Compile Include="Pages\UserRelated.cs" />

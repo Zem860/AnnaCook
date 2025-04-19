@@ -11,7 +11,7 @@ using RecipeTest.Security;
 using System.Web;
 using System.Data.Entity;
 using System.Collections;
-
+using RecipeTest.Pages;
 namespace RecipeTest.Controllers
 {
 
@@ -21,7 +21,7 @@ namespace RecipeTest.Controllers
         private RecipeModel db = new RecipeModel();
         [HttpGet]
         [Route("api/ad")]
-        public IHttpActionResult GetAd(string pos = "home", int? recipeId =null)
+        public IHttpActionResult GetAd(string pos = "home", int? recipeId = null)
         {
             int DisplayLocation;
             string place = string.Empty;
@@ -46,23 +46,23 @@ namespace RecipeTest.Controllers
                     break;
             }
             var adData = db.Advertisements.Include(ad => ad.AdImgs)
-            .Where(ad => ad.AdDisplayPage == DisplayLocation && ad.StartDate < DateTime.Now && ad.EndDate > DateTime.Now && ad.IsEnabled); 
-                if (isRandom)
+            .Where(ad => ad.AdDisplayPage == DisplayLocation && ad.StartDate < DateTime.Now && ad.EndDate > DateTime.Now && ad.IsEnabled);
+            if (isRandom)
+            {
+                if (pos == "recipe" && recipeId.HasValue)
                 {
-                    if(pos =="recipe" && recipeId.HasValue)
-                    {
-                    var recipeTagsId = db.RecipeTags.Where(rt => rt.RecipeId == recipeId).Select(rt=>rt.TagId).ToList();
+                    var recipeTagsId = db.RecipeTags.Where(rt => rt.RecipeId == recipeId).Select(rt => rt.TagId).ToList();
                     var AdTags = db.AdTags.Where(at => recipeTagsId.Contains(at.TagId)).Select(at => at.AdId).Distinct().ToList();
                     adData = adData.Where(ad => AdTags.Contains(ad.Id)).OrderBy(ad => Guid.NewGuid());
-                    }
-                    else
-                    {
-                        adData = adData.OrderBy(ad => Guid.NewGuid()).Take(takeNumber);
-                    }
                 }
-                else 
+                else
                 {
-                    adData = adData.OrderBy(ad => ad.Priority).Take(takeNumber);
+                    adData = adData.OrderBy(ad => Guid.NewGuid()).Take(takeNumber);
+                }
+            }
+            else
+            {
+                adData = adData.OrderBy(ad => ad.Priority).Take(takeNumber);
             }
             var uniqueAds = adData
                 .ToList()  // ✅ 拉進記憶體中（EF 到這裡為止）
@@ -90,56 +90,78 @@ namespace RecipeTest.Controllers
             };
             return Ok(res);
         }
-        //[HttpPost]
-        //[Route("api/adlogs")]
-        //public IHttpActionResult AdLogRecord([FromBody] int adId)
-        //{
-        //    string token = Request.Headers.Authorization?.Parameter;
-        //    string sessionId = Request.Headers.GetValues("X-Session-Id")?.FirstOrDefault();
+        //再與前端討論他要傳哪種ID進來
+        [HttpPost]
+        [Route("api/adlogs")]
+        public IHttpActionResult recordAdRecord(AdRelated.AdLogDto userRecords)
+        {
+            var token = Request.Headers.Authorization?.Parameter;
+            int? currentUserId = 0;
+            if (!string.IsNullOrEmpty(token))
+            {
+                try
+                {
+                    var payload = JwtAuthUtil.GetPayload(token);
+                    currentUserId = ((int?)payload["Id"]).Value;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Token 無法解析：" + ex.Message);
+                }
+            }
+            if (userRecords.IsClick)
+            {
 
-        //    if (string.IsNullOrEmpty(sessionId))
-        //        return BadRequest("缺少 sessionId");
+                bool hasClickedBySession = db.AdViewLogs.Any(av =>
+                av.AdId == userRecords.AdId &&
+                av.SessionId == userRecords.SessionId.ToString() &&
+                av.IsClick &&
+                DbFunctions.TruncateTime(av.ViewedAt) == DateTime.Today
+                    );
 
-        //    int? userId = null;
-        //    if (!string.IsNullOrEmpty(token))
-        //    {
-        //        var user = userhash.GetUserFromJWT();
-        //        userId = user.Id;
-        //    }
+                bool hasClickedByUser = db.AdViewLogs.Any(av => av.AdId == userRecords.AdId && av.UserId == currentUserId && av.IsClick && DbFunctions.TruncateTime(av.ViewedAt) == DateTime.Today);
 
-        //    DateTime today = DateTime.Today;
+                if (hasClickedBySession||hasClickedByUser)
+                {
+                    return Ok(new { StatusCode = 401, msg = "今日已點擊" });
+                }
+            }
 
-        //    // 🔍 檢查有沒有今天看過這則廣告
-        //    var existingLog = db.AdViewLogs.FirstOrDefault(l =>
-        //        l.AdId == adId &&
-        //        DbFunctions.TruncateTime(l.ViewedAt) == today &&
-        //        l.SessionId == sessionId);
+            int displayLocation = 0;
+            switch (userRecords.Pos.ToLower())
+            {
+                case "home":
+                    displayLocation = (int)AdDisplayPageType.Home;
+                    break;
+                case "search":
+                    displayLocation = (int)AdDisplayPageType.SearchList;
+                    break;
+                case "recipe":
+                    displayLocation = (int)AdDisplayPageType.RecipeDetail;
+                    break;
+                default:
+                    return Ok(new { StatusCode = 401, msg = "位置參數錯誤" });
+            }
 
-        //    if (existingLog != null)
-        //    {
-        //        // 🔄 如果是後來登入的，把 userId 補上去
-        //        if (userId != null && existingLog.UserId == null)
-        //        {
-        //            existingLog.UserId = userId;
-        //            db.SaveChanges();
-        //        }
+            var adlog = new AdViewLog();
+            adlog.AdId = userRecords.AdId;
+            adlog.AdDisplayPage = displayLocation;
+            adlog.UserId = currentUserId.HasValue && currentUserId > 0 ? currentUserId : null;
+            adlog.SessionId = userRecords.SessionId.ToString();
+            adlog.IsClick = userRecords.IsClick;
+            adlog.ViewedAt = DateTime.Now;
 
-        //        return Ok(new { msg = "已紀錄，今日不重複" });
-        //    }
-
-        //    // 🆕 沒有紀錄就新增
-        //    db.AdViewLogs.Add(new AdViewLog
-        //    {
-        //        AdId = adId,
-        //        SessionId = sessionId,
-        //        UserId = userId,
-        //        ViewedAt = DateTime.Now
-        //    });
-
-        //    db.SaveChanges();
-
-        //    return Ok(new { msg = "曝光紀錄成功" });
-        //}
-
+            db.AdViewLogs.Add(adlog);
+            db.SaveChanges();
+            var type = userRecords.IsClick ? "點擊" : "觀看";
+            var res = new
+            {
+                StatusCode = 200,
+                msg = $"廣告{type}已記錄",
+                AdId = userRecords.AdId,
+                logId = adlog.Id,
+            };
+            return Ok(res);
+        }
     }
 }

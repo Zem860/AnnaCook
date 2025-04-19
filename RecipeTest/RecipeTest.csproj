@@ -215,6 +215,7 @@
     <Compile Include="Controllers\RecipeController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Enums\AdDisplayPage.cs" />
+    <Compile Include="Enums\FeaturedSectionType.cs" />
     <Compile Include="Enums\LoginActions.cs" />
     <Compile Include="Enums\LoginProvider.cs" />
     <Compile Include="Enums\UserRole.cs" />
@@ -225,13 +226,46 @@
     <Compile Include="Migrations\202504140234041_rebuild-AnnaCook.Designer.cs">
       <DependentUpon>202504140234041_rebuild-AnnaCook.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202504170127246_feat-featuredSection.cs" />
+    <Compile Include="Migrations\202504170127246_feat-featuredSection.Designer.cs">
+      <DependentUpon>202504170127246_feat-featuredSection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202504170211357_add-FeaturedSection-isActive.cs" />
+    <Compile Include="Migrations\202504170211357_add-FeaturedSection-isActive.Designer.cs">
+      <DependentUpon>202504170211357_add-FeaturedSection-isActive.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202504170344198_update-FeaturedSectionName.cs" />
+    <Compile Include="Migrations\202504170344198_update-FeaturedSectionName.Designer.cs">
+      <DependentUpon>202504170344198_update-FeaturedSectionName.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202504170753543_add-adviewlog-table.cs" />
+    <Compile Include="Migrations\202504170753543_add-adviewlog-table.Designer.cs">
+      <DependentUpon>202504170753543_add-adviewlog-table.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202504180259100_add-UserId-toAdViewLog-anddeleteMonthlyPerformance.cs" />
+    <Compile Include="Migrations\202504180259100_add-UserId-toAdViewLog-anddeleteMonthlyPerformance.Designer.cs">
+      <DependentUpon>202504180259100_add-UserId-toAdViewLog-anddeleteMonthlyPerformance.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202504180504399_add-advertiserName-to-ads.cs" />
+    <Compile Include="Migrations\202504180504399_add-advertiserName-to-ads.Designer.cs">
+      <DependentUpon>202504180504399_add-advertiserName-to-ads.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202504180618150_add-priority.cs" />
+    <Compile Include="Migrations\202504180618150_add-priority.Designer.cs">
+      <DependentUpon>202504180618150_add-priority.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202504180841217_add-displayName.cs" />
+    <Compile Include="Migrations\202504180841217_add-displayName.Designer.cs">
+      <DependentUpon>202504180841217_add-displayName.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdImgs.cs" />
-    <Compile Include="Models\AdMonthlyPerformance.cs" />
     <Compile Include="Models\AdTags.cs" />
     <Compile Include="Models\Advertisement.cs" />
+    <Compile Include="Models\AdViewLog.cs" />
     <Compile Include="Models\Comments.cs" />
     <Compile Include="Models\Favorites.cs" />
+    <Compile Include="Models\FeaturedSection.cs" />
     <Compile Include="Models\Follows.cs" />
     <Compile Include="Models\Ingredients.cs" />
     <Compile Include="Models\LoginRecords.cs" />
@@ -252,8 +286,6 @@
     <Compile Include="Security\JWTAuthFilters.cs" />
     <Compile Include="Security\JwtAuthUtil.cs" />
     <Compile Include="Security\UserEncryption.cs" />
-    <Compile Include="SeedData\SeedRecipe.cs" />
-    <Compile Include="SeedData\SeedUser.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />
@@ -402,6 +434,30 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202504140234041_rebuild-AnnaCook.resx">
       <DependentUpon>202504140234041_rebuild-AnnaCook.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202504170127246_feat-featuredSection.resx">
+      <DependentUpon>202504170127246_feat-featuredSection.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202504170211357_add-FeaturedSection-isActive.resx">
+      <DependentUpon>202504170211357_add-FeaturedSection-isActive.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202504170344198_update-FeaturedSectionName.resx">
+      <DependentUpon>202504170344198_update-FeaturedSectionName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202504170753543_add-adviewlog-table.resx">
+      <DependentUpon>202504170753543_add-adviewlog-table.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202504180259100_add-UserId-toAdViewLog-anddeleteMonthlyPerformance.resx">
+      <DependentUpon>202504180259100_add-UserId-toAdViewLog-anddeleteMonthlyPerformance.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202504180504399_add-advertiserName-to-ads.resx">
+      <DependentUpon>202504180504399_add-advertiserName-to-ads.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202504180618150_add-priority.resx">
+      <DependentUpon>202504180618150_add-priority.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202504180841217_add-displayName.resx">
+      <DependentUpon>202504180841217_add-displayName.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

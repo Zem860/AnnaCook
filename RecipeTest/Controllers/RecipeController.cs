@@ -296,19 +296,25 @@ namespace RecipeTest.Controllers
             }
             try
             {
-                //建立唯一顯示ID
-                // 建立唯一顯示ID（避免重複）
-                string lastDisplayId = db.Recipes
+                var candidate = db.Recipes
+                    .Where(r => r.DisplayId.StartsWith("R") && r.DisplayId.Length == 7)
                     .OrderByDescending(r => r.DisplayId)
                     .Select(r => r.DisplayId)
-                    .FirstOrDefault();
+                    .FirstOrDefault(); // ← SQL 執行，只撈一筆
 
-                int number = 0;
-                if (!string.IsNullOrEmpty(lastDisplayId) && lastDisplayId.Length == 7)
+                int lastNumber = 0;
+                if (!string.IsNullOrEmpty(candidate))
                 {
-                    int.TryParse(lastDisplayId.Substring(1), out number);
+                    var numericPart = candidate.Substring(1);
+                    if (numericPart.All(char.IsDigit))
+                    {
+                        lastNumber = int.Parse(numericPart);
+                    }
                 }
-                string displayId = "R" + (number + 1).ToString("D6");
+
+
+                //int lastNumber = allValidDisplayIds.Any() ? allValidDisplayIds.Max() : 0;
+                string displayId = "R" + (lastNumber + 1).ToString("D6");
 
                 // （可選）加保險防呆
                 if (db.Recipes.Any(r => r.DisplayId == displayId))
@@ -340,11 +346,11 @@ namespace RecipeTest.Controllers
                 string extension = Path.GetExtension(fileName).ToLower();
                 if (!allowedExtensions.Contains(extension))
                 {
-                    return BadRequest("檔案格式錯誤");
+                    return Ok(new { StatusCode =400, msg="檔案格式錯誤"});
                 }
                 //重新命名檔案
                 string newFileName = Guid.NewGuid().ToString("N") + extension;
-                string relativePath = "/TestPhoto/" + newFileName;
+                string relativePath = "/RecipeCoverPhoto/" + newFileName;
                 string fullPath = Path.Combine(localStorragePath, newFileName);
                 byte[] fileBytes = await photo.ReadAsByteArrayAsync();
                 File.WriteAllBytes(fullPath, fileBytes);

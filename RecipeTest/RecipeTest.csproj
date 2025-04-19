@@ -205,6 +205,9 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AdController.cs" />
+    <Compile Include="Controllers\DAdController.cs" />
+    <Compile Include="Controllers\DadminLoginController.cs" />
+    <Compile Include="Controllers\DfeaturedSectionController.cs" />
     <Compile Include="Controllers\ExtraController.cs" />
     <Compile Include="Controllers\HomePageController.cs" />
     <Compile Include="Controllers\UnsureController.cs" />

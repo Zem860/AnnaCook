@@ -289,7 +289,7 @@ namespace RecipeTest.Controllers
         [Route("api/auth/login")]
         public IHttpActionResult login([FromBody] UserRelated.UserLoginData request)
         {
-            var user = db.Users.FirstOrDefault(u => u.AccountEmail == request.AccountEmail && u.IsVerified == true);
+            var user = db.Users.FirstOrDefault(u => u.AccountEmail == request.AccountEmail && u.IsVerified == true && u.UserRole==UserRoles.User);
             if (user == null)
             {
                 var resError = new

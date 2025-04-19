@@ -30,7 +30,7 @@ namespace RecipeTest.Controllers
     public class RecipeController : ApiController
     {
         private RecipeModel db = new RecipeModel();
-        private string localStorragePath = HttpContext.Current.Server.MapPath("~/RecipePhoto");
+        private string localStorragePath = HttpContext.Current.Server.MapPath("~/RecipeCoverPhoto");
         private string[] allowedExtensions = { ".jpg", ".jpeg", ".png", ".webp" };
         private string vimeoAccessToken = ConfigurationManager.AppSettings["VimeoAccessToken"];
         private string vimeoUploadUrl = "https://api.vimeo.com/me/videos";

@@ -261,6 +261,10 @@
     <Compile Include="Migrations\202504180841217_add-displayName.Designer.cs">
       <DependentUpon>202504180841217_add-displayName.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202504200424459_addFK_AdViewLog_to_Ad.cs" />
+    <Compile Include="Migrations\202504200424459_addFK_AdViewLog_to_Ad.Designer.cs">
+      <DependentUpon>202504200424459_addFK_AdViewLog_to_Ad.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdImgs.cs" />
     <Compile Include="Models\AdTags.cs" />
@@ -462,6 +466,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202504180841217_add-displayName.resx">
       <DependentUpon>202504180841217_add-displayName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202504200424459_addFK_AdViewLog_to_Ad.resx">
+      <DependentUpon>202504200424459_addFK_AdViewLog_to_Ad.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

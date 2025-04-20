@@ -32,6 +32,12 @@ namespace RecipeTest.Models
         public virtual DbSet<AdViewLog> AdViewLogs { get; set; }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<AdViewLog>()
+    .HasRequired(av => av.Advertisement)
+    .WithMany()
+    .HasForeignKey(av => av.AdId)
+    .WillCascadeOnDelete(false); // ❗避免刪除廣告連帶刪點擊紀錄
+
 
             modelBuilder.Entity<RecipeTags>()
     .HasKey(rt => new { rt.RecipeId, rt.TagId });

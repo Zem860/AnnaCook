@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 
 namespace RecipeTest.Models
 {
@@ -13,10 +14,15 @@ namespace RecipeTest.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Display(Name ="編號")]
         public int Id { get; set; }
-        [Required]
+
+        [JsonIgnore]
         [Column(TypeName = "int")]
         [Display(Name ="廣告id")]
+
         public int AdId { get; set; }
+
+        [ForeignKey("AdId")]
+        public virtual Advertisement Advertisement { get; set; }
 
         [Column(TypeName ="int")]
         [Display(Name ="使用者Id")]

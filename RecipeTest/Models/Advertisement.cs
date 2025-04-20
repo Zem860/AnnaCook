@@ -77,5 +77,7 @@ namespace RecipeTest.Models
 
         public virtual ICollection<AdTags> AdTags { get; set; }
         public virtual ICollection<AdImgs> AdImgs { get; set; }
+
+        public virtual ICollection<AdViewLog> AdViewLogs { get; set; }
     }
 }

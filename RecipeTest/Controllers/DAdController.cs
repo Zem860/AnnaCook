@@ -18,7 +18,7 @@ namespace RecipeTest.Controllers
         [HttpGet]
         [Route("api/admin/ads")]
         [JwtAuthFilter]
-        public IHttpActionResult getAds(int number=1)
+        public IHttpActionResult getAds(int number=1, string pos ="all", string status ="all")
         {
             var user = userhash.GetUserFromJWT();
             var admin = db.Users.FirstOrDefault(u => u.Id == u.Id && u.IsVerified && !u.IsBanned && !u.IsDeleted && u.UserRole == UserRoles.Admin);
@@ -29,7 +29,39 @@ namespace RecipeTest.Controllers
             }
             int pageSize = 10;
             int skipNumber = (number -1 )*pageSize;
-            var ads = db.Advertisements.
+            DateTime now = DateTime.Now;
+
+            var adsQuery = db.Advertisements.AsQueryable();
+
+            if (pos != "all")
+            {
+                int adPos = pos=="home"?1:pos=="search"?2:pos =="recipe"?3:0;
+                adsQuery = adsQuery.Where(a=>a.AdDisplayPage == adPos);
+            }
+
+            switch (status)
+            {
+                case "draft":
+                    // 草稿 → 只要沒上架，都算草稿（不論時間）
+                    adsQuery = adsQuery.Where(a => !a.IsEnabled);
+                    break;
+                case "scheduled":
+                    // 排程 → 上架了，但還沒到開始時間
+                    adsQuery = adsQuery.Where(a => a.IsEnabled && a.StartDate > now);
+                    break;
+                case "active":
+                    // 進行中 → 上架了，而且在開始與結束時間內
+                    adsQuery = adsQuery.Where(a => a.IsEnabled && a.StartDate <= now && a.EndDate >= now);
+                    break;
+                case "expired":
+                    // 已結束 → 時間已過，不論是否上架
+                    adsQuery = adsQuery.Where(a => a.EndDate < now);
+                    break;
+                default:
+                    break;
+            }
+
+            var ads = adsQuery.
                 OrderByDescending(a => a.CreatedAt).Skip(skipNumber).Take(pageSize).ToList();
             var adsNumber = ads.Count();
             int totalPages = (int)Math.Ceiling((double)adsNumber / pageSize);
@@ -39,7 +71,6 @@ namespace RecipeTest.Controllers
             //1: 5
             //2: 3
             //3: 0
-            DateTime now = DateTime.Now;
             var adData = ads.Select(a => new
             {
                 id = a.Id,

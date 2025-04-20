@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 namespace RecipeTest.Models
 {
     public class AdTags
@@ -21,9 +22,12 @@ namespace RecipeTest.Models
         [Column(TypeName = "DATETIME")]
         [Display(Name = "更新時間")]
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
+        [JsonIgnore]
 
         [ForeignKey("AdId")]
         public virtual Advertisement Advertisement { get; set; }
+        [JsonIgnore]
+
         [ForeignKey("TagId")]
 
         public virtual Tags Tags { get; set; }

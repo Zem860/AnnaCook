@@ -15,11 +15,11 @@ namespace RecipeTest.Models
         [Display(Name ="編號")]
         public int Id { get; set; }
 
-        [JsonIgnore]
         [Column(TypeName = "int")]
         [Display(Name ="廣告id")]
 
         public int AdId { get; set; }
+        [JsonIgnore]
 
         [ForeignKey("AdId")]
         public virtual Advertisement Advertisement { get; set; }

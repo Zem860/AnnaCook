@@ -29,7 +29,16 @@ namespace RecipeTest.Controllers
             }
             int pageSize = 10;
             int skipNumber = (number -1 )*pageSize;
-            var ads = db.Advertisements.OrderByDescending(a => a.CreatedAt).Skip(skipNumber).Take(10).ToList(); ;
+            var ads = db.Advertisements.
+                OrderByDescending(a => a.CreatedAt).Skip(skipNumber).Take(pageSize).ToList();
+            var adsNumber = ads.Count();
+            int totalPages = (int)Math.Ceiling((double)adsNumber / pageSize);
+            var adIds = ads.Select(a => a.Id).ToList();
+            //groupby adlogs 以adid為主
+            var logCount = db.AdViewLogs.Where(av => adIds.Contains(av.AdId) && av.IsClick).GroupBy(av => av.AdId).ToDictionary(g=>g.Key, g=>g.Count());
+            //1: 5
+            //2: 3
+            //3: 0
             DateTime now = DateTime.Now;
             var adData = ads.Select(a => new
             {
@@ -37,13 +46,17 @@ namespace RecipeTest.Controllers
                 adName = a.AdName,
                 adType = a.AdDisplayPage == 1 ? "首頁" : a.AdDisplayPage == 2 ? "食譜列表頁" : a.AdDisplayPage == 3 ? "食譜內頁" : "未知",
                 startDate = a.StartDate.ToString("yyyy-MM-dd"),
-                endDatae = a.EndDate.ToString("yyyy-MM-dd"),
+                endDate = a.EndDate.ToString("yyyy-MM-dd"),
                 status = !a.IsEnabled ? "草稿" : (now < a.StartDate) ? "已排成" : (now >= a.StartDate && now <= a.EndDate) ? "進行中" : "已結束",
-                clicks = db.AdViewLogs.Where(al => al.AdId == a.Id).Count(),
-                tags = a.AdTags.Select(at=>at.Tags.TagName).ToList()
-            });
+                clicks = logCount.TryGetValue(a.Id, out int count)? count: 0,
+                tags = a.AdTags.Select(at => at.Tags.TagName),
+            }).ToList() ;
 
-            return Ok(new {StatusCode = 200, msg="獲取廣告", data = adData });
+            return Ok(new {StatusCode = 200,
+                msg = "獲取廣告",
+                totalCount = adsNumber,
+                totalPages = totalPages,
+                data = adData });
         }
     }
 }

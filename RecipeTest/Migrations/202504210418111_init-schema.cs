@@ -3,7 +3,7 @@
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class rebuildAnnaCook : DbMigration
+    public partial class initschema : DbMigration
     {
         public override void Up()
         {
@@ -30,8 +30,11 @@
                         AdDisplayPage = c.Int(nullable: false),
                         IsEnabled = c.Boolean(nullable: false),
                         LinkUrl = c.String(nullable: false),
+                        Priority = c.Int(),
+                        AdvertiserName = c.String(nullable: false, maxLength: 100),
                         AdPrice = c.Decimal(precision: 18, scale: 2),
                         Currency = c.String(nullable: false, maxLength: 20),
+                        AdIntro = c.String(nullable: false, maxLength: 100),
                         StartDate = c.DateTime(nullable: false),
                         EndDate = c.DateTime(nullable: false),
                         CreatedAt = c.DateTime(nullable: false),
@@ -277,13 +280,33 @@
                 .Index(t => t.StepId);
             
             CreateTable(
-                "dbo.AdMonthlyPerformances",
+                "dbo.AdViewLogs",
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
-                        AdId = c.Int(nullable: false),
-                        ClickCount = c.Int(nullable: false),
-                        ExposureCount = c.Int(nullable: false),
+                        AdvertisementId = c.Int(nullable: false),
+                        UserId = c.Int(),
+                        SessionId = c.String(maxLength: 100),
+                        IsClick = c.Boolean(nullable: false),
+                        AdDisplayPage = c.Int(nullable: false),
+                        ViewedAt = c.DateTime(nullable: false),
+                        Advertisement_Id = c.Int(),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.Advertisements", t => t.AdvertisementId)
+                .ForeignKey("dbo.Advertisements", t => t.Advertisement_Id)
+                .Index(t => t.AdvertisementId)
+                .Index(t => t.Advertisement_Id);
+            
+            CreateTable(
+                "dbo.FeaturedSections",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        SectionPos = c.Int(nullable: false),
+                        FeaturedSectionName = c.String(nullable: false, maxLength: 100),
+                        FeaturedSectionTags = c.String(nullable: false, maxLength: 100),
+                        IsActive = c.Boolean(nullable: false),
                         CreatedAt = c.DateTime(nullable: false),
                         UpdatedAt = c.DateTime(nullable: false),
                     })
@@ -305,6 +328,8 @@
         
         public override void Down()
         {
+            DropForeignKey("dbo.AdViewLogs", "Advertisement_Id", "dbo.Advertisements");
+            DropForeignKey("dbo.AdViewLogs", "AdvertisementId", "dbo.Advertisements");
             DropForeignKey("dbo.AdTags", "TagId", "dbo.Tags");
             DropForeignKey("dbo.RecipeTags", "TagId", "dbo.Tags");
             DropForeignKey("dbo.RecipeTags", "RecipeId", "dbo.Recipes");
@@ -325,6 +350,8 @@
             DropForeignKey("dbo.Comments", "RecipeId", "dbo.Recipes");
             DropForeignKey("dbo.AdTags", "AdId", "dbo.Advertisements");
             DropForeignKey("dbo.AdImgs", "AdId", "dbo.Advertisements");
+            DropIndex("dbo.AdViewLogs", new[] { "Advertisement_Id" });
+            DropIndex("dbo.AdViewLogs", new[] { "AdvertisementId" });
             DropIndex("dbo.SubSteps", new[] { "StepId" });
             DropIndex("dbo.Steps", new[] { "RecipeId" });
             DropIndex("dbo.StepPhotos", new[] { "Recipes_Id" });
@@ -350,7 +377,8 @@
             DropIndex("dbo.AdTags", new[] { "AdId" });
             DropIndex("dbo.AdImgs", new[] { "AdId" });
             DropTable("dbo.LoginRecords");
-            DropTable("dbo.AdMonthlyPerformances");
+            DropTable("dbo.FeaturedSections");
+            DropTable("dbo.AdViewLogs");
             DropTable("dbo.SubSteps");
             DropTable("dbo.Steps");
             DropTable("dbo.StepPhotos");

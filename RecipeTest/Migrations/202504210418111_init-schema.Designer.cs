@@ -7,13 +7,13 @@ namespace RecipeTest.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.5.1")]
-    public sealed partial class addadvertiserNametoads : IMigrationMetadata
+    public sealed partial class initschema : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(addadvertiserNametoads));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(initschema));
         
         string IMigrationMetadata.Id
         {
-            get { return "202504180504399_add-advertiserName-to-ads"; }
+            get { return "202504210418111_init-schema"; }
         }
         
         string IMigrationMetadata.Source

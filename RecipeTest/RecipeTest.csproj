@@ -229,6 +229,10 @@
     <Compile Include="Migrations\202504210418111_init-schema.Designer.cs">
       <DependentUpon>202504210418111_init-schema.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202504230823066_add-a-displayName.cs" />
+    <Compile Include="Migrations\202504230823066_add-a-displayName.Designer.cs">
+      <DependentUpon>202504230823066_add-a-displayName.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdImgs.cs" />
     <Compile Include="Models\AdTags.cs" />
@@ -406,6 +410,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202504210418111_init-schema.resx">
       <DependentUpon>202504210418111_init-schema.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202504230823066_add-a-displayName.resx">
+      <DependentUpon>202504230823066_add-a-displayName.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

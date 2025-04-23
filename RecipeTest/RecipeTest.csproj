@@ -225,45 +225,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202504140234041_rebuild-AnnaCook.cs" />
-    <Compile Include="Migrations\202504140234041_rebuild-AnnaCook.Designer.cs">
-      <DependentUpon>202504140234041_rebuild-AnnaCook.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202504170127246_feat-featuredSection.cs" />
-    <Compile Include="Migrations\202504170127246_feat-featuredSection.Designer.cs">
-      <DependentUpon>202504170127246_feat-featuredSection.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202504170211357_add-FeaturedSection-isActive.cs" />
-    <Compile Include="Migrations\202504170211357_add-FeaturedSection-isActive.Designer.cs">
-      <DependentUpon>202504170211357_add-FeaturedSection-isActive.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202504170344198_update-FeaturedSectionName.cs" />
-    <Compile Include="Migrations\202504170344198_update-FeaturedSectionName.Designer.cs">
-      <DependentUpon>202504170344198_update-FeaturedSectionName.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202504170753543_add-adviewlog-table.cs" />
-    <Compile Include="Migrations\202504170753543_add-adviewlog-table.Designer.cs">
-      <DependentUpon>202504170753543_add-adviewlog-table.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202504180259100_add-UserId-toAdViewLog-anddeleteMonthlyPerformance.cs" />
-    <Compile Include="Migrations\202504180259100_add-UserId-toAdViewLog-anddeleteMonthlyPerformance.Designer.cs">
-      <DependentUpon>202504180259100_add-UserId-toAdViewLog-anddeleteMonthlyPerformance.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202504180504399_add-advertiserName-to-ads.cs" />
-    <Compile Include="Migrations\202504180504399_add-advertiserName-to-ads.Designer.cs">
-      <DependentUpon>202504180504399_add-advertiserName-to-ads.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202504180618150_add-priority.cs" />
-    <Compile Include="Migrations\202504180618150_add-priority.Designer.cs">
-      <DependentUpon>202504180618150_add-priority.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202504180841217_add-displayName.cs" />
-    <Compile Include="Migrations\202504180841217_add-displayName.Designer.cs">
-      <DependentUpon>202504180841217_add-displayName.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202504200424459_addFK_AdViewLog_to_Ad.cs" />
-    <Compile Include="Migrations\202504200424459_addFK_AdViewLog_to_Ad.Designer.cs">
-      <DependentUpon>202504200424459_addFK_AdViewLog_to_Ad.cs</DependentUpon>
+    <Compile Include="Migrations\202504210418111_init-schema.cs" />
+    <Compile Include="Migrations\202504210418111_init-schema.Designer.cs">
+      <DependentUpon>202504210418111_init-schema.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdImgs.cs" />
@@ -440,35 +404,8 @@
     <Content Include="Scripts\jquery-3.7.0.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202504140234041_rebuild-AnnaCook.resx">
-      <DependentUpon>202504140234041_rebuild-AnnaCook.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202504170127246_feat-featuredSection.resx">
-      <DependentUpon>202504170127246_feat-featuredSection.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202504170211357_add-FeaturedSection-isActive.resx">
-      <DependentUpon>202504170211357_add-FeaturedSection-isActive.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202504170344198_update-FeaturedSectionName.resx">
-      <DependentUpon>202504170344198_update-FeaturedSectionName.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202504170753543_add-adviewlog-table.resx">
-      <DependentUpon>202504170753543_add-adviewlog-table.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202504180259100_add-UserId-toAdViewLog-anddeleteMonthlyPerformance.resx">
-      <DependentUpon>202504180259100_add-UserId-toAdViewLog-anddeleteMonthlyPerformance.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202504180504399_add-advertiserName-to-ads.resx">
-      <DependentUpon>202504180504399_add-advertiserName-to-ads.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202504180618150_add-priority.resx">
-      <DependentUpon>202504180618150_add-priority.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202504180841217_add-displayName.resx">
-      <DependentUpon>202504180841217_add-displayName.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202504200424459_addFK_AdViewLog_to_Ad.resx">
-      <DependentUpon>202504200424459_addFK_AdViewLog_to_Ad.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202504210418111_init-schema.resx">
+      <DependentUpon>202504210418111_init-schema.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -8,6 +8,10 @@ using MyWebApiProject.Security;
 using RecipeTest.Models;
 using RecipeTest.Security;
 using RecipeTest.Enums;
+using RecipeTest.Pages;
+using System.Web;
+using System.Threading.Tasks;
+using System.IO;
 
 namespace RecipeTest.Controllers
 {
@@ -15,10 +19,13 @@ namespace RecipeTest.Controllers
     {
         private RecipeModel db = new RecipeModel();
         private UserEncryption userhash = new UserEncryption();
+        private string localStorragePath = HttpContext.Current.Server.MapPath("~/AdImages");
+        private string[] allowedExtensions = { ".jpg", ".jpeg", ".png", ".webp" };
+        private string[] adStatus = { "draft", "scheduled", "active", "expired", "all" };
         [HttpGet]
         [Route("api/admin/ads")]
         [JwtAuthFilter]
-        public IHttpActionResult getAds(int number=1, string pos ="all", string status ="all")
+        public IHttpActionResult getAds(int number = 1, string pos = "all", string status = "all")
         {
             var user = userhash.GetUserFromJWT();
             var admin = db.Users.FirstOrDefault(u => u.Id == u.Id && u.IsVerified && !u.IsBanned && !u.IsDeleted && u.UserRole == UserRoles.Admin);
@@ -28,15 +35,15 @@ namespace RecipeTest.Controllers
                 return Ok(new { StatusCode = 401, msg = "此人無權限" });
             }
             int pageSize = 10;
-            int skipNumber = (number -1 )*pageSize;
+            int skipNumber = (number - 1) * pageSize;
             DateTime now = DateTime.Now;
 
             var adsQuery = db.Advertisements.AsQueryable();
 
             if (pos != "all")
             {
-                int adPos = pos=="home"?1:pos=="search"?2:pos =="recipe"?3:0;
-                adsQuery = adsQuery.Where(a=>a.AdDisplayPage == adPos);
+                int adPos = pos == "home" ? 1 : pos == "search" ? 2 : pos == "recipe" ? 3 : 0;
+                adsQuery = adsQuery.Where(a => a.AdDisplayPage == adPos);
             }
 
             switch (status)
@@ -67,7 +74,7 @@ namespace RecipeTest.Controllers
             int totalPages = (int)Math.Ceiling((double)adsNumber / pageSize);
             var adIds = ads.Select(a => a.Id).ToList();
             //groupby adlogs 以adid為主
-            var logCount = db.AdViewLogs.Where(av => adIds.Contains(av.AdId) && av.IsClick).GroupBy(av => av.AdId).ToDictionary(g=>g.Key, g=>g.Count());
+            var logCount = db.AdViewLogs.Where(av => adIds.Contains(av.AdvertisementId) && av.IsClick).GroupBy(av => av.AdvertisementId).ToDictionary(g => g.Key, g => g.Count());
             //1: 5
             //2: 3
             //3: 0
@@ -79,15 +86,194 @@ namespace RecipeTest.Controllers
                 startDate = a.StartDate.ToString("yyyy-MM-dd"),
                 endDate = a.EndDate.ToString("yyyy-MM-dd"),
                 status = !a.IsEnabled ? "草稿" : (now < a.StartDate) ? "已排成" : (now >= a.StartDate && now <= a.EndDate) ? "進行中" : "已結束",
-                clicks = logCount.TryGetValue(a.Id, out int count)? count: 0,
+                clicks = logCount.TryGetValue(a.Id, out int count) ? count : 0,
                 tags = a.AdTags.Select(at => at.Tags.TagName),
-            }).ToList() ;
+            }).ToList();
 
-            return Ok(new {StatusCode = 200,
+            return Ok(new
+            {
+                StatusCode = 200,
                 msg = "獲取廣告",
                 totalCount = adsNumber,
                 totalPages = totalPages,
-                data = adData });
+                data = adData
+            });
+        }
+
+        [HttpPost]
+        [Route("api/admin/ad")]
+        [JwtAuthFilter]
+        public async Task<IHttpActionResult> createAd()
+        {
+            if (!Request.Content.IsMimeMultipartContent())
+            {
+                return Ok(new { StatusCode = 401, msg = "請求格式錯誤" });
+            }
+
+            DateTime now = DateTime.Now;
+            var user = userhash.GetUserFromJWT();
+            var admin = db.Users.FirstOrDefault(u => u.Id == user.Id && u.IsVerified && !u.IsBanned && !u.IsDeleted && u.UserRole == UserRoles.Admin);
+            bool isAdmin = admin != null;
+            if (!isAdmin)
+            {
+                return Ok(new { StatusCode = 401, msg = "你權限不夠" });
+            }
+            var provider = await Request.Content.ReadAsMultipartAsync();
+            var contents = provider.Contents;
+
+            string GetFormValue(string key) =>
+                contents.FirstOrDefault(c => c.Headers.ContentDisposition.Name.Trim('"') == key)?.ReadAsStringAsync().Result;
+
+            List<HttpContent> GetFileList(string inputName) =>
+                contents.Where(c => c.Headers.ContentDisposition.Name.Trim('"') == inputName && c.Headers.ContentDisposition.FileName != null).ToList();
+
+            var imageFiles = GetFileList("adImages");
+            if (!imageFiles.Any())
+            {
+                return Ok(new { StatusCode = 401, msg = "請上傳圖片" });
+            }
+
+            string adName = GetFormValue("adName");
+            string dashboardAdName = GetFormValue("dashboardAdName");
+            string adPos = GetFormValue("pos");
+            string adIntro = GetFormValue("adIntro");
+            string adPrice = GetFormValue("adPrice");
+            string adCurrency = GetFormValue("currency");
+            string advertiserName = GetFormValue("advertiserName");
+            string linkUrl = GetFormValue("linkUrl");
+            string status = GetFormValue("status");
+            string startDateStr = GetFormValue("startDate");
+            string endDateStr = GetFormValue("endDate");
+
+            if (!DateTime.TryParse(startDateStr, out DateTime startDate) || !DateTime.TryParse(endDateStr, out DateTime endDate))
+            {
+                return Ok(new { StatusCode = 400, msg = "上架/下架日期格式錯誤" });
+            }
+
+            if (startDate > endDate)
+            {
+                return Ok(new { StatusCode = 400, msg = "開始日期不能晚於結束日期" });
+            }
+
+            switch (status)
+            {
+                case "draft":
+                    // 不上架
+                    break;
+                case "scheduled":
+                    if (now >= startDate)
+                        return Ok(new { StatusCode = 400, msg = "排程中的廣告開始時間必須在未來" });
+                    break;
+                case "active":
+                    if (now < startDate)
+                        return Ok(new { StatusCode = 400, msg = "狀態為進行中時，開始時間不可是未來" });
+                    if (now > endDate)
+                        return Ok(new { StatusCode = 400, msg = "狀態為進行中，但已超過結束時間" });
+                    break;
+                case "expired":
+                    if (now <= endDate)
+                        return Ok(new { StatusCode = 400, msg = "已結束的廣告，結束時間必須早於現在" });
+                    break;
+                default:
+                    return Ok(new { StatusCode = 400, msg = "狀態參數不合法" });
+            }
+
+            decimal? calcuPrice = decimal.TryParse(adPrice, out decimal price) ? price : (decimal?)null;
+
+            string tagNames = GetFormValue("tagNames");
+            List<string> tags = tagNames?
+                .Split(',')
+                .Select(t => t.Trim().ToLower())
+                .Where(t => !string.IsNullOrWhiteSpace(t))
+                .ToList() ?? new List<string>();
+
+            var matchedTags = db.Tags
+                .Where(t => tags.Contains(t.TagName.ToLower()))
+                .ToList();
+
+            var ad = new Advertisement
+            {
+                AdName = adName,
+                DashboardAdName = dashboardAdName,
+                AdDisplayPage = adPos == "home" ? 1 : adPos == "search" ? 2 : adPos == "recipe" ? 3 : 0,
+                AdIntro = adIntro,
+                LinkUrl = linkUrl,
+                AdPrice = calcuPrice,
+                AdvertiserName = advertiserName,
+                Currency = adCurrency,
+                StartDate = startDate,
+                EndDate = endDate,
+                IsEnabled = status == "active" || status == "scheduled" || status == "expired",
+                CreatedAt = now,
+                UpdateTime = now,
+                AdImgs = new List<AdImgs>(),
+                AdTags = matchedTags.Select(tag => new AdTags { TagId = tag.Id }).ToList()
+            };
+
+            foreach (var file in imageFiles)
+            {
+                string extension = Path.GetExtension(file.Headers.ContentDisposition.FileName.Trim('"'));
+                if (!allowedExtensions.Contains(extension))
+                {
+                    return Ok(new { StatusCode = 400, msg = "檔案格式錯誤" });
+                }
+
+                string newFileName = Guid.NewGuid().ToString("N") + extension;
+                string relativePath = "/AdImages/" + newFileName;
+                string fullPath = Path.Combine(localStorragePath, newFileName);
+
+                byte[] fileBytes = await file.ReadAsByteArrayAsync();
+                File.WriteAllBytes(fullPath, fileBytes);
+
+                ad.AdImgs.Add(new AdImgs
+                {
+                    ImgUrl = relativePath,
+                    CreatedAt = now,
+                    UpdatedAt = now
+                });
+            }
+
+            ad.AdTags = matchedTags.Select(tag => new AdTags
+            {
+                TagId = tag.Id,
+                CreatedAt = now,
+                UpdatedAt = now
+            }).ToList();
+
+
+            db.Advertisements.Add(ad);
+            db.SaveChanges();
+
+
+            return Ok(new { StatusCode = 200, msg = "廣告建立成功", adId = ad.Id });
+        }
+
+
+        [HttpGet]
+        [Route("api/admin/overview")]
+        public IHttpActionResult GetAdsSummary()
+        {
+            DateTime startOfThisMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            DateTime startOfNextMonth = startOfThisMonth.AddMonths(1);
+            DateTime endOfThisMonth = startOfNextMonth.AddDays(-1);
+            DateTime startOfLastMonth = startOfThisMonth.AddMonths(-1);
+            DateTime endOfLastMonth = startOfLastMonth.AddDays(-1);
+
+            int viewLogsOfThisMonth = db.AdViewLogs.Count(av => !av.IsClick && av.ViewedAt >= startOfThisMonth && av.ViewedAt <= endOfThisMonth);
+            int viewLogsOfLastMonth = db.AdViewLogs.Count(av => !av.IsClick && av.ViewedAt >= startOfLastMonth && av.ViewedAt <= endOfLastMonth);
+            int clickLogOfThisMonth = db.AdViewLogs.Count(av => av.IsClick && av.ViewedAt >= startOfThisMonth && av.ViewedAt <= endOfThisMonth);
+            int clickLogsOfLastMonth = db.AdViewLogs.Count(av => av.IsClick && av.ViewedAt >= startOfLastMonth && av.ViewedAt <= endOfLastMonth);
+
+            double interactionRate = (double)viewLogsOfThisMonth / (double)clickLogOfThisMonth;
+
+            return Ok(new
+            {
+                thismonthview = viewLogsOfThisMonth,
+                lastmonthview = viewLogsOfLastMonth,
+                thismonthclick = clickLogOfThisMonth,
+                lastmonthclick = clickLogsOfLastMonth,
+                interactionRate = interactionRate,
+            });
         }
     }
 }

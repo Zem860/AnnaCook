@@ -378,7 +378,17 @@ namespace RecipeTest.Controllers
                     {
                         StatusCode = 200,
                         msg = "Google 登入成功",
-                        token = token
+                        token = token,
+                        userData = new
+                        {
+                            userId = user.Id,
+                            userDisplayId = user.DisplayId,
+                            accountEmail = user.AccountEmail,
+                            accountName = user.AccountName,
+                            profilePhoto = user.AccountProfilePhoto,
+                            role = (int)user.UserRole,
+                            roleName = user.UserRole.ToString(),
+                        }
                     });
                 }
             }

@@ -873,7 +873,7 @@ namespace RecipeTest.Controllers
                 }
                 //重新命名檔案(並確認相對與實體路徑)
                 string newFileName = Guid.NewGuid().ToString("N") + extension;
-                string relativePath = "/TestPhoto/" + newFileName;
+                string relativePath = "/RecipeCoverPhoto/" + newFileName;
                 string fullPath = Path.Combine(localStorragePath, newFileName);
                 //把圖片檔案抓出來
                 byte[] fileBytes = await photo.ReadAsByteArrayAsync();

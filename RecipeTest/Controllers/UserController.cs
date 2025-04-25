@@ -157,28 +157,28 @@ namespace RecipeTest.Controllers
         [HttpGet]
         [Route("api/user/{displayId}/author-recipes")]
         [JwtAuthFilter]
-        public IHttpActionResult GetAuthorRecipes(string displayId, bool isPublished = true, int page=1) //預設是看有發布的要看未發布的要另外加
+        public IHttpActionResult GetAuthorRecipes(string displayId, bool isPublished = true) //預設是看有發布的要看未發布的要另外加
         {
             var user = userhash.GetUserFromJWT();
             if (user.DisplayId != displayId)
             {
-                return Unauthorized(); // 防止別人偷打
+                return Ok(new { StatusCode = 401, msg = "只有作者有權限閱讀" });
             }
 
-            var recipes = db.Recipes.Where(r => r.UserId == user.Id && r.IsPublished == isPublished).OrderByDescending(r => r.CreatedAt);
+            var recipes = db.Recipes.Where(r => r.UserId == user.Id && r.IsPublished == isPublished).OrderByDescending(r => r.CreatedAt).ToList();
             int totalCount = recipes.Count();
-            int skip = (page - 1) * 3;
-            int take = 3;
-            bool hasMore = (skip + take) < totalCount;
-            var result = recipes.Skip(skip).Take(take).ToList();
-            var data = result.Select(r => new
+            //int skip = (page - 1) * 3;
+            //int take = 3;
+            //bool hasMore = (skip + take) < totalCount;
+            //var result = recipes.Skip(skip).Take(take).ToList();
+            var data = recipes.Select(r => new
             {
-                recipeId = r.Id,
+                id = r.Id,
                 title = r.RecipeName,
                 description = r.RecipeIntro,
                 isPublished = r.IsPublished,
                 sharedCount = r.SharedCount,
-                rating = r.Rating,
+                rating = Math.Round(r.Rating,1),
                 viewCount = r.ViewCount,
                 averageRating = Math.Round
                 (
@@ -204,7 +204,7 @@ namespace RecipeTest.Controllers
             {
                 statusCode = 200,
                 totalCount = totalCount,
-                hasMore = hasMore,
+                //hasMore = hasMore,
                 data = data,
                 newToken = newToken
             });

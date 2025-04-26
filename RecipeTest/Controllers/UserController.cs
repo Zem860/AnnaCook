@@ -41,7 +41,7 @@ namespace RecipeTest.Controllers
 
             if (user == null)
             {
-                return NotFound();
+                return Ok(new { StatusCode=400, msg="查無此使用者"});
             }
             //若有帶token(代表有使用者登入，若是一般瀏覽者則不需要)
             var token = Request.Headers.Authorization?.Parameter;
@@ -303,7 +303,7 @@ namespace RecipeTest.Controllers
             bool hasUser = existingUser != null;
             if (existingUser == null)
             {
-                return NotFound();
+                return Ok(new {StatusCode = 400, msg="查無此使用者"});
             }
             var provider = await Request.Content.ReadAsMultipartAsync();
             var formData = provider.Contents;
@@ -379,14 +379,34 @@ namespace RecipeTest.Controllers
 
         [HttpGet]
         [Route("api/user/profile")]
-        public IHttpActionResult BrowseUserFile(string displayId)
+        [JwtAuthFilter]
+        public IHttpActionResult BrowseUserFile()
         {
-            if (string.IsNullOrEmpty(displayId))
+            var user = userhash.GetUserFromJWT();
+            var userFromDb = db.Users.FirstOrDefault(u => u.Id == user.Id);
+            bool hasUser = user != null;
+            if (!hasUser)
             {
-                return BadRequest("DisplayId是必填");
+                return Ok(new { StatusCode = 400, msg = "找不到使用者" });
             }
-            var user = db.Users.FirstOrDefault(u => u.DisplayId == displayId);
-            return Ok();
+
+            var userData = new
+            {
+                userId = userFromDb.Id,
+                displayId = userFromDb.DisplayId,
+                accountName = userFromDb.AccountName,
+                accountEmail = userFromDb.AccountEmail,
+                profilePhoto = userFromDb.AccountProfilePhoto,
+                description = userFromDb.UserIntro,
+            };
+
+            var res = new
+            {
+                StatusCode = 200,
+                msg = "使用者資料獲取成功",
+                data = userData
+            };
+            return Ok(res);
         }
         [HttpGet]
         [Route("api/users")]

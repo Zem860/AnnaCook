@@ -100,7 +100,7 @@ namespace RecipeTest.Controllers
         public IHttpActionResult Check()
         {
             var payload = userhash.GetUserFromJWT();
-            var user = new UserRelated.UserTokenData
+            var userTokenData = new UserRelated.UserTokenData
             {
                 Id = (int)payload.Id,
                 DisplayId = payload.DisplayId,
@@ -111,14 +111,26 @@ namespace RecipeTest.Controllers
                 LoginProvider = (int)(LoginProvider)Convert.ToInt32(payload.LoginProvider)
             };
 
+            var user = db.Users.FirstOrDefault(u => u.Id == payload.Id);
+            var userData = new
+            {
+                id = user.Id,
+                displayId = user.DisplayId,
+                accountEmail = user.AccountEmail,
+                accountName = user.AccountName,
+                profilePhoto = user.AccountProfilePhoto,
+                role = Convert.ToInt32(user.UserRole),
+                loginProvider = (int)(LoginProvider)Convert.ToInt32(user.LoginProvider)
+            };
+
             // ✅ 重新產生新 token
             var jwt = new JwtAuthUtil();
-            var newToken = jwt.GenerateToken(user);
-
+            var newToken = jwt.GenerateToken(userTokenData);
             return Ok(new
             {
                 message = "Token refreshed",
-                token = newToken
+                token = newToken,
+                userData = userData,
             });
         }
     }

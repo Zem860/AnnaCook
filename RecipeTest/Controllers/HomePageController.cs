@@ -60,35 +60,7 @@ namespace RecipeTest.Controllers
             });
 
 
-        }
-
-        [HttpGet]
-        [Route("api/home/recipes/by-tag/{tag}")] //not ok
-        public IHttpActionResult GetTagRecipes(string tag, int number=1)
-        {
-            const int pageSize = 6;
-            var recipes = db.Recipes.Where(r => r.IsPublished && !r.IsDeleted && !r.IsArchived&& r.RecipeTags.Any(rt => rt.Tags.TagName.Contains(tag))).OrderByDescending(r=>r.CreatedAt).Skip(0).Take(pageSize);
-            int count = recipes.Count();
-            var data = recipes.Select(r => new
-            {
-                recipeName = r.RecipeName,
-                coverPhoto = r.RecipesPhotos.FirstOrDefault(p => p.IsCover).ImgUrl,
-                author = r.User.AccountName,
-            }).ToList();
-
-            var res = new
-            {
-                StatusCode = 200,
-                msg = "獲取推薦動態食譜卡片",
-                count = count,
-                data = data
-            };
-
-
-            return Ok(res);
-        }
-
-        
+        }      
 
         [HttpGet]
         [Route("api/home/recipes")] //ok
@@ -137,10 +109,7 @@ namespace RecipeTest.Controllers
                 data = result,
             };
             return Ok(res);
-        }
-
-
-     
+        }   
     }
 }
 

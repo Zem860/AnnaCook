@@ -113,13 +113,13 @@ namespace RecipeTest.Controllers
             {
 
                 bool hasClickedBySession = db.AdViewLogs.Any(av =>
-                av.AdId == userRecords.AdId &&
+                av.AdvertisementId == userRecords.AdId &&
                 av.SessionId == userRecords.SessionId.ToString() &&
                 av.IsClick &&
                 DbFunctions.TruncateTime(av.ViewedAt) == DateTime.Today
                     );
 
-                bool hasClickedByUser = db.AdViewLogs.Any(av => av.AdId == userRecords.AdId && av.UserId == currentUserId && av.IsClick && DbFunctions.TruncateTime(av.ViewedAt) == DateTime.Today);
+                bool hasClickedByUser = db.AdViewLogs.Any(av => av.AdvertisementId == userRecords.AdId && av.UserId == currentUserId && av.IsClick && DbFunctions.TruncateTime(av.ViewedAt) == DateTime.Today);
 
                 if (hasClickedBySession||hasClickedByUser)
                 {
@@ -144,7 +144,7 @@ namespace RecipeTest.Controllers
             }
 
             var adlog = new AdViewLog();
-            adlog.AdId = userRecords.AdId;
+            adlog.AdvertisementId = userRecords.AdId;
             adlog.AdDisplayPage = displayLocation;
             adlog.UserId = currentUserId.HasValue && currentUserId > 0 ? currentUserId : null;
             adlog.SessionId = userRecords.SessionId.ToString();

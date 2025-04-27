@@ -38,6 +38,7 @@ namespace RecipeTest.Controllers
                                 .Take(6)
                                 .Select(r => new
                                 {
+                                    id = r.Id,
                                     recipeName = r.RecipeName,
                                     rating = r.Rating,
                                     coverPhoto = r.RecipesPhotos.FirstOrDefault(p => p.IsCover).ImgUrl,

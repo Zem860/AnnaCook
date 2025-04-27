@@ -140,6 +140,7 @@ namespace RecipeTest.Controllers
             string adPrice = GetFormValue("adPrice");
             string adCurrency = GetFormValue("currency");
             string advertiserName = GetFormValue("advertiserName");
+            string priority = GetFormValue("priority");
             string linkUrl = GetFormValue("linkUrl");
             string status = GetFormValue("status");
             string startDateStr = GetFormValue("startDate");
@@ -201,6 +202,7 @@ namespace RecipeTest.Controllers
                 AdPrice = calcuPrice,
                 AdvertiserName = advertiserName,
                 Currency = adCurrency,
+                Priority= Convert.ToInt32(priority),
                 StartDate = startDate,
                 EndDate = endDate,
                 IsEnabled = status == "active" || status == "scheduled" || status == "expired",

@@ -12,6 +12,7 @@ using RecipeTest.Pages;
 using System.Web;
 using System.Threading.Tasks;
 using System.IO;
+using static RecipeTest.Pages.AdRelated;
 
 namespace RecipeTest.Controllers
 {
@@ -250,32 +251,100 @@ namespace RecipeTest.Controllers
             return Ok(new { StatusCode = 200, msg = "廣告建立成功", adId = ad.Id });
         }
 
+        //[HttpGet]
+        //[Route("api/admin/ads/overview")]
+        //public IHttpActionResult GetAdsOverview()
+        //{
+        //    DateTime startOfThisMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+        //    DateTime startOfNextMonth = startOfThisMonth.AddMonths(1);
+        //    DateTime endOfThisMonth = startOfNextMonth.AddDays(-1);
+        //    DateTime startOfLastMonth = startOfThisMonth.AddMonths(-1);
+        //    DateTime endOfLastMonth = startOfThisMonth.AddDays(-1); // 改成這一行！
+
+        //    int viewLogsOfThisMonth = db.AdViewLogs.Count(av => !av.IsClick && av.ViewedAt >= startOfThisMonth && av.ViewedAt <= endOfThisMonth);
+        //    int viewLogsOfLastMonth = db.AdViewLogs.Count(av => !av.IsClick && av.ViewedAt >= startOfLastMonth && av.ViewedAt <= endOfLastMonth);
+        //    int clickLogOfThisMonth = db.AdViewLogs.Count(av => av.IsClick && av.ViewedAt >= startOfThisMonth && av.ViewedAt <= endOfThisMonth);
+        //    int clickLogsOfLastMonth = db.AdViewLogs.Count(av => av.IsClick && av.ViewedAt >= startOfLastMonth && av.ViewedAt <= endOfLastMonth);
+
+        //    double interactionRate = ((double)clickLogOfThisMonth / (double)viewLogsOfThisMonth)*100;
+
+        //    var thisMonthQuery = db.AdViewLogs.Where(av => av.ViewedAt >= startOfThisMonth && av.ViewedAt <= endOfLastMonth);
+        //    var lastMonthQuery = db.AdViewLogs.Where(av => av.ViewedAt >= startOfLastMonth && av.ViewedAt <= endOfLastMonth);
+
+        //    return Ok(new
+        //    {
+        //        thismonthview = viewLogsOfThisMonth,
+        //        lastmonthview = viewLogsOfLastMonth,
+        //        thismonthclick = clickLogOfThisMonth,
+        //        lastmonthclick = clickLogsOfLastMonth,
+        //        interactionRate = interactionRate,
+        //    });
+        //}
 
         [HttpGet]
-        [Route("api/admin/overview")]
-        public IHttpActionResult GetAdsSummary()
+        [Route("api/admin/top3/ads")]
+        public IHttpActionResult getTop3()
         {
             DateTime startOfThisMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
             DateTime startOfNextMonth = startOfThisMonth.AddMonths(1);
             DateTime endOfThisMonth = startOfNextMonth.AddDays(-1);
-            DateTime startOfLastMonth = startOfThisMonth.AddMonths(-1);
-            DateTime endOfLastMonth = startOfLastMonth.AddDays(-1);
+            var query = db.AdViewLogs.Where(av => av.ViewedAt >= startOfThisMonth && av.ViewedAt <= endOfThisMonth);
 
-            int viewLogsOfThisMonth = db.AdViewLogs.Count(av => !av.IsClick && av.ViewedAt >= startOfThisMonth && av.ViewedAt <= endOfThisMonth);
-            int viewLogsOfLastMonth = db.AdViewLogs.Count(av => !av.IsClick && av.ViewedAt >= startOfLastMonth && av.ViewedAt <= endOfLastMonth);
-            int clickLogOfThisMonth = db.AdViewLogs.Count(av => av.IsClick && av.ViewedAt >= startOfThisMonth && av.ViewedAt <= endOfThisMonth);
-            int clickLogsOfLastMonth = db.AdViewLogs.Count(av => av.IsClick && av.ViewedAt >= startOfLastMonth && av.ViewedAt <= endOfLastMonth);
 
-            double interactionRate = (double)viewLogsOfThisMonth / (double)clickLogOfThisMonth;
+            var groupData = query.GroupBy(av => av.AdvertisementId);
 
-            return Ok(new
+
+            var groupDataDetail = groupData.Select(g => new
+            { 
+                adName = g.FirstOrDefault().Advertisement.AdName,
+                adDisplayPage = g.FirstOrDefault().Advertisement.AdDisplayPage == 1 ? "首頁" : g.FirstOrDefault().Advertisement.AdDisplayPage == 2 ? "食譜列表頁" : g.FirstOrDefault().Advertisement.AdDisplayPage == 3 ? "食譜內頁" : "未知",
+                viewCount = g.Count(av => !av.IsClick),
+                clickCount = g.Count(av => av.IsClick),
+                interactionRate = g.Count(av => !av.IsClick) == 0 || g.Count(av => av.IsClick) == 0 ? 0 : ((double)g.Count(av => av.IsClick) / g.Count(av => !av.IsClick))*100
+            }).OrderByDescending(gd => gd.interactionRate).Take(3).ToList();
+
+            var res = new
             {
-                thismonthview = viewLogsOfThisMonth,
-                lastmonthview = viewLogsOfLastMonth,
-                thismonthclick = clickLogOfThisMonth,
-                lastmonthclick = clickLogsOfLastMonth,
-                interactionRate = interactionRate,
-            });
+                StatusCode = 200,
+                msg = "獲取廣告總表數據",
+                data = groupDataDetail,
+            };
+
+            return Ok(res);
         }
+
+        [HttpGet]
+        [Route("api/admin/ads/chart")]
+        public IHttpActionResult getAdsOverview(DateTime startDate, DateTime endDate, string userType = "all")
+        {
+            var query = db.AdViewLogs.Where(av => av.ViewedAt >= startDate && av.ViewedAt <= endDate);
+            if (userType == "guest")
+            {
+                query = query.Where(av => av.UserId == null);
+            } else if (userType == "user")
+            {
+                query = query.Where(av => av.UserId != null);
+            }
+            var groupData = query.GroupBy(av => av.ViewedAt.Date);
+            var groupDataDetail = groupData.Select(g => new
+            {
+                date = g.Key.ToString("yyyy-MM-dd"),
+                viewCount = g.Count(av => !av.IsClick),
+                clickCount = g.Count(av => av.IsClick),
+                interactionRate = g.Count(av => !av.IsClick) == 0 || g.Count(av => av.IsClick) == 0 ? 0 : ((double)g.Count(av => av.IsClick) / g.Count(av => !av.IsClick)) * 100,
+            }).OrderBy(gd => gd.date).ToList();
+
+            var res = new
+            {
+                StatusCode = 200,
+                msg = "獲取廣告總表數據",
+                data = groupDataDetail,
+            };
+
+
+            return Ok(res);
+        }
+
+
     }
 }

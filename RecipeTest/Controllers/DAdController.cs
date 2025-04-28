@@ -251,40 +251,77 @@ namespace RecipeTest.Controllers
             return Ok(new { StatusCode = 200, msg = "廣告建立成功", adId = ad.Id });
         }
 
-        //[HttpGet]
-        //[Route("api/admin/ads/overview")]
-        //public IHttpActionResult GetAdsOverview()
-        //{
-        //    DateTime startOfThisMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
-        //    DateTime startOfNextMonth = startOfThisMonth.AddMonths(1);
-        //    DateTime endOfThisMonth = startOfNextMonth.AddDays(-1);
-        //    DateTime startOfLastMonth = startOfThisMonth.AddMonths(-1);
-        //    DateTime endOfLastMonth = startOfThisMonth.AddDays(-1); // 改成這一行！
+        [HttpGet]
+        [Route("api/admin/ads/overview")]
+        [JwtAuthFilter]
+        public IHttpActionResult GetAdsOverview()
+        {
+            var user = userhash.GetUserFromJWT();
+            var admin = db.Users.FirstOrDefault(u => u.Id == user.Id && u.IsVerified && !u.IsBanned && !u.IsDeleted && u.UserRole == UserRoles.Admin);
+            bool isAdmin = admin != null;
+            if (!isAdmin)
+            {
+                return Ok(new { StatusCode = 401, msg = "你權限不夠" });
+            }
+            DateTime startOfThisMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1));
+            DateTime startOfNextMonth = startOfThisMonth.AddMonths(1);
+            DateTime endOfThisMonth = startOfNextMonth.AddDays(-1);
+            DateTime startOfLastMonth = startOfThisMonth.AddMonths(-1);
+            DateTime endOfLastMonth = startOfThisMonth.AddDays(-1);
 
-        //    int viewLogsOfThisMonth = db.AdViewLogs.Count(av => !av.IsClick && av.ViewedAt >= startOfThisMonth && av.ViewedAt <= endOfThisMonth);
-        //    int viewLogsOfLastMonth = db.AdViewLogs.Count(av => !av.IsClick && av.ViewedAt >= startOfLastMonth && av.ViewedAt <= endOfLastMonth);
-        //    int clickLogOfThisMonth = db.AdViewLogs.Count(av => av.IsClick && av.ViewedAt >= startOfThisMonth && av.ViewedAt <= endOfThisMonth);
-        //    int clickLogsOfLastMonth = db.AdViewLogs.Count(av => av.IsClick && av.ViewedAt >= startOfLastMonth && av.ViewedAt <= endOfLastMonth);
+            var thisMonthQuery = db.AdViewLogs.Where(av => av.ViewedAt >= startOfThisMonth && av.ViewedAt <= endOfThisMonth);
+            var lastMonthQuery = db.AdViewLogs.Where(av => av.ViewedAt >= startOfLastMonth && av.ViewedAt <= endOfLastMonth);
+            int viewLogsOfThisMonth = thisMonthQuery.Count(v=>!v.IsClick);
+            int clickLogsOfThisMonth = thisMonthQuery.Count(v => v.IsClick);
+            int viewLogsOfLastMonth = lastMonthQuery.Count(v => !v.IsClick);
+            int clickLogsOfLastMonth = lastMonthQuery.Count(v => v.IsClick);
+            int activeAdsThisMonth = thisMonthQuery.Where(a => !a.IsClick).Select(a => a.AdvertisementId).Distinct().Count();
+            int activeAdsLastMonth = lastMonthQuery.Where(a => !a.IsClick).Select(a => a.AdvertisementId).Distinct().Count();
+            double interactionRateThisMonth = viewLogsOfThisMonth == 0 ? 0 : ((double)clickLogsOfThisMonth / viewLogsOfThisMonth) * 100;
+            double interactionRateLastMonth = viewLogsOfLastMonth == 0 ? 0 : ((double)clickLogsOfLastMonth / viewLogsOfLastMonth) * 100;
 
-        //    double interactionRate = ((double)clickLogOfThisMonth / (double)viewLogsOfThisMonth)*100;
+            double CalcGrowth(double thisMonth, double lastMonth)
+            {
+                if (lastMonth == 0) return 0;
+                return ((thisMonth - lastMonth) / lastMonth) * 100;
+            }
 
-        //    var thisMonthQuery = db.AdViewLogs.Where(av => av.ViewedAt >= startOfThisMonth && av.ViewedAt <= endOfLastMonth);
-        //    var lastMonthQuery = db.AdViewLogs.Where(av => av.ViewedAt >= startOfLastMonth && av.ViewedAt <= endOfLastMonth);
+            var res = new
+            {
+                StatusCode = 200,
+                msg = "獲取廣告總表數據",
+                data = new
+                {
+                    viewLogsThisMonth = viewLogsOfThisMonth,
+                    clickLogsThisMonth = clickLogsOfThisMonth,
+                    viewLogsLastMonth = viewLogsOfLastMonth,
+                    clickLogsLastMonth = clickLogsOfLastMonth,
+                    activeAdsThisMonth = activeAdsThisMonth,
+                    activeAdsLastMonth = activeAdsLastMonth,
+                    interactionRateThisMonth = interactionRateThisMonth,
+                    interactionRateLastMonth = interactionRateLastMonth,
+                    growthViewLog = CalcGrowth(viewLogsOfThisMonth, viewLogsOfLastMonth),
+                    growthClickLog = CalcGrowth(clickLogsOfThisMonth, clickLogsOfLastMonth),
+                    growthActiveAd = CalcGrowth(activeAdsThisMonth, activeAdsLastMonth)
+                }
+            };
 
-        //    return Ok(new
-        //    {
-        //        thismonthview = viewLogsOfThisMonth,
-        //        lastmonthview = viewLogsOfLastMonth,
-        //        thismonthclick = clickLogOfThisMonth,
-        //        lastmonthclick = clickLogsOfLastMonth,
-        //        interactionRate = interactionRate,
-        //    });
-        //}
+            return Ok(res);
+
+        }
 
         [HttpGet]
         [Route("api/admin/top3/ads")]
+        [JwtAuthFilter]
         public IHttpActionResult getTop3()
         {
+            var user = userhash.GetUserFromJWT();
+            var admin = db.Users.FirstOrDefault(u => u.Id == user.Id && u.IsVerified && !u.IsBanned && !u.IsDeleted && u.UserRole == UserRoles.Admin);
+            bool isAdmin = admin != null;
+            if (!isAdmin)
+            {
+                return Ok(new { StatusCode = 401, msg = "你權限不夠" });
+            }
             DateTime startOfThisMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
             DateTime startOfNextMonth = startOfThisMonth.AddMonths(1);
             DateTime endOfThisMonth = startOfNextMonth.AddDays(-1);
@@ -315,8 +352,16 @@ namespace RecipeTest.Controllers
 
         [HttpGet]
         [Route("api/admin/ads/chart")]
+        [JwtAuthFilter]
         public IHttpActionResult getAdsOverview(DateTime startDate, DateTime endDate, string userType = "all")
         {
+            var user = userhash.GetUserFromJWT();
+            var admin = db.Users.FirstOrDefault(u => u.Id == user.Id && u.IsVerified && !u.IsBanned && !u.IsDeleted && u.UserRole == UserRoles.Admin);
+            bool isAdmin = admin != null;
+            if (!isAdmin)
+            {
+                return Ok(new { StatusCode = 401, msg = "你權限不夠" });
+            }
             var query = db.AdViewLogs.Where(av => av.ViewedAt >= startDate && av.ViewedAt <= endDate);
             if (userType == "guest")
             {

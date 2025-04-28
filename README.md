@@ -21,11 +21,8 @@ FrontendFailRegister | 前端註冊失敗導向頁面 URL
 
 鍵值名稱	說明
 RecipeModel	資料庫連線字串，請設定有效的 SQL Server 連線資訊
-範例格式：
+資料庫連線字串範例：
 
-sql
-複製
-編輯
 data source=伺服器名稱;initial catalog=資料庫名稱;integrated security=True;MultipleActiveResultSets=True;App=EntityFramework
 建議設定方式
 透過環境變數設定（如 Visual Studio 啟動設定 / Windows 系統環境變數）
@@ -36,4 +33,3 @@ data source=伺服器名稱;initial catalog=資料庫名稱;integrated security=
 請勿將真實的 API 金鑰、密碼、資料庫連線字串推送到公開的 GitHub 倉庫。
 
 正式部署時，亦應透過安全方式注入這些資訊（如 IIS 應用程式設定或 CI/CD Secrets）。
-

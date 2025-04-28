@@ -7,16 +7,18 @@
 必須設定的項目
 1. AppSettings 相關
 
-鍵值名稱 | 類型 | 說明
-VimeoAccessToken | string | Vimeo API 金鑰
-GoogleClient | string | Google OAuth Client ID
-GoogleClientSecret | string | Google OAuth Client Secret
-GoogleRedirectUrl | string | Google OAuth 回傳 Redirect URL
-FrontendGoogleLogin | string | 前端使用 Google 登入後跳轉的 URL
-VerifyAPI | string | 用於驗證的 API URL
-FrontendResetPassword | string | 前端重設密碼頁面 URL
-FrontendSuccessRegister | string | 前端註冊成功導向頁面 URL
-FrontendFailRegister | string | 前端註冊失敗導向頁面 URL
+
+| 鍵值名稱 | 類型 | 說明 |
+| :---- | :--- | :---- |
+| VimeoAccessToken | string | Vimeo API 金鑰 |
+| GoogleClient | string | Google OAuth Client ID |
+| GoogleClientSecret | string | Google OAuth Client Secret |
+| GoogleRedirectUrl | string | Google OAuth 回傳 Redirect URL |
+| FrontendGoogleLogin | string | 前端使用 Google 登入後跳轉的 URL |
+| VerifyAPI | string | 用於驗證的 API URL |
+| FrontendResetPassword | string | 前端重設密碼頁面 URL |
+| FrontendSuccessRegister | string | 前端註冊成功導向頁面 URL |
+| FrontendFailRegister | string | 前端註冊失敗導向頁面 URL |
 
 2. 資料庫連線字串 (ConnectionStrings)
 

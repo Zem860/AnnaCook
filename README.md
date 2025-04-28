@@ -7,7 +7,6 @@
 必須設定的項目
 1. AppSettings 相關
 
-鍵值名稱	說明
 鍵值名稱 | 說明
 VimeoAccessToken | Vimeo API 金鑰
 GoogleClient | Google OAuth Client ID
@@ -29,11 +28,12 @@ sql
 編輯
 data source=伺服器名稱;initial catalog=資料庫名稱;integrated security=True;MultipleActiveResultSets=True;App=EntityFramework
 建議設定方式
-可以透過 環境變數 設定（如 Visual Studio 啟動設定 / Windows 系統環境變數）
+透過環境變數設定（如 Visual Studio 啟動設定 / Windows 系統環境變數）
 
-或是 本機自訂 web.config，填入自己的值（不要直接修改 GitHub 上的版本）
+或於本地環境的 web.config 內填入個人開發用的設定（不要推上 GitHub）
 
 注意事項
 請勿將真實的 API 金鑰、密碼、資料庫連線字串推送到公開的 GitHub 倉庫。
 
-正式部署時，也應透過安全的方式（如 IIS Application Settings 或 CI/CD Secrets）注入這些設定。
+正式部署時，亦應透過安全方式注入這些資訊（如 IIS 應用程式設定或 CI/CD Secrets）。
+

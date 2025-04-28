@@ -22,8 +22,11 @@
 
 2. 資料庫連線字串 (ConnectionStrings)
 
-鍵值名稱	說明
-RecipeModel	資料庫連線字串，請設定有效的 SQL Server 連線資訊
+
+| 鍵值名稱 | 類型 | 說明 |
+| :---- | :--- | :---- |
+| RecipeModel | string | 資料庫連線字串，請設定有效的 SQL Server 連線資訊 |
+
 資料庫連線字串範例：
 
 data source=伺服器名稱;initial catalog=資料庫名稱;integrated security=True;MultipleActiveResultSets=True;App=EntityFramework

@@ -27,10 +27,10 @@ namespace RecipeTest.Controllers
         [JwtAuthFilter]
         public IHttpActionResult ShareRecipe(int id)
         {
-            var recipe = db.Recipes.FirstOrDefault(r => r.Id == id);
+            var recipe = db.Recipes.FirstOrDefault(r => r.Id == id && !r.IsDeleted && r.IsPublished && !r.IsArchived);
             if (recipe == null)
             {
-                return NotFound();
+                return Ok(new { statusCode = 404, msg = "找不到該食譜或無法進行此操作" });
             }
 
             // 限制只能分享公開食譜
@@ -61,6 +61,13 @@ namespace RecipeTest.Controllers
             {
                 return Ok(new { StatusCode=400, msg="未找到任何留言"});
             }
+
+            var recipe = db.Recipes.FirstOrDefault(r => r.Id == recipeId && !r.IsDeleted && r.IsPublished && !r.IsArchived);
+            if (recipe == null)
+            {
+                return Ok(new { statusCode = 404, msg = "找不到該食譜或無法進行此操作" });
+            }
+
             int pageSize = 3;
             int skip = (number - 1) * pageSize;
             var totalCount = recipeComment.Count();
@@ -70,14 +77,15 @@ namespace RecipeTest.Controllers
                 .Take(pageSize)
                 .Select(c => new
                 {
-                    id = c.Id,
+                    commentId = c.Id,
+                    displayId =c.Users.DisplayId,
                     authorName = c.Users.AccountName,
                     authorPhoto = c.Users.AccountProfilePhoto,
                     comment = c.CommentContent,
-                    rating = db.Ratings
+                    rating = (int)Math.Round(db.Ratings
                         .Where(r => r.UserId == c.Users.Id && r.RecipeId == recipeId)
                         .Select(r => r.Rating)
-                        .FirstOrDefault()
+                        .FirstOrDefault(),0),
                 })
                 .ToList(); // 記得轉成 List 才能正確 return JSON
 
@@ -105,6 +113,12 @@ namespace RecipeTest.Controllers
             var checkUser = new UserEncryption();
             var statusCheck = checkUser.GetUserStatusErrorMessage(userData);
             if (statusCheck != null) return Ok(new { statusCode = 403, msg = statusCheck });
+
+            var recipe = db.Recipes.FirstOrDefault(r => r.Id == recipeId && !r.IsDeleted && r.IsPublished && !r.IsArchived);
+            if (recipe == null)
+            {
+                return Ok(new { statusCode = 404, msg = "找不到該食譜或無法進行此操作" });
+            }
 
             if (dto.Rating == 0)
             {
@@ -151,10 +165,15 @@ namespace RecipeTest.Controllers
             var statusCheck = checkUser.GetUserStatusErrorMessage(userData);
             if (statusCheck != null) return Ok(new { statusCode = 403, msg = statusCheck });
 
-            var recipe = db.Recipes.FirstOrDefault(r => r.Id == recipeId);
+            var recipe = db.Recipes.FirstOrDefault(r => r.Id == recipeId && !r.IsDeleted && r.IsPublished && !r.IsArchived);
+            if (recipe == null)
+            {
+                return Ok(new { statusCode = 404, msg = "找不到該食譜或無法進行此操作" });
+            }
+
             if (recipe.UserId == user.Id)
             {
-                return BadRequest("自己不能給自己評分");
+                return Ok(new { StatusCode = 400, msg= "自己不能給自己評分" });
             }
 
             // 檢查是否已評分

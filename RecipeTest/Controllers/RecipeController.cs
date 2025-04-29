@@ -112,7 +112,8 @@ namespace RecipeTest.Controllers
         [Route("api/recipes/{id}")]//ok
         public IHttpActionResult GetRecipe(int id)
         {
-            var recipe = db.Recipes.FirstOrDefault(r => r.Id == id && !r.IsArchived && !r.IsDeleted);
+            //如果沒有發布就看不到(宜駿說如果沒有發布的話連作者也看不到)
+            var recipe = db.Recipes.FirstOrDefault(r => r.IsPublished && r.Id == id && !r.IsArchived && !r.IsDeleted);
             bool hasRecipe = recipe != null;
             if (hasRecipe)
             {
@@ -157,6 +158,7 @@ namespace RecipeTest.Controllers
                 {
                     id = recipe.UserId,
                     displayId = recipe.User.DisplayId,
+                    authorPhoto = recipe.User.AccountProfilePhoto,
                     name = recipe.User.AccountName,
                     followersCount = followers,
                 };
@@ -207,7 +209,7 @@ namespace RecipeTest.Controllers
 
             } else
             {
-                return NotFound();
+                return Ok(new { StatusCode = 400, msg="找不到該食譜"});
             }
 
         }
@@ -731,6 +733,7 @@ namespace RecipeTest.Controllers
             {
                 StatusCode = 200,
                 msg = "步驟已成功更新（舊的已清除）",
+                recipeId= id,
                 stepCount = steps.Count,
                 newToken = newToken,
             });

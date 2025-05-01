@@ -165,7 +165,7 @@ namespace RecipeTest.Controllers
                 return Ok(new { StatusCode = 401, msg = "只有作者有權限閱讀" });
             }
 
-            var recipes = db.Recipes.Where(r => r.UserId == user.Id && r.IsPublished == isPublished).OrderByDescending(r => r.CreatedAt).ToList();
+            var recipes = db.Recipes.Where(r => r.UserId == user.Id && r.IsPublished == isPublished && !r.IsDeleted).OrderByDescending(r => r.CreatedAt).ToList();
             int totalCount = recipes.Count();
             //int skip = (page - 1) * 3;
             //int take = 3;

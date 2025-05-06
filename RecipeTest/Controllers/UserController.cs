@@ -135,7 +135,7 @@ namespace RecipeTest.Controllers
                     description = r.RecipeIntro,
                     portion = r.Portion,
                     cookTime = r.CookingTime,
-                    rating = r.Rating,
+                    rating = Math.Round(r.Rating,1),
                     coverPhoto = db.RecipePhotos
                         .Where(p => p.RecipeId == r.Id && p.IsCover)
                         .Select(p => p.ImgUrl)

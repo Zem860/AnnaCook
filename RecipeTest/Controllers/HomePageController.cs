@@ -98,7 +98,7 @@ namespace RecipeTest.Controllers
                 description = r.RecipeIntro,
                 portion = r.Portion,
                 cookingTime = r.CookingTime,
-                rating = r.Rating,
+                rating = Math.Round(r.Rating, 1),
             }).ToList();
 
             var res = new
